@@ -755,7 +755,7 @@ class MoveGenerator extends AbstractGenerator {
 
 	@Override
 	public String toString() {
-		return "FastMoveGenerator []";
+		return "MoveGenerator []";
 	}
 
 }
