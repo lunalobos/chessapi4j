@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"chessapi4j"},{"l":"chessapi4j.core"}];updateSearchResults();

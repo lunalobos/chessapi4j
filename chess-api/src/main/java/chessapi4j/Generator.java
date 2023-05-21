@@ -20,7 +20,7 @@ public interface Generator {
 	 * If the generateLegalMoves() method was previously called, this method returns
 	 * the calculated positions.
 	 * 
-	 * @return
+	 * @return the children list
 	 */
 	List<? extends Position> getChildren();
 
