@@ -18,13 +18,37 @@ import chessapi4j.Position;
  */
 
 public class PositionFactory {
+	
+	/**
+	 * Startpos new instance.
+	 * @return a new instance
+	 */
 	public static Position instance() {
 		return new BitPosition();
 	}
+	
+	/**
+	 * Custom new instance.
+	 * @param fen
+	 * @return a new instance
+	 */
 	public static Position instance(String fen) {
 		return new BitPosition(fen);
 	}
 	
+	/**
+	 * Custom new instance.
+	 * @param bits
+	 * @param enPassant
+	 * @param whiteMoveNumeric
+	 * @param shortCastleWhiteNumeric
+	 * @param shortCastleBlackNumeric
+	 * @param longCastleWhiteNumeric
+	 * @param longCastleBlackNumeric
+	 * @param movesCounter
+	 * @param halfMovesCounter
+	 * @return a new instance
+	 */
 	public static Position instance(long[] bits, int enPassant, long whiteMoveNumeric, long shortCastleWhiteNumeric, 
 			long shortCastleBlackNumeric, long longCastleWhiteNumeric, long longCastleBlackNumeric, int movesCounter, 
 			int halfMovesCounter) {
@@ -32,6 +56,12 @@ public class PositionFactory {
 				longCastleWhiteNumeric, longCastleBlackNumeric, movesCounter, halfMovesCounter);
 	}
 	
+	/**
+	 * Custom new instance. Argument is a fen string with the next moves separated by spaces.
+	 * Returns the position after play all the moves.
+	 * @param fenPlusMoves
+	 * @return a new instance
+	 */
 	public static Position fromMoves(String fenPlusMoves) throws MovementException {
 		Scanner input = new Scanner(fenPlusMoves);
 		List<String> list = new LinkedList<>();
@@ -60,6 +90,12 @@ public class PositionFactory {
 		
 	}
 	
+	/**
+	 * Custom new instance. Arguments are the initial position and a list of the next moves. 
+	 * Returns the position after play all the moves.
+	 * @param p, moves
+	 * @return a new instance
+	 */
 	public static Position fromMoves(Position p, List<Move> moves) throws MovementException {
 		Position fp = (Position)p.makeClone();
 		for (Move move : moves) {
