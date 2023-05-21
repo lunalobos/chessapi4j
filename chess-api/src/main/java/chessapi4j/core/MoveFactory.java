@@ -6,18 +6,37 @@ import chessapi4j.Piece;
 
 /**
  * Factory class for Move interface.
- * @author Migue
+ * @author lunalobos
  *
  */
 public class MoveFactory {
+	/**
+	 * New instance.
+	 * @param origin
+	 * @param destiny
+	 * @return a move representation instance
+	 */
 	public static Move instance(int origin, int destiny) {
 		return new BitMove(1L << destiny, origin, -1);
 	}
-
+	
+	/**
+	 * New coronation instance.
+	 * @param origin
+	 * @param destiny
+	 * @param coronationPiece
+	 * @return a move representation instance
+	 */
 	public static Move instance(int origin, int destiny, int coronationPiece) {
 		return new BitMove(1L << destiny, origin, coronationPiece);
 	}
-
+	
+	/**
+	 * Takes a move string (UCI notation) and a boolean indicating the player who moves and return the move representation.
+	 * @param move
+	 * @param whiteMove
+	 * @return a move representation instance
+	 */
 	public static Move instance(String move, boolean whiteMove) throws MovementException {
 		char[] chars = move.toCharArray();// a1b2q
 		if(chars.length < 4)
