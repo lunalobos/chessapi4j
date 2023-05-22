@@ -39,7 +39,8 @@ To use the ChessAPI4j library in your Java project, follow these steps:
 Here's an example of how to create a position, generate legal moves, and execute a play:
 
 ```java
-import com.chess.api.core.*;
+import chessapi4j.*;
+import chessapi4j.core.*;
 
 public class ChessGame {
     public static void main(String[] args) {
