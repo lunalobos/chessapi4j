@@ -20,7 +20,7 @@ To simplify the creation of positions, moves, and plays, the library provides fa
 The `Util` class is an utility class that provides various helpful functions for chess operations. It includes methods to calculate visible squares for a given position and set of directions, convert between square indices and algebraic notation, check for coronation (promotion), and more. These utility functions can be used to enhance your chess-related logic and calculations.
 
 ## Documentation
-The ChessAPI4j library comes with comprehensive [documentation](https://lunalobos.github.io/chessapi4j/chess-api/target/site/apidocs/index.html) that provides information about the classes, interfaces, and methods available. The documentation includes explanations of the different features and, in some cases, usage examples. 
+The ChessAPI4j library comes with comprehensive [documentation](https://lunalobos.github.io/chessapi4j/chess-api/apidocs/index.html) that provides information about the classes, interfaces, and methods available. The documentation includes explanations of the different features and, in some cases, usage examples. 
 
 ## Contributing
 Contributions to the ChessAPI4j library are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request on the GitHub repository. You can contribute to the library by adding new features, improving existing functionality, fixing bugs, or adding more documentation.
