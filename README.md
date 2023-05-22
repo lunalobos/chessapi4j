@@ -67,4 +67,4 @@ public class ChessGame {
 
 ## Author
 
-This Chess API library is developed and maintained by me (https://github.com/lunalobos). Feel free to reach out to me at [lunalobosmiguel@gmail.com](mailto:lunalobosmiguel@gmail.com).
+This ChessAPI4j library is developed and maintained by me (https://github.com/lunalobos). Feel free to reach out to me at [lunalobosmiguel@gmail.com](mailto:lunalobosmiguel@gmail.com).
