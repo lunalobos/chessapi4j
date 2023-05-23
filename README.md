@@ -33,8 +33,23 @@ The ChessAPI4j library is licensed under the Eclipse Public License - v 2.0. You
 To use the ChessAPI4j library in your Java project, follow these steps:
 
 1. Download the latest release.
-2. Add the ChessAPI4j library JAR file to your project's classpath.
-3. Import the necessary classes in your code to start using the API.
+2. Open a kernel and positionate in the chess-api direction.
+```console
+cd <chessapi4j_download_directory>\chess-api
+```
+3. Install the library in your local repository with maven. 
+```console
+mvn clean install
+```
+4. Include the dependency in your pom.
+```xml
+<dependency>
+    <groupId>chessapi4j</groupId>
+    <artifactId>chessapi4j</artifactId>
+    <version>1.0.0-RELEASE</version>
+</dependency>
+```
+5. Now you can import the classes in your code to start using the API.
 
 Here's an example of how to create a position, generate legal moves, and execute a play:
 
