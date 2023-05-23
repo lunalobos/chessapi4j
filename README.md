@@ -42,6 +42,7 @@ cd <chessapi4j_download_directory>\chess-api
 mvn clean install
 ```
 4. Include the dependency in your pom.
+
 ```
 <dependency>
     <groupId>chessapi4j</groupId>
@@ -49,6 +50,7 @@ mvn clean install
     <version>1.0.0-RELEASE</version>
 </dependency>
 ```
+
 5. Now you can import the classes in your code to start using the API.
 
 Here's an example of how to create a position, generate legal moves, and execute a play:
