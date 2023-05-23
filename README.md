@@ -42,7 +42,7 @@ cd <chessapi4j_download_directory>\chess-api
 mvn clean install
 ```
 4. Include the dependency in your pom.
-```xml
+```
 <dependency>
     <groupId>chessapi4j</groupId>
     <artifactId>chessapi4j</artifactId>
