@@ -33,7 +33,7 @@ The ChessAPI4j library is licensed under the Eclipse Public License - v 2.0. You
 To use the ChessAPI4j library in your Java project, follow these steps:
 
 1. Download the latest release.
-2. Open a kernel and positionate in the chess-api direction.
+2. Open a kernel and positionate in the chess-api directory.
 ```console
 cd <chessapi4j_download_directory>\chess-api
 ```
