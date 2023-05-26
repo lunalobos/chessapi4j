@@ -99,5 +99,6 @@ public class Rules {
 				.collect(Collectors.toCollection(LinkedList::new));
 		return moves.contains(move.toString());
 	}
-
+	
+	
 }
