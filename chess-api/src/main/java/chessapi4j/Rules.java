@@ -7,9 +7,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import chessapi4j.core.GeneratorFactory;
+import chessapi4j.core.MoveDetector;
 import chessapi4j.core.Util;
-
-
 
 /**
  * Utility class for game's rules.
@@ -87,4 +86,19 @@ public class Rules {
 			position.setLackOfMaterial(true);
 	}
 
+	/**
+	 * Allows determining if a specific move is legal for a given position.
+	 * 
+	 * @param position
+	 * @param move
+	 */
+	public static boolean legal(Position position, Move move) {
+		Generator generator = GeneratorFactory.instance(position);
+		generator.generateLegalMoves();
+		List<String> moves = generator.getLegalMoves().stream().map(m -> m.toString())
+				.collect(Collectors.toCollection(LinkedList::new));
+		return moves.contains(move.toString());
+	}
+	
+	
 }
