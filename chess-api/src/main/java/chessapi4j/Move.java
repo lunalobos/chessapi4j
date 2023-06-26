@@ -1,5 +1,8 @@
 package chessapi4j;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import chessapi4j.core.Util;
 
 /**
@@ -33,41 +36,19 @@ public interface Move {
 		int y_ = Util.getRow(getDestiny()) + 1;
 		String collum = Util.getColLetter(getOrigin());
 		String collum_ = Util.getColLetter(getDestiny());
-
-		String piece = "";
 		if (getCoronationPiece() < 0)
 			return collum + y + collum_ + y_;
 		else {
-			switch (Piece.values()[getCoronationPiece()]) {
-			case WN:
-				piece += "n";
-				break;
-			case WB:
-				piece += "b";
-				break;
-			case WR:
-				piece += "r";
-				break;
-			case WQ:
-				piece += "q";
-				break;
-			case BN:
-				piece += "n";
-				break;
-			case BB:
-				piece += "b";
-				break;
-			case BR:
-				piece += "r";
-				break;
-			case BQ:
-				piece += "q";
-				break;
-			default:
-				break;
-			}
+			String regex = "(?<color>[BW])(?<piece>[NBRQ])";
+			Pattern pattern = Pattern.compile(regex);
+			Matcher matcher = pattern.matcher(Piece.values()[getCoronationPiece()].toString());
+			boolean finded = matcher.find();
+			if(!finded)
+				throw new IllegalArgumentException("Invalid move.");
+			String promotion = matcher.group("piece").toLowerCase();
+			return collum + y + collum_ + y_ + promotion;// UCI notation;
 		}
-		return collum + y + collum_ + y_ + piece;// UCI notation;
+		
 	}
 
 	default boolean areEquals(Object obj) {

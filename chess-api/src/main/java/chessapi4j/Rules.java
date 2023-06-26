@@ -7,13 +7,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import chessapi4j.core.GeneratorFactory;
-import chessapi4j.core.MoveDetector;
 import chessapi4j.core.Util;
 
 /**
  * Utility class for game's rules.
  * 
- * @author maluna
+ * @author lunalobos
  *
  */
 public class Rules {
@@ -87,7 +86,7 @@ public class Rules {
 	}
 
 	/**
-	 * Allows determining if a specific move is legal for a given position.
+	 * Allows determining if an specific move is legal for a given position.
 	 * 
 	 * @param position
 	 * @param move
