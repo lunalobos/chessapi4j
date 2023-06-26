@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>chessapi4j</groupId>
   <artifactId>chessapi4j</artifactId>
-  <version>1.0.0-RELEASE</version>
+  <version>1.1.0-RELEASE</version>
   <name>ChessAPI4j</name>
   
   <properties>
