@@ -1,7 +1,7 @@
 package chessapi4j;
 /**
  * Enum basic class for pieces.
- * @author Migue
+ * @author lunalobos
  *
  */
 public enum Piece {

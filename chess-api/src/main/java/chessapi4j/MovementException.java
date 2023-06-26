@@ -2,7 +2,7 @@ package chessapi4j;
 
 /**
  * It's thrown when move inconsistencies happens.
- * @author Migue
+ * @author lunalobos
  *
  */
 public class MovementException extends Exception {

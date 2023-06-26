@@ -1,0 +1,520 @@
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/ICrBBEAN"]
+[Date "2023.06.26"]
+[White "iliria1912"]
+[Black "jjcarv"]
+[Result "0-1"]
+[UTCDate "2023.06.26"]
+[UTCTime "00:52:04"]
+[WhiteElo "2108"]
+[BlackElo "2156"]
+[WhiteRatingDiff "-5"]
+[BlackRatingDiff "+6"]
+[Variant "Standard"]
+[TimeControl "300+0"]
+[ECO "B10"]
+[Termination "Time forfeit"]
+
+1. e4 c6 2. Nf3 d5 3. exd5 cxd5 4. d4 Nf6 5. h3 Nc6 6. Bb5 Bd7 7. O-O e6 8. c3 Bd6 9. Bg5 h6 10. Bxf6 Qxf6 11. Re1 O-O 12. Ne5 Bxe5 13. dxe5 Nxe5 14. Rxe5 Bxb5 15. Re1 Rac8 16. Nd2 Rfd8 17. Nf3 Qf4 18. Nd4 Bc6 19. Re3 Qf6 20. Qe2 Re8 21. Re1 Qd8 22. a3 Qb6 23. Qd2 Bd7 24. Re5 Qc7 25. R5e3 b5 26. Qe2 Qb6 27. g4 a5 28. Qf3 b4 29. axb4 axb4 30. h4 bxc3 31. bxc3 Qa5 32. g5 hxg5 33. hxg5 Rf8 34. Qg3 e5 35. Qxe5 Rxc3 36. Kg2 Rxe3 37. Qxe3 Re8 38. Qxe8+ Bxe8 39. Rxe8+ Kh7 40. Nf3 Qb5 41. Re1 Kg6 42. Kg3 Qb8+ 43. Kg2 Qf4 44. Re5 Qg4+ 0-1
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/DWHHtkrd"]
+[Date "2023.06.26"]
+[White "jjcarv"]
+[Black "soginsky"]
+[Result "1-0"]
+[UTCDate "2023.06.26"]
+[UTCTime "00:46:58"]
+[WhiteElo "2152"]
+[BlackElo "1935"]
+[WhiteRatingDiff "+4"]
+[BlackRatingDiff "-4"]
+[Variant "Standard"]
+[TimeControl "300+0"]
+[ECO "D10"]
+[Termination "Normal"]
+
+1. d4 d5 2. c4 c6 3. Nc3 Nf6 4. cxd5 cxd5 5. Nf3 Nc6 6. e3 Bg4 7. Be2 e6 8. Qb3 Qb6 9. Qxb6 axb6 10. Bd2 Ne4 11. Nxe4 dxe4 12. Ng5 Bxe2 13. Kxe2 f5 14. Nxe6 Kd7 15. Nf4 g5 16. Nd5 Ra6 17. Rhc1 Bg7 18. b4 b5 19. a4 Rha8 20. a5 Bf8 21. Nb6+ Rxb6 22. axb6 Rxa1 23. Rxa1 Bxb4 24. Bxb4 Nxb4 25. Rb1 Nd5 26. Kd2 Kc6 27. Rc1+ Kxb6 28. Rc5 Ne7 29. Re5 Nc6 30. Rxf5 h6 31. Rf6 b4 32. d5 1-0
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/M96XXMnM"]
+[Date "2023.06.26"]
+[White "Gyaljensherpa2"]
+[Black "jjcarv"]
+[Result "0-1"]
+[UTCDate "2023.06.26"]
+[UTCTime "00:39:58"]
+[WhiteElo "1939"]
+[BlackElo "2149"]
+[WhiteRatingDiff "-3"]
+[BlackRatingDiff "+3"]
+[Variant "Standard"]
+[TimeControl "300+0"]
+[ECO "B10"]
+[Termination "Normal"]
+
+1. e4 c6 2. c4 d5 3. cxd5 cxd5 4. exd5 Nf6 5. Nc3 Nxd5 6. Nf3 Nc6 7. Be2 Bg4 8. O-O e6 9. d4 Be7 10. h3 Bf5 11. Bb5 Rc8 12. Ne5 O-O 13. Nxc6 bxc6 14. Bd3 Bxd3 15. Qxd3 c5 16. dxc5 Nxc3 17. Qxd8 Ne2+ 18. Kh1 Rfxd8 19. b4 Nxc1 20. Rfxc1 a5 21. a3 Rd4 22. Rab1 axb4 23. axb4 h5 24. f3 h4 25. Kg1 Bg5 26. Rc2 Be3+ 27. Kf1 Rd2 28. Rc3 Bd4 29. Rc4 e5 30. c6 Bb6 31. b5 Rf2+ 32. Ke1 Rxg2 33. Rb3 Ra8 34. Rc1 Rg1+ 35. Kd2 Ra2+ 36. Rc2 Rg2+ 37. Kd3 Rgxc2 38. Ke4 Kf8 39. Kxe5 Ke7 40. Kd5 Ra4 41. Ke5 Rc5# 0-1
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/DDPPly53"]
+[Date "2023.06.26"]
+[White "jjcarv"]
+[Black "mercator4"]
+[Result "1-0"]
+[UTCDate "2023.06.26"]
+[UTCTime "00:32:20"]
+[WhiteElo "2147"]
+[BlackElo "1775"]
+[WhiteRatingDiff "+2"]
+[BlackRatingDiff "-1"]
+[Variant "Standard"]
+[TimeControl "300+0"]
+[ECO "A53"]
+[Termination "Normal"]
+
+1. d4 d6 2. c4 Nf6 3. Nc3 Nbd7 4. e4 c6 5. f4 Qc7 6. Nf3 e5 7. fxe5 dxe5 8. d5 Bc5 9. Bd3 Ng4 10. Qe2 Bf2+ 11. Kf1 Bc5 12. Na4 Be7 13. h3 Ngf6 14. Be3 O-O 15. g4 cxd5 16. cxd5 Nc5 17. Nxc5 Bxc5 18. Rc1 b6 19. b4 Nd7 20. bxc5 Nxc5 21. Bxc5 bxc5 22. Qf2 f5 23. gxf5 Bxf5 24. Qxc5 Qxc5 25. Rxc5 Bg6 26. Kg2 Bh5 27. Rf1 Rab8 28. Nxe5 Rb2+ 29. Rc2 Rfb8 30. Rxb2 Rxb2+ 31. Rf2 Rb4 32. Nc6 Rb7 33. d6 Be8 34. Bc4+ Bf7 35. Ne7+ Rxe7 36. dxe7 Bxc4 37. Rf8# 1-0
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/0GCZToBJ"]
+[Date "2023.06.26"]
+[White "ADUJLEON7"]
+[Black "jjcarv"]
+[Result "0-1"]
+[UTCDate "2023.06.26"]
+[UTCTime "00:27:32"]
+[WhiteElo "1431"]
+[BlackElo "2147"]
+[WhiteRatingDiff "+0"]
+[BlackRatingDiff "+0"]
+[Variant "Standard"]
+[TimeControl "300+0"]
+[ECO "B10"]
+[Termination "Normal"]
+
+1. e4 c6 2. f4 d5 3. exd5 cxd5 4. Nf3 Nc6 5. d4 Bg4 6. Bb5 e6 7. O-O Bd6 8. h3 Bxf3 9. Qxf3 Ne7 10. Nc3 a6 11. Bxc6+ Nxc6 12. f5 Nxd4 13. Qe3 Nxf5 14. Rxf5 O-O 15. Rf2 d4 16. Qf3 dxc3 17. bxc3 Bc5 18. Be3 Qb6 19. Bxc5 Qxc5 20. Kh2 Qc7+ 21. Kh1 Rac8 22. Rb1 b5 23. a4 Rb8 24. axb5 Rxb5 25. Rbf1 Rc5 26. h4 h6 27. h5 Rxc3 28. Qe4 Rc4 29. Qe2 Rh4+ 30. Kg1 Qh2# 0-1
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/SL4gKi21"]
+[Date "2023.06.26"]
+[White "jjcarv"]
+[Black "Simonmelo"]
+[Result "1-0"]
+[UTCDate "2023.06.26"]
+[UTCTime "00:23:45"]
+[WhiteElo "2144"]
+[BlackElo "1887"]
+[WhiteRatingDiff "+3"]
+[BlackRatingDiff "-2"]
+[Variant "Standard"]
+[TimeControl "300+0"]
+[ECO "D31"]
+[Termination "Time forfeit"]
+
+1. d4 e6 2. c4 d5 3. Nc3 c6 4. e4 f5 5. exf5 exf5 6. cxd5 cxd5 7. Bb5+ Nc6 8. Nf3 Nf6 9. O-O Ke7 10. Bg5 Kf7 11. Qb3 Be6 12. Bxc6 bxc6 13. Ne5+ Kg8 14. Nxc6 Qd6 15. Bxf6 gxf6 16. Na5 1-0
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/ZRC4eDGx"]
+[Date "2023.06.26"]
+[White "Akinluyi"]
+[Black "jjcarv"]
+[Result "0-1"]
+[UTCDate "2023.06.26"]
+[UTCTime "00:17:11"]
+[WhiteElo "1928"]
+[BlackElo "2141"]
+[WhiteRatingDiff "-2"]
+[BlackRatingDiff "+3"]
+[Variant "Standard"]
+[TimeControl "300+0"]
+[ECO "A07"]
+[Termination "Normal"]
+
+1. Nf3 d5 2. g3 Nd7 3. Bg2 e5 4. d3 Ngf6 5. O-O Bd6 6. Bg5 h6 7. Bxf6 Nxf6 8. Nbd2 c6 9. e4 O-O 10. Nh4 dxe4 11. Nxe4 Nxe4 12. Bxe4 f5 13. Bg2 Qf6 14. Qh5 Bd7 15. Bh3 g5 16. Ng6 Be8 17. Qxh6 Qxg6 18. Qxg6+ Bxg6 19. Rae1 g4 20. Bg2 f4 21. d4 f3 22. dxe5 fxg2 23. Kxg2 Bc5 24. e6 Rae8 25. Re5 Be7 26. c3 Kg7 27. f4 gxf3+ 28. Rxf3 Rxf3 29. Kxf3 0-1
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/YIUG76o5"]
+[Date "2023.06.26"]
+[White "jjcarv"]
+[Black "tesacarelacaca"]
+[Result "1-0"]
+[UTCDate "2023.06.26"]
+[UTCTime "00:15:40"]
+[WhiteElo "2140"]
+[BlackElo "1557"]
+[WhiteRatingDiff "+1"]
+[BlackRatingDiff "-1"]
+[Variant "Standard"]
+[TimeControl "300+0"]
+[ECO "D32"]
+[Termination "Normal"]
+
+1. d4 e6 2. Nf3 d5 3. c4 c5 4. cxd5 exd5 5. Nc3 cxd4 6. Nxd4 Bc5 7. Nb3 Bxf2+ 8. Kxf2 Qh4+ 9. g3 Qe7 10. Nxd5 1-0
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/Ituosnbg"]
+[Date "2023.06.26"]
+[White "jjcarv"]
+[Black "yurichesspk"]
+[Result "1-0"]
+[UTCDate "2023.06.26"]
+[UTCTime "00:08:43"]
+[WhiteElo "2138"]
+[BlackElo "1801"]
+[WhiteRatingDiff "+2"]
+[BlackRatingDiff "-1"]
+[Variant "Standard"]
+[TimeControl "300+0"]
+[ECO "D21"]
+[Termination "Normal"]
+
+1. d4 d5 2. c4 dxc4 3. Nf3 c6 4. a4 Bf5 5. Nc3 e6 6. e4 Bg6 7. Bxc4 Nf6 8. Qe2 Be7 9. O-O O-O 10. Bf4 Bh5 11. Rfd1 Bg6 12. h3 h6 13. Ne5 Bh7 14. Rac1 Nbd7 15. Bg3 Qc8 16. f3 Nxe5 17. Bxe5 Rd8 18. Bb3 Nd7 19. Bf4 Nf6 20. Bh2 Ne8 21. d5 exd5 22. Nxd5 cxd5 23. Rxc8 Raxc8 24. Bxd5 Nf6 25. Bxb7 Rc7 26. Bxc7 Rxd1+ 27. Qxd1 Bc5+ 28. Kh2 Bg6 29. Qd8+ Kh7 30. Be5 Nh5 31. Bd4 Bxd4 32. Qxd4 Nf4 33. Qxa7 Nd3 34. Qb6 Ne5 35. a5 Nc4 36. Qb4 Ne5 37. a6 Nd7 38. a7 Ne5 39. a8=Q Nxf3+ 40. gxf3 Bh5 41. e5 f6 42. Be4+ g6 43. Qbb7# 1-0
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/Dhdngh2R"]
+[Date "2023.06.26"]
+[White "mrmicheas"]
+[Black "jjcarv"]
+[Result "0-1"]
+[UTCDate "2023.06.26"]
+[UTCTime "00:01:57"]
+[WhiteElo "2074"]
+[BlackElo "2132"]
+[WhiteRatingDiff "-5"]
+[BlackRatingDiff "+6"]
+[Variant "Standard"]
+[TimeControl "300+0"]
+[ECO "B15"]
+[Termination "Time forfeit"]
+
+1. e4 c6 2. d4 d5 3. Nd2 dxe4 4. Nxe4 Nf6 5. Ng5 h6 6. N5f3 Bg4 7. h3 Bh5 8. g4 Bg6 9. Ne5 Bh7 10. Bc4 e6 11. Ngf3 Nd5 12. Qe2 Nd7 13. Bd2 Nxe5 14. Nxe5 Bd6 15. O-O-O O-O 16. f4 Bxe5 17. dxe5 b5 18. Bb3 a5 19. a4 Qb6 20. g5 h5 21. Qxh5 Bg6 22. Qe2 bxa4 23. Bxa4 Rfb8 24. b3 Nb4 25. Be3 Qb7 26. c3 Nd5 27. Bd2 c5 28. c4 Nb4 29. Bxb4 Qxb4 30. h4 Qc3+ 0-1
+
+
+[Event "Rated Blitz game"]
+[Site "https://lichess.org/honkmeMl"]
+[Date "2023.06.25"]
+[White "jjcarv"]
+[Black "JediDanih2"]
+[Result "1-0"]
+[UTCDate "2023.06.25"]
+[UTCTime "23:50:23"]
+[WhiteElo "2123"]
+[BlackElo "2140"]
+[WhiteRatingDiff "+9"]
+[BlackRatingDiff "-6"]
+[Variant "Standard"]
+[TimeControl "180+2"]
+[ECO "E01"]
+[Termination "Time forfeit"]
+
+1. d4 Nf6 2. c4 e6 3. g3 d5 4. Bg2 c5 5. cxd5 exd5 6. Nf3 Nc6 7. O-O h6 8. Nc3 Be6 9. Bf4 Be7 10. dxc5 Bxc5 11. Qa4 O-O 12. Rad1 Qb6 13. Qc2 Rac8 14. Na4 Nb4 15. Nxb6 Nxc2 16. Nxc8 Rxc8 17. Rc1 Nb4 18. a3 Na6 19. b4 Be7 20. Rxc8+ Bxc8 21. Nd4 Nh5 22. Rc1 Bd7 23. Be3 Nf6 24. h3 Bd6 25. Bf4 Bxf4 26. gxf4 Kh7 27. b5 Nb8 28. Rc7 1-0
+
+
+[Event "Rated Blitz game"]
+[Site "https://lichess.org/dERtJ2Y5"]
+[Date "2023.06.25"]
+[White "JediDanih2"]
+[Black "jjcarv"]
+[Result "1/2-1/2"]
+[UTCDate "2023.06.25"]
+[UTCTime "23:40:24"]
+[WhiteElo "2140"]
+[BlackElo "2123"]
+[WhiteRatingDiff "+0"]
+[BlackRatingDiff "+0"]
+[Variant "Standard"]
+[TimeControl "180+2"]
+[ECO "B13"]
+[Termination "Normal"]
+
+1. e4 c6 2. d4 d5 3. exd5 cxd5 4. h3 Nf6 5. Bd3 Nc6 6. c3 e5 7. dxe5 Nxe5 8. Nf3 Nxd3+ 9. Qxd3 Bc5 10. O-O O-O 11. Bg5 Be6 12. Nbd2 h6 13. Bxf6 Qxf6 14. Nb3 Bb6 15. Nbd4 Rfd8 16. Rfe1 Rac8 17. Re2 Re8 18. Rae1 Bd7 19. Rxe8+ Bxe8 20. Qf5 Qxf5 21. Nxf5 Kf8 22. Nd6 Rb8 23. Nxe8 Rxe8 24. Rxe8+ Kxe8 25. Kf1 Ke7 26. Ke2 Kd6 27. b4 a5 28. a3 axb4 29. axb4 g5 30. Nd2 f5 31. g3 Ke5 32. f3 Bc7 33. Ke3 Bb6+ 34. Kd3 Ba7 35. Nb3 Bf2 36. g4 fxg4 37. hxg4 Kf4 38. Ke2 Bg1 39. Na5 b6 40. Nb3 Be3 41. b5 Bg1 42. Nc1 Ke5 43. Nd3+ Kd6 44. f4 gxf4 45. Nxf4 Bc5 46. Kf3 Ba3 47. Nd3 d4 48. c4 Bc5 49. Ke4 Ke6 50. Nf4+ Kf6 51. Nd3 Ke6 52. Kf3 Bd6 53. Ke4 Bc5 1/2-1/2
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/tUrdOxDP"]
+[Date "2023.05.31"]
+[White "jjcarv"]
+[Black "gen123pal"]
+[Result "1-0"]
+[UTCDate "2023.05.31"]
+[UTCTime "02:52:59"]
+[WhiteElo "2118"]
+[BlackElo "2001"]
+[WhiteRatingDiff "+5"]
+[BlackRatingDiff "-3"]
+[Variant "Standard"]
+[TimeControl "300+0"]
+[ECO "D10"]
+[Termination "Normal"]
+
+1. d4 d5 2. c4 c6 3. cxd5 cxd5 4. Nc3 Nf6 5. Nf3 Nc6 6. e3 e6 7. Ne5 Bc5 8. Nxc6 bxc6 9. dxc5 O-O 10. Bd3 e5 11. O-O e4 12. Be2 Nd7 13. Na4 Ne5 14. b3 Qg5 15. f4 exf3 16. Bxf3 Bh3 17. e4 Qg6 18. Bb2 Rae8 19. Bxe5 Rxe5 20. exd5 cxd5 21. Rf2 Rg5 22. Qd2 Re8 23. Rd1 h5 24. Kh1 Be6 25. c6 h4 26. c7 h3 27. g3 Rxg3 28. hxg3 Qxg3 29. Rg1 Qxc7 30. Qc3 Qxc3 31. Nxc3 d4 32. Ne4 Rd8 33. Rd2 Bf5 34. Nf6+ Kf8 35. Nd5 Be6 36. Rxd4 f6 37. Nf4 Re8 38. Nxe6+ Rxe6 39. Bg4 1-0
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/auEnFYCO"]
+[Date "2023.05.31"]
+[White "Franco_Milazzo"]
+[Black "jjcarv"]
+[Result "1-0"]
+[UTCDate "2023.05.31"]
+[UTCTime "02:42:15"]
+[WhiteElo "1835"]
+[BlackElo "2130"]
+[WhiteRatingDiff "+10"]
+[BlackRatingDiff "-12"]
+[Variant "Standard"]
+[TimeControl "300+0"]
+[ECO "C42"]
+[Termination "Time forfeit"]
+
+1. e4 e5 2. Nf3 Nf6 3. Nxe5 d6 4. Nf3 Nxe4 5. d4 d5 6. Bd3 Be7 7. O-O O-O 8. Nbd2 Bf5 9. Re1 Nd6 10. Bxf5 Nxf5 11. Nf1 Nc6 12. c3 h6 13. Qd3 Nd6 14. Ng3 Bf6 15. Ne5 Re8 16. f4 Bh4 17. Bd2 Bxg3 18. hxg3 Ne4 19. Ng4 Ne7 20. Nf2 Nd6 21. Re2 Qd7 22. Rae1 Nef5 23. g4 Rxe2 24. Rxe2 Nh4 25. Qg3 Ng6 26. f5 Nf8 27. Bf4 Re8 28. Qf3 Rxe2 29. Qxe2 Qe8 30. Qf3 Nd7 31. Kh2 Nf6 32. Bxd6 cxd6 33. Kg3 Ne4+ 34. Kh2 Qe7 35. g3 b6 36. Nd3 Qg5 37. Nf4 Nf6 38. Kh3 h5 39. Nxh5 Nxh5 40. gxh5 Qc1 41. Qxd5 Qxb2 42. f6 Qb1 43. fxg7 Qf1+ 44. Kh4 Kxg7 45. Qg5+ Kh7 46. h6 Qh1+ 47. Kg4 Qe4+ 48. Kh3 1-0
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/8RAjqtHR"]
+[Date "2023.05.31"]
+[White "jjcarv"]
+[Black "van_gomes"]
+[Result "1/2-1/2"]
+[UTCDate "2023.05.31"]
+[UTCTime "02:36:15"]
+[WhiteElo "2129"]
+[BlackElo "2171"]
+[WhiteRatingDiff "+1"]
+[BlackRatingDiff "+0"]
+[Variant "Standard"]
+[TimeControl "300+0"]
+[ECO "A51"]
+[Termination "Normal"]
+
+1. d4 Nf6 2. c4 e5 3. dxe5 Ne4 4. Nf3 Bb4+ 5. Bd2 Nxd2 6. Nbxd2 Nc6 7. e3 O-O 8. a3 Bxd2+ 9. Qxd2 Re8 10. Qc3 Qe7 11. Be2 Nxe5 12. Nxe5 Qxe5 13. Qxe5 Rxe5 14. O-O-O d6 15. Bf3 Rb8 16. Rd5 Be6 17. Rxe5 dxe5 18. c5 b6 19. c6 Rd8 20. Rd1 Rxd1+ 21. Kxd1 Kf8 22. Kd2 Ke7 23. Kc3 Kd6 24. b4 f5 25. b5 Kc5 26. Be2 Bd5 27. g3 g5 28. h3 h6 29. f4 exf4 30. exf4 Be4 31. h4 gxf4 32. gxf4 Bb1 33. Bf1 Be4 34. Be2 a5 35. Bf1 Bb1 36. Be2 Be4 37. Bf1 Bb1 38. Be2 Be4 39. Bf1 1/2-1/2
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/UMNfPufK"]
+[Date "2023.05.31"]
+[White "jjcarv"]
+[Black "Uncycledude"]
+[Result "1/2-1/2"]
+[UTCDate "2023.05.31"]
+[UTCTime "02:27:28"]
+[WhiteElo "2133"]
+[BlackElo "1914"]
+[WhiteRatingDiff "-4"]
+[BlackRatingDiff "+4"]
+[Variant "Standard"]
+[TimeControl "300+0"]
+[ECO "E91"]
+[Termination "Normal"]
+
+1. d4 g6 2. c4 Bg7 3. Nf3 Nf6 4. Nc3 d6 5. e4 O-O 6. Be2 Nbd7 7. Bg5 e5 8. d5 h6 9. Bh4 g5 10. Bg3 Nh7 11. Nd2 f5 12. exf5 Rxf5 13. Bg4 Rf8 14. Be6+ Kh8 15. Qc2 Ndf6 16. Bxc8 Qxc8 17. O-O Qd7 18. Nde4 Rf7 19. Rad1 Raf8 20. b4 b6 21. c5 bxc5 22. bxc5 Nxe4 23. Nxe4 Nf6 24. cxd6 cxd6 25. f3 Rc8 26. Nxf6 Bxf6 27. Qg6 Bg7 28. Rc1 Rcf8 29. Rc6 Rf6 30. Qc2 Re8 31. Rc7 Qb5 32. Rc1 Qxd5 33. Rxa7 Qd4+ 34. Bf2 Qf4 35. Qc7 Rg8 36. Rd1 e4 37. Bg3 Qe3+ 38. Bf2 Qf4 39. Bg3 Qe3+ 40. Bf2 Qf4 1/2-1/2
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/akcetPW3"]
+[Date "2023.05.31"]
+[White "joseh63"]
+[Black "jjcarv"]
+[Result "0-1"]
+[UTCDate "2023.05.31"]
+[UTCTime "02:16:55"]
+[WhiteElo "1799"]
+[BlackElo "2131"]
+[WhiteRatingDiff "-1"]
+[BlackRatingDiff "+2"]
+[Variant "Standard"]
+[TimeControl "300+0"]
+[ECO "C00"]
+[Termination "Time forfeit"]
+
+1. e4 e6 2. d3 d5 3. Nd2 b6 4. Ngf3 Bb7 5. exd5 Qxd5 6. g3 Bb4 7. Bg2 Qd8 8. O-O Nf6 9. c3 Bd6 10. d4 O-O 11. Nc4 Be7 12. Nce5 Nbd7 13. Bf4 Nxe5 14. Nxe5 Bxg2 15. Kxg2 Bd6 16. Qe2 Nd5 17. Bd2 Bxe5 18. Qxe5 b5 19. Rae1 c6 20. f4 Re8 21. f5 exf5 22. Qxf5 Qf6 23. Qxf6 Nxf6 24. Bg5 Nd5 25. Kf2 f6 26. Bd2 a5 27. Rxe8+ Rxe8 28. Re1 Rxe1 29. Kxe1 Kf7 30. Ke2 Ke6 31. Kd3 Nb6 32. b3 a4 33. Be3 axb3 34. axb3 Nd5 35. Bd2 g5 36. c4 Ne7 37. g4 h6 38. h3 f5 39. gxf5+ Nxf5 40. Ke4 Nd6+ 41. Kd3 Kf5 42. d5 bxc4+ 43. bxc4 cxd5 44. cxd5 Ke5 45. Bb4 Kxd5 46. Bxd6 Kxd6 47. Kd4 Ke6 48. Ke4 Kf6 0-1
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/nc21Ep4c"]
+[Date "2023.05.31"]
+[White "jjcarv"]
+[Black "HardRob"]
+[Result "1-0"]
+[UTCDate "2023.05.31"]
+[UTCTime "02:10:08"]
+[WhiteElo "2129"]
+[BlackElo "1744"]
+[WhiteRatingDiff "+2"]
+[BlackRatingDiff "-1"]
+[Variant "Standard"]
+[TimeControl "300+0"]
+[ECO "E91"]
+[Termination "Time forfeit"]
+
+1. d4 Nf6 2. c4 g6 3. Nc3 Bg7 4. e4 d6 5. Nf3 O-O 6. Be2 Nc6 7. d5 Ne5 8. Nxe5 dxe5 9. c5 Ne8 10. O-O f5 11. f3 f4 12. b4 Kh8 13. Bb2 g5 14. a4 Nf6 15. a5 h5 16. b5 g4 17. b6 axb6 18. axb6 Rxa1 19. Bxa1 g3 20. hxg3 fxg3 21. Qe1 h4 22. Nb5 c6 23. dxc6 bxc6 24. Na7 Bb7 25. Bxe5 Nd7 26. Bxg7+ Kxg7 27. Qa1+ e5 28. Rd1 Rf7 29. Qxe5+ Nxe5 30. Rxd8 Rd7 31. Rxd7+ Nxd7 32. f4 Nxc5 33. Bf3 Nd7 34. e5 Nxb6 35. Nxc6 Nc4 36. Nd4 Bxf3 37. Nxf3 Kg6 38. Nxh4+ 1-0
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/c79V6573"]
+[Date "2023.05.31"]
+[White "badapp"]
+[Black "jjcarv"]
+[Result "0-1"]
+[UTCDate "2023.05.31"]
+[UTCTime "02:01:45"]
+[WhiteElo "1917"]
+[BlackElo "2126"]
+[WhiteRatingDiff "-3"]
+[BlackRatingDiff "+3"]
+[Variant "Standard"]
+[TimeControl "300+0"]
+[ECO "D82"]
+[Termination "Normal"]
+
+1. d4 Nf6 2. c4 g6 3. Nc3 d5 4. Bf4 Bg7 5. e3 a6 6. Rc1 dxc4 7. Bxc4 b5 8. Bb3 Bb7 9. Nf3 Nbd7 10. O-O c5 11. Re1 c4 12. Bc2 O-O 13. b3 Rc8 14. bxc4 Rxc4 15. Bb3 Rc8 16. Ne2 Ne4 17. Qd3 Ndf6 18. Ne5 Nh5 19. Rxc8 Qxc8 20. Rc1 Nxf4 21. Rxc8 Nxd3 22. Rxf8+ Kxf8 23. Nxd3 f6 24. f3 Nd2 25. Nc5 Nxb3 26. axb3 Bc8 27. b4 e5 28. Kf2 exd4 29. Nxd4 Ke7 30. Nc6+ Kd6 31. Nb8 f5 32. Nbxa6 Bc3 33. e4 Bxb4 34. Nxb4 Kxc5 35. Nd3+ Kd4 36. exf5 Kxd3 37. fxg6 hxg6 38. g4 b4 39. h4 b3 40. h5 gxh5 41. gxh5 b2 42. h6 Bf5 43. Kg3 b1=Q 44. Kf4 Kd4 45. Kg5 Bh7 46. f4 Qf5+ 47. Kh4 Qxf4+ 48. Kh5 Qf5+ 49. Kh4 Qg6 50. Kh3 Ke3 51. Kh4 Kf4 0-1
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/qicgwFmC"]
+[Date "2023.05.31"]
+[White "jjcarv"]
+[Black "Phox23"]
+[Result "0-1"]
+[UTCDate "2023.05.31"]
+[UTCTime "01:51:16"]
+[WhiteElo "2135"]
+[BlackElo "2027"]
+[WhiteRatingDiff "-9"]
+[BlackRatingDiff "+7"]
+[Variant "Standard"]
+[TimeControl "180+2"]
+[ECO "A43"]
+[Termination "Time forfeit"]
+
+1. d4 c5 2. d5 b5 3. e4 a6 4. a4 b4 5. Nd2 d6 6. Nc4 a5 7. Bd3 Nd7 8. Nf3 Ngf6 9. h3 g6 10. Bf4 Bg7 11. Bh2 O-O 12. O-O Bb7 13. Nfd2 Nb6 14. Nxb6 Qxb6 15. Nc4 Qd8 16. f4 Nd7 17. Be2 Nb6 18. Nxb6 Qxb6 19. Bc4 Bxb2 20. e5 Bxa1 21. Qxa1 Ba6 22. Bxa6 Rxa6 23. Kh1 c4 24. f5 Qe3 25. Rf3 Qe2 26. Qc1 dxe5 27. Re3 Qf2 28. Rf3 Qd4 29. Qe1 Qxd5 30. Bxe5 Rd8 31. Qg3 Qd1+ 32. Kh2 Qd7 33. fxg6 Rxg6 34. Qf4 f6 35. Bc7 Rc8 36. Qxc4+ e6 37. Qh4 Qxc7+ 38. Kg1 Qc4 39. Rf4 Qc5+ 40. Kh2 Qg5 41. Qxg5 Rxg5 42. Rxf6 Rxc2 43. Kg1 Rgxg2+ 44. Kf1 Rh2 45. Kg1 Rhd2 0-1
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/Bnb1HuPM"]
+[Date "2023.05.31"]
+[White "PedroCP_2000"]
+[Black "jjcarv"]
+[Result "0-1"]
+[UTCDate "2023.05.31"]
+[UTCTime "01:44:58"]
+[WhiteElo "1518"]
+[BlackElo "2135"]
+[WhiteRatingDiff "+0"]
+[BlackRatingDiff "+0"]
+[Variant "Standard"]
+[TimeControl "180+2"]
+[ECO "A46"]
+[Termination "Normal"]
+
+1. d4 Nf6 2. Nf3 e6 3. Bf4 Bd6 4. Bg3 b6 5. Nc3 Bb7 6. e3 a6 7. Bd3 Bb4 8. O-O Bxc3 9. bxc3 d6 10. Bh4 h6 11. Bxf6 Qxf6 12. e4 Nd7 13. c4 e5 14. d5 Nc5 15. Be2 Bc8 16. c3 Bd7 17. a3 Nxe4 18. Bd3 Nc5 19. Bc2 O-O 20. Re1 Rfe8 21. Bb1 Bg4 22. Qc2 e4 23. Nd4 Bh5 24. Nb3 Bg6 25. Nxc5 bxc5 26. Re3 Rab8 27. Qe2 Rb3 28. Bc2 Rxc3 29. Rxc3 Qxc3 30. Re1 e3 31. Bxg6 exf2+ 32. Kxf2 Qxe1+ 33. Qxe1 Rxe1 34. Kxe1 fxg6 35. Ke2 Kf7 36. Kd2 Kf6 37. Kc3 Ke5 38. Kb3 Kd4 39. Ka4 Kxc4 40. Ka5 Kb3 41. a4 c4 42. Kxa6 Kxa4 43. Kb7 c3 44. Kxc7 c2 45. Kxd6 c1=Q 46. Ke7 0-1
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/ffGeHZyR"]
+[Date "2023.05.31"]
+[White "jjcarv"]
+[Black "Escalabar"]
+[Result "1-0"]
+[UTCDate "2023.05.31"]
+[UTCTime "01:41:52"]
+[WhiteElo "2132"]
+[BlackElo "1890"]
+[WhiteRatingDiff "+3"]
+[BlackRatingDiff "-2"]
+[Variant "Standard"]
+[TimeControl "180+2"]
+[ECO "D08"]
+[Termination "Normal"]
+
+1. d4 d5 2. c4 e5 3. dxe5 d4 4. a3 Nc6 5. Nf3 Bg4 6. Bf4 Qe7 7. e3 Bxf3 8. Qxf3 d3 9. Bxd3 O-O-O 10. Be4 Nxe5 11. Bxe5 Qxe5 12. Bxb7+ Kb8 13. Nc3 Rd6 14. Bd5 Nf6 15. O-O Rd8 16. Ba8 Nd7 17. Qb7# 1-0
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/wer3DGbc"]
+[Date "2023.05.31"]
+[White "Irukandy"]
+[Black "jjcarv"]
+[Result "0-1"]
+[UTCDate "2023.05.31"]
+[UTCTime "01:32:18"]
+[WhiteElo "1987"]
+[BlackElo "2127"]
+[WhiteRatingDiff "-3"]
+[BlackRatingDiff "+5"]
+[Variant "Standard"]
+[TimeControl "180+2"]
+[ECO "A22"]
+[Termination "Normal"]
+
+1. c4 e5 2. Nc3 Nf6 3. e4 Bc5 4. g3 c6 5. Bg2 d6 6. h3 a5 7. Nge2 Be6 8. d3 Na6 9. O-O Nc7 10. b3 d5 11. d4 exd4 12. Nxd4 Bxd4 13. Qxd4 dxc4 14. Qxd8+ Rxd8 15. bxc4 Bxc4 16. Re1 O-O 17. Bg5 Ne6 18. e5 Nxg5 19. exf6 Ne6 20. fxg7 Kxg7 21. Rab1 Rd7 22. Rb6 Nc5 23. h4 Rfd8 24. h5 h6 25. Bf1 Be6 26. Bg2 Rd3 27. Ne4 Rd1 28. Rxd1 Rxd1+ 29. Kh2 Nxe4 30. Bxe4 Rd7 31. a3 Bg4 32. f4 Bxh5 33. Kh3 Be2 34. Bf5 Re7 35. Bc8 Ba6 36. Kh4 c5 37. Bf5 c4 38. Rb2 c3 39. Rc2 Rc7 40. Kg4 b5 41. Bd3 b4 42. Bxa6 b3 43. Rg2 c2 0-1
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/E1UCmpYG"]
+[Date "2023.05.31"]
+[White "jjcarv"]
+[Black "FILETEDEDRAGON"]
+[Result "0-1"]
+[UTCDate "2023.05.31"]
+[UTCTime "01:23:59"]
+[WhiteElo "2142"]
+[BlackElo "1509"]
+[WhiteRatingDiff "-15"]
+[BlackRatingDiff "+45"]
+[Variant "Standard"]
+[TimeControl "180+2"]
+[ECO "E91"]
+[Termination "Time forfeit"]
+
+1. d4 Nf6 2. c4 g6 3. Nc3 Bg7 4. e4 d6 5. Nf3 O-O 6. Be2 c5 7. dxc5 dxc5 8. Qxd8 Rxd8 9. Be3 b6 10. h3 Bb7 11. Nd2 Nbd7 12. O-O-O Ne5 13. Kc2 Nc6 14. Nd5 Nxd5 15. exd5 Nb4+ 16. Kb3 a5 17. a4 Bc8 18. Ne4 Bf5 19. f3 Bxe4 20. fxe4 f5 21. Bf3 fxe4 22. Bxe4 Rf8 23. Rhf1 Be5 24. Bg5 Rxf1 25. Rxf1 Rf8 26. Rxf8+ Kxf8 27. h4 Kf7 28. g4 Bf6 29. Bxf6 Kxf6 0-1
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/uV7VlDCw"]
+[Date "2023.05.31"]
+[White "MANDAYARDA"]
+[Black "jjcarv"]
+[Result "1-0"]
+[UTCDate "2023.05.31"]
+[UTCTime "01:15:56"]
+[WhiteElo "2204"]
+[BlackElo "2148"]
+[WhiteRatingDiff "+5"]
+[BlackRatingDiff "-6"]
+[Variant "Standard"]
+[TimeControl "180+2"]
+[ECO "C10"]
+[Termination "Normal"]
+
+1. Nc3 e6 2. d4 d5 3. e4 c5 4. Nf3 Nf6 5. Bg5 cxd4 6. Qxd4 Nc6 7. Bb5 Be7 8. exd5 Nxd5 9. Nxd5 Qxd5 10. Bxc6+ bxc6 11. Qxg7 Rf8 12. Bxe7 Qe4+ 13. Kd2 Kxe7 14. Rae1 Qf4+ 15. Re3 Rd8+ 16. Kc1 h6 17. Re1 Ba6 18. g3 Qf6 19. Rxe6+ Qxe6 20. Rxe6+ Kxe6 21. Qf6+ Kd7 22. Qxf7+ Kd6 23. Qf6+ Kc7 24. b3 Be2 25. Qe7+ Kb6 26. Qxe2 1-0
+
+
+[Event "Hourly Blitz Arena"]
+[Site "https://lichess.org/hj5Gq9mY"]
+[Date "2023.05.31"]
+[White "Johaidii"]
+[Black "jjcarv"]
+[Result "0-1"]
+[UTCDate "2023.05.31"]
+[UTCTime "01:11:25"]
+[WhiteElo "1788"]
+[BlackElo "2147"]
+[WhiteRatingDiff "-1"]
+[BlackRatingDiff "+1"]
+[Variant "Standard"]
+[TimeControl "180+2"]
+[ECO "A00"]
+[Termination "Normal"]
+
+1. b4 e6 2. Bb2 Nf6 3. a3 d5 4. e3 Bd6 5. c4 b6 6. cxd5 exd5 7. Nf3 O-O 8. Be2 Bb7 9. O-O Nbd7 10. d4 Ne4 11. Nbd2 Qe7 12. Nxe4 dxe4 13. Nd2 f5 14. Nc4 Nf6 15. Nxd6 cxd6 16. f3 Rac8 17. fxe4 Qxe4 18. Bf3 Qxe3+ 19. Kh1 Bxf3 20. Qxf3 Qxf3 21. Rxf3 Nd5 22. h3 Rc2 23. Bc1 Re8 24. Bg5 h6 25. Bh4 Re4 26. Bf2 f4 27. Re1 Rxe1+ 28. Bxe1 Rc1 29. Rf1 Ne3 30. Rg1 Nc2 31. Bd2 Rxg1+ 32. Kxg1 Nxd4 33. Bxf4 Ne2+ 0-1
+
+
