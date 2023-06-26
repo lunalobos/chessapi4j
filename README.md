@@ -19,6 +19,9 @@ To simplify the creation of positions, moves, and plays, the library provides fa
 ### Utility Functions
 The `Util` class is an utility class that provides various helpful functions for chess operations. It includes methods to calculate visible squares for a given position and set of directions, convert between square indices and algebraic notation, check for coronation (promotion), and more. These utility functions can be used to enhance your chess-related logic and calculations.
 
+### Importing and exporting games in PGN format
+By using the Game class, it is possible to represent a game and then export it to PGN format. It is also possible to create a list of Game instances from a PGN file using the PGNHandler class.
+
 ## Documentation
 The ChessAPI4j library comes with comprehensive [documentation](https://lunalobos.github.io/chessapi4j/chess-api/apidocs/index.html) that provides information about the classes, interfaces, and methods available. The documentation includes explanations of the different features and, in some cases, usage examples. 
 
@@ -42,14 +45,16 @@ cd <chessapi4j_download_directory>\chess-api
 mvn clean install
 ```
 4. Include the dependency in your pom.
-```xml
+
+```
 <dependency>
     <groupId>chessapi4j</groupId>
     <artifactId>chessapi4j</artifactId>
     <version>1.0.0-RELEASE</version>
 </dependency>
 ```
-5. Now you can import the classes in your code to start using the API.
+
+Now you can import the classes in your code to start using the API.
 
 Here's an example of how to create a position, generate legal moves, and execute a play:
 
