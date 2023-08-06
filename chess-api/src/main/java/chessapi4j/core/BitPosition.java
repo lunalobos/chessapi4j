@@ -92,7 +92,18 @@ class BitPosition extends AbstractPosition {
 
 	@Override
 	public int hashCode() {
-		return hash();
+		final int prime = 103963;
+		int hash = 1;
+		for (long bitBoard : getBits()) {
+			hash = hash * prime + (int) (bitBoard ^ (bitBoard >>> 32));
+		}
+		hash = hash * prime + (int) whiteMoveNumeric;
+		hash = hash * prime + (int) shortCastleWhiteNumeric;
+		hash = hash * prime + (int) longCastleWhiteNumeric;
+		hash = hash * prime + (int) shortCastleBlackNumeric;
+		hash = hash * prime + (int) longCastleBlackNumeric;
+		hash = hash * prime + getEnPassant();
+		return hash;
 	}
 
 	@Override

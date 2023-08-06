@@ -2,11 +2,13 @@ package chessapi4j.core;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 import chessapi4j.Position;
 
 /**
  * Utility class to avoid boilerplate code.
+ * 
  * @author lunalobos
  *
  */
