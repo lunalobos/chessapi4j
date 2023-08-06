@@ -2,6 +2,7 @@ package chessapi4j.core;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 import chessapi4j.Generator;
 import chessapi4j.Piece;
@@ -14,12 +15,12 @@ import chessapi4j.Piece;
 abstract class AbstractGenerator implements Generator {
 	protected static final int[] BISHOP_DIRECTIONS = new int[] { 0, 1, 2, 3 };
 	protected static final int[] BISHOPS = new int[] { Piece.BB.ordinal(), Piece.WB.ordinal() };
-	protected static final int[][] BLACK_PAWN_MATRIX_1 = new int[][] { {}, {}, {}, {}, {}, {}, {}, {}, { 0 }, { 1 }, { 2 },
-			{ 3 }, { 4 }, { 5 }, { 6 }, { 7 }, { 8 }, { 9 }, { 10 }, { 11 }, { 12 }, { 13 }, { 14 }, { 15 }, { 16 },
-			{ 17 }, { 18 }, { 19 }, { 20 }, { 21 }, { 22 }, { 23 }, { 24 }, { 25 }, { 26 }, { 27 }, { 28 }, { 29 },
-			{ 30 }, { 31 }, { 32 }, { 33 }, { 34 }, { 35 }, { 36 }, { 37 }, { 38 }, { 39 }, { 40, 32 }, { 41, 33 },
-			{ 42, 34 }, { 43, 35 }, { 44, 36 }, { 45, 37 }, { 46, 38 }, { 47, 39 }, { 48 }, { 49 }, { 50 }, { 51 },
-			{ 52 }, { 53 }, { 54 }, { 55 } };
+	protected static final int[][] BLACK_PAWN_MATRIX_1 = new int[][] { {}, {}, {}, {}, {}, {}, {}, {}, { 0 }, { 1 },
+			{ 2 }, { 3 }, { 4 }, { 5 }, { 6 }, { 7 }, { 8 }, { 9 }, { 10 }, { 11 }, { 12 }, { 13 }, { 14 }, { 15 },
+			{ 16 }, { 17 }, { 18 }, { 19 }, { 20 }, { 21 }, { 22 }, { 23 }, { 24 }, { 25 }, { 26 }, { 27 }, { 28 },
+			{ 29 }, { 30 }, { 31 }, { 32 }, { 33 }, { 34 }, { 35 }, { 36 }, { 37 }, { 38 }, { 39 }, { 40, 32 },
+			{ 41, 33 }, { 42, 34 }, { 43, 35 }, { 44, 36 }, { 45, 37 }, { 46, 38 }, { 47, 39 }, { 48 }, { 49 }, { 50 },
+			{ 51 }, { 52 }, { 53 }, { 54 }, { 55 } };
 	protected static final int[][] BLACK_PAWN_MATRIX_2 = new int[][] { {}, {}, {}, {}, {}, {}, {}, {}, { 1 }, { 0, 2 },
 			{ 1, 3 }, { 2, 4 }, { 3, 5 }, { 4, 6 }, { 5, 7 }, { 6 }, { 9 }, { 8, 10 }, { 9, 11 }, { 10, 12 },
 			{ 11, 13 }, { 12, 14 }, { 13, 15 }, { 14 }, { 17 }, { 16, 18 }, { 17, 19 }, { 18, 20 }, { 19, 21 },
@@ -27,7 +28,7 @@ abstract class AbstractGenerator implements Generator {
 			{ 29, 31 }, { 30 }, { 33 }, { 32, 34 }, { 33, 35 }, { 34, 36 }, { 35, 37 }, { 36, 38 }, { 37, 39 }, { 38 },
 			{ 41 }, { 40, 42 }, { 41, 43 }, { 42, 44 }, { 43, 45 }, { 44, 46 }, { 45, 47 }, { 46 }, { 49 }, { 48, 50 },
 			{ 49, 51 }, { 50, 52 }, { 51, 53 }, { 52, 54 }, { 53, 55 }, { 54 } };
-	
+
 	protected static final long[] SCB_MASK = new long[] { 1L << 60, 1L << 63 };
 	protected static final int[] SCB_SQUARES = new int[] { 60, 63 };
 	protected static final long[] SCW_MASK = new long[] { 1L << 4, 1 << 7 };
@@ -36,10 +37,11 @@ abstract class AbstractGenerator implements Generator {
 	protected static final int[] LCB_SQUARES = new int[] { 60, 56 };
 	protected static final long[] LCW_MASK = new long[] { 1L << 4, 1 << 0 };
 	protected static final int[] LCW_SQUARES = new int[] { 4, 0 };
-			
+
 	protected static final long[][][] CASTLE_MASK = new long[][][] { { SCB_MASK, LCB_MASK }, { SCW_MASK, LCW_MASK } };
-			
-	protected static final int[][][] CASTLE_SQUARES = new int[][][] { { SCB_SQUARES, LCB_SQUARES }, { SCW_SQUARES, LCW_SQUARES } };
+
+	protected static final int[][][] CASTLE_SQUARES = new int[][][] { { SCB_SQUARES, LCB_SQUARES },
+			{ SCW_SQUARES, LCW_SQUARES } };
 
 	protected static final int[] INDEXES = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
 
@@ -69,9 +71,9 @@ abstract class AbstractGenerator implements Generator {
 	protected static final int[] KINGS = new int[] { Piece.BK.ordinal(), Piece.WK.ordinal() };
 
 	protected static final int[][] KNIGHT_MATRIX = new int[][] { { 17, 10 }, { 18, 16, 11 }, { 19, 17, 12, 8 },
-			{ 20, 18, 13, 9 }, { 21, 19, 14, 10 }, { 22, 20, 15,11 }, { 23, 21, 12 }, { 22, 13 }, { 25, 18, 2 },
+			{ 20, 18, 13, 9 }, { 21, 19, 14, 10 }, { 22, 20, 15, 11 }, { 23, 21, 12 }, { 22, 13 }, { 25, 18, 2 },
 			{ 26, 24, 19, 3 }, { 27, 25, 20, 16, 4, 0 }, { 28, 26, 21, 17, 5, 1 }, { 29, 27, 22, 18, 6, 2 },
-			{ 30, 28, 23, 19, 7, 3 }, { 31, 29, 20, 4 }, { 30, 21, 5 }, { 33, 26, 1, 10 }, { 34, 32, 27, 2,0, 11 },
+			{ 30, 28, 23, 19, 7, 3 }, { 31, 29, 20, 4 }, { 30, 21, 5 }, { 33, 26, 1, 10 }, { 34, 32, 27, 2, 0, 11 },
 			{ 35, 33, 28, 24, 3, 1, 12, 8 }, { 36, 34, 29, 25, 4, 2, 13, 9 }, { 37, 35, 30, 26, 5, 3, 14, 10 },
 			{ 38, 36, 31, 27, 6, 4, 15, 11 }, { 39, 37, 28, 7, 5, 12 }, { 38, 29, 6, 13 }, { 41, 34, 9, 18 },
 			{ 42, 40, 35, 10, 8, 19 }, { 43, 41, 36, 32, 11, 9, 20, 16 }, { 44, 42, 37, 33, 12, 10, 21, 17 },
@@ -86,20 +88,20 @@ abstract class AbstractGenerator implements Generator {
 			{ 43, 41, 52, 48 }, { 44, 42, 53, 49 }, { 45, 43, 54, 50 }, { 46, 44, 55, 51 }, { 47, 45, 52 },
 			{ 46, 53 } };
 	protected static final int[] KNIGHTS = new int[] { Piece.BN.ordinal(), Piece.WN.ordinal() };
-	
+
 	protected static final int[][] WHITE_PAWN_MATRIX_1 = new int[][] { { 8 }, { 9 }, { 10 }, { 11 }, { 12 }, { 13 },
 			{ 14 }, { 15 }, { 16, 24 }, { 17, 25 }, { 18, 26 }, { 19, 27 }, { 20, 28 }, { 21, 29 }, { 22, 30 },
 			{ 23, 31 }, { 24 }, { 25 }, { 26 }, { 27 }, { 28 }, { 29 }, { 30 }, { 31 }, { 32 }, { 33 }, { 34 }, { 35 },
 			{ 36 }, { 37 }, { 38 }, { 39 }, { 40 }, { 41 }, { 42 }, { 43 }, { 44 }, { 45 }, { 46 }, { 47 }, { 48 },
 			{ 49 }, { 50 }, { 51 }, { 52 }, { 53 }, { 54 }, { 55 }, { 56 }, { 57 }, { 58 }, { 59 }, { 60 }, { 61 },
 			{ 62 }, { 63 }, {}, {}, {}, {}, {}, {}, {}, {} };
-	protected static final int[][] WHITE_PAWN_MATRIX_2 = new int[][] { { 9 }, { 8, 10 }, { 9, 11 }, { 10, 12 }, { 11, 13 },
-			{ 12, 14 }, { 13, 15 }, { 14 }, { 17 }, { 16, 18 }, { 17, 19 }, { 18, 20 }, { 19, 21 }, { 20, 22 },
-			{ 21, 23 }, { 22 }, { 25 }, { 24, 26 }, { 25, 27 }, { 26, 28 }, { 27, 29 }, { 28, 30 }, { 29, 31 }, { 30 },
-			{ 33 }, { 32, 34 }, { 33, 35 }, { 34, 36 }, { 35, 37 }, { 36, 38 }, { 37, 39 }, { 38 }, { 41 }, { 40, 42 },
-			{ 41, 43 }, { 42, 44 }, { 43, 45 }, { 44, 46 }, { 45, 47 }, { 46 }, { 49 }, { 48, 50 }, { 49, 51 },
-			{ 50, 52 }, { 51, 53 }, { 52, 54 }, { 53, 55 }, { 54 }, { 57 }, { 56, 58 }, { 57, 59 }, { 58, 60 },
-			{ 59, 61 }, { 60, 62 }, { 61, 63 }, { 62 }, {}, {}, {}, {}, {}, {}, {}, {} };
+	protected static final int[][] WHITE_PAWN_MATRIX_2 = new int[][] { { 9 }, { 8, 10 }, { 9, 11 }, { 10, 12 },
+			{ 11, 13 }, { 12, 14 }, { 13, 15 }, { 14 }, { 17 }, { 16, 18 }, { 17, 19 }, { 18, 20 }, { 19, 21 },
+			{ 20, 22 }, { 21, 23 }, { 22 }, { 25 }, { 24, 26 }, { 25, 27 }, { 26, 28 }, { 27, 29 }, { 28, 30 },
+			{ 29, 31 }, { 30 }, { 33 }, { 32, 34 }, { 33, 35 }, { 34, 36 }, { 35, 37 }, { 36, 38 }, { 37, 39 }, { 38 },
+			{ 41 }, { 40, 42 }, { 41, 43 }, { 42, 44 }, { 43, 45 }, { 44, 46 }, { 45, 47 }, { 46 }, { 49 }, { 48, 50 },
+			{ 49, 51 }, { 50, 52 }, { 51, 53 }, { 52, 54 }, { 53, 55 }, { 54 }, { 57 }, { 56, 58 }, { 57, 59 },
+			{ 58, 60 }, { 59, 61 }, { 60, 62 }, { 61, 63 }, { 62 }, {}, {}, {}, {}, {}, {}, {}, {} };
 	protected static final int[][][] PAWN_MATRIX1 = new int[][][] { BLACK_PAWN_MATRIX_1, WHITE_PAWN_MATRIX_1 };
 	protected static final int[][][] PAWN_MATRIX2 = new int[][][] { BLACK_PAWN_MATRIX_2, WHITE_PAWN_MATRIX_2 };
 	protected static final int[] PAWNS = new int[] { Piece.BP.ordinal(), Piece.WP.ordinal() };
@@ -236,13 +238,12 @@ abstract class AbstractGenerator implements Generator {
 	protected static final int[] QUEENS = new int[] { Piece.BQ.ordinal(), Piece.WQ.ordinal() };
 	protected static final int[] ROOK_DIRECTIONS = new int[] { 4, 5, 6, 7 };
 	protected static final int[] ROOK_PIECES = new int[] { Piece.BR.ordinal(), Piece.WR.ordinal() };
-	
+
 	protected static final int[] ROOKS = new int[] { Piece.BR.ordinal(), Piece.WR.ordinal() };
 
 	protected static final int[] SQUARES = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
 			19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45,
 			46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63 };
-	
 
 	protected static long isCoronation(int finalSquare) {
 		return ((((finalSquare >>> 3) & 7L) >>> 2) & ((((finalSquare >>> 3) & 7L) >>> 1) & 1L)
@@ -261,7 +262,7 @@ abstract class AbstractGenerator implements Generator {
 	protected static long isInCheck(BitPosition position) {
 		int kingPiece = -Piece.WK.ordinal() * (int) position.getWhiteMoveNumeric() + Piece.BK.ordinal();
 		int kingSquare = squaresMap(position.getBits()[kingPiece - 1]);
-		if(kingSquare >= 64)
+		if (kingSquare >= 64)
 			System.out.println("finded");
 		int[][] pawnsDirectionChoice = new int[][] { BLACK_PAWN_MATRIX_2[kingSquare], WHITE_PAWN_MATRIX_2[kingSquare] };
 		int[] pawnsDirections = pawnsDirectionChoice[(int) position.getWhiteMoveNumeric()];
@@ -310,8 +311,7 @@ abstract class AbstractGenerator implements Generator {
 
 		for (int i = 0; i < 4; i++) {
 			long visible = visibleSquares(bits, new int[] { i }, kingSquare, whiteMoveNumeric);
-			isInCheck = isInCheck
-					| ((enemyBishopsAndQuens & visible) >>> squaresMap(enemyBishopsAndQuens & visible));
+			isInCheck = isInCheck | ((enemyBishopsAndQuens & visible) >>> squaresMap(enemyBishopsAndQuens & visible));
 		}
 		// rooks directions
 		long enemyRooksAndQuens = bits[enemys[3] - 1] | bits[enemys[4] - 1];
@@ -321,12 +321,13 @@ abstract class AbstractGenerator implements Generator {
 		}
 		return isInCheck;
 	}
-	
+
+
 	protected static List<Long> longToList(long pseudoLegalMoves) {
 		List<Long> list = new LinkedList<>();
 		long j = pseudoLegalMoves;
-		while(j != 0L) {
-			long lb = Long.lowestOneBit(j);
+		while (j != 0L) {
+			long lb = j & -j;
 			list.add(lb);
 			j = j & ~lb;
 		}
@@ -369,7 +370,7 @@ abstract class AbstractGenerator implements Generator {
 	protected static long visibleSquares(BitPosition position, int[] directionsIndexs, int square) {
 		return visibleSquares(position.getBits(), directionsIndexs, square, position.getWhiteMoveNumeric());
 	}
-	
+
 	protected static long visibleSquares(long[] bits, int[] directionsIndexs, int square, long whiteMoveNumeric) {
 		int[][] matrix = QUEEN_MEGAMATRIX[square];
 		long moves = 0L;
