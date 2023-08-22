@@ -85,9 +85,6 @@ public class GeneratorTest {
 		assertEquals(3894594, generationTest(4, generator));
 		assertEquals(164075551, generationTest(5, generator));
 	}
-	
-	
-	
 
 	private int generationTest(int depth, Generator generator) {
 		if (depth == 0)

@@ -672,6 +672,14 @@ class GameBuilder {
 			
 		return new Game(event, site, date, round, white, black, result, suplementalTags, moves);
 	}
+
+	@Override
+	public String toString() {
+		return "GameBuilder [event=" + event + ", site=" + site + ", date=" + date + ", round=" + round + ", white="
+				+ white + ", black=" + black + ", result=" + result + ", suplementalTags=" + suplementalTags
+				+ ", moves=" + moves + "]";
+	}
+	
 }
 
 class GameCollector implements Collector<Line, GameListBuilder, List<Game>> {
@@ -715,17 +723,21 @@ class GameListBuilder {
 
 	private List<GameBuilder> builders;
 	private GameBuilder current;
+	private StringBuilder moveLineBuilder;
 	private String currentType;
 
 	public GameListBuilder() {
 		current = new GameBuilder();
 		builders = new LinkedList<>();
+		moveLineBuilder = new StringBuilder();
 	}
 
 	public void accept(Line line) {
 		String newType = line.getType();
 		if (currentType != null) {
 			if (newType.equals("tag") && currentType.equals("moves")) {
+				parseMoves(new Line(moveLineBuilder.toString(), "moves"));
+				moveLineBuilder = new StringBuilder();
 				builders.add(current);
 				current = new GameBuilder();
 			}
@@ -734,8 +746,8 @@ class GameListBuilder {
 		currentType = newType;
 		if (newType.equals("tag"))
 			parseTag(line);
-		else
-			parseMoves(line);
+		else if(newType.equals("moves"))
+			moveLineBuilder.append(" ").append(line.getValue());
 	}
 
 	private void parseTag(Line line) {
@@ -753,7 +765,11 @@ class GameListBuilder {
 			position = PositionFactory.instance(current.getFen());
 		else
 			position = PositionFactory.instance();
-		current.moves(PGNHandler.captureMoves(position, line.getValue()));
+		try {
+			current.moves(PGNHandler.captureMoves(position, line.getValue()));
+		} catch(IndexOutOfBoundsException e) {
+			throw new IndexOutOfBoundsException(current + line.getValue());
+		}
 	}
 
 	public List<Game> build() {

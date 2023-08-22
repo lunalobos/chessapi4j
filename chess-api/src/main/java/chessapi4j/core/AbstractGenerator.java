@@ -2,7 +2,6 @@ package chessapi4j.core;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 import chessapi4j.Generator;
 import chessapi4j.Piece;
