@@ -469,14 +469,9 @@ public class PGNHandler {
 				Matcher tagMatcher = tagPattern.matcher(line);
 				boolean tagFinded = tagMatcher.find();
 				if (tagFinded)
-					return new Line(line, "tag");
-				Pattern movePattern = Pattern.compile(MOVE_REGEX);
-				Matcher moveMatcher = movePattern.matcher(line);
-				boolean moveFinded = moveMatcher.find();
-				if (moveFinded)
-					return new Line(line, "moves");
-				return new Line(line, "non");
-			}).filter(line -> !line.getType().equals("non")).collect(new GameCollector());
+					return new Line(line, "tag");				
+				return new Line(line, "moves");
+			}).collect(new GameCollector());
 
 		} catch (IOException e) {
 			throw new IllegalArgumentException("Invalid or inaccesible path.");
