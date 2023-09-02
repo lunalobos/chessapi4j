@@ -50,7 +50,7 @@ mvn clean install
 <dependency>
     <groupId>chessapi4j</groupId>
     <artifactId>chessapi4j</artifactId>
-    <version>1.0.0-RELEASE</version>
+    <version>1.1.2-RELEASE</version>
 </dependency>
 ```
 
