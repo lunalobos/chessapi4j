@@ -19,8 +19,10 @@ public class Rules {
 
 	private static final List<List<Integer>> LACK_OF_MATERIAL_MATRIX = new LinkedList<>();
 	private static final List<Integer> MATERIAL_PIECES = new ArrayList<>(Arrays.asList(0, 1, 2, 3, 4, 6, 7, 8, 9, 10));
+	
 	static {
-		Integer[][] matrix = new Integer[][] { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // K k
+		Integer[][] matrix = new Integer[][] { 
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // K k
 				{ 0, 1, 0, 0, 0, 0, 1, 0, 0, 0 }, // KN kn
 				{ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 }, // KN k
 				{ 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, // K kn

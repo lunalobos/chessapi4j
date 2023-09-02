@@ -321,7 +321,6 @@ abstract class AbstractGenerator implements Generator {
 		return isInCheck;
 	}
 
-
 	protected static List<Long> longToList(long pseudoLegalMoves) {
 		List<Long> list = new LinkedList<>();
 		long j = pseudoLegalMoves;

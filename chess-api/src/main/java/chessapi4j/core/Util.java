@@ -2,7 +2,6 @@ package chessapi4j.core;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
 
 import chessapi4j.Position;
 
@@ -79,6 +78,13 @@ public class Util {
 			return AbstractGenerator.isInCheck((BitPosition) position) == 1;
 		else
 			return AbstractGenerator.isInCheck(new BitPosition(position.toFen())) == 1;
+	}
+	
+	public static int inCheck(Position position) {
+		if (position instanceof BitPosition)
+			return (int) AbstractGenerator.isInCheck((BitPosition) position);
+		else
+			return (int) AbstractGenerator.isInCheck(new BitPosition(position.toFen()));
 	}
 
 	public static int countPieces(Position pos) {
