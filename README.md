@@ -29,14 +29,14 @@ The ChessAPI4j library comes with comprehensive [documentation](https://lunalobo
 Contributions to the ChessAPI4j library are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request on the GitHub repository. You can contribute to the library by adding new features, improving existing functionality, fixing bugs, or adding more documentation.
 
 ## License
-The ChessAPI4j library is licensed under the Eclipse Public License - v 2.0. You are free to use, modify, and distribute the library according to the terms of this license.
+The ChessAPI4j library is licensed under the Apache-2.0 License. You are free to use, modify, and distribute the library according to the terms of this license.
 
 ## Getting Started
 
 To use the ChessAPI4j library in your Java project, follow these steps:
 
-1. Download the latest release.
-2. Open a kernel and positionate in the chess-api directory.
+1. Open git bash and clone this repository.
+2. Positionate in the chess-api directory.
 ```console
 cd <chessapi4j_download_directory>\chess-api
 ```
@@ -71,10 +71,11 @@ public class ChessGame {
         Generator generator = GeneratorFactory.instance(position);
         List<Move> moves = generator.generateMoves();
         
-        // Choose a move to play
-        Move move = moves.get(0);
+        // Choose a move any move
+        Move move = moves.stream().findAny()
+                .orElseThrow(() -> new IllegalArgumentException("Positio with no moves."));
         
-        // Create a play and execute the move
+        // Create a play object to execute the move
         Play play = PlayFactory.instance(generator, move);
         play.executeMove();
         
