@@ -9,7 +9,7 @@ import chessapi4j.core.Util;
 
 /**
  * Interface for position representation.
- * 
+ *
  * @author lunalobos
  *
  */
@@ -95,17 +95,8 @@ public interface Position extends Serializable {
 
 		String castlePart = parts[2];
 
-		if (castlePart.equals("-")) {
-			setShortCastleWhite(false);
-			setShortCastleBlack(false);
-			setLongCastleWhite(false);
-			setLongCastleBlack(false);
-		} else {
+		if (!castlePart.equals("-")) {
 			char[] chars = castlePart.toCharArray();
-			setShortCastleWhite(false);
-			setShortCastleBlack(false);
-			setLongCastleWhite(false);
-			setLongCastleBlack(false);
 			for (char character : chars) {
 				switch (character) {
 				case 'K':
@@ -147,11 +138,6 @@ public interface Position extends Serializable {
 
 		setMovesCounter(Integer.parseInt(parts[5]));
 
-		setCheckmate(false);
-		setFiftyMoves(false);
-		setLackOfMaterial(false);
-		setRepetitions(false);
-		setStalemate(false);
 	}
 
 	/**
@@ -159,7 +145,7 @@ public interface Position extends Serializable {
 	 * <p>
 	 * This means that index 0 represents white pawns, index 1 represents white
 	 * knights and so on.
-	 * 
+	 *
 	 * @return the array of bitboards
 	 */
 	long[] getBits();
@@ -175,19 +161,21 @@ public interface Position extends Serializable {
 	 * <p>
 	 * For a position like "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3
 	 * 0 1" this method will return the square index for e4, 28.
-	 * 
+	 *
 	 * @return
 	 */
 	int getEnPassant();
-	
+
 	/**
 	 * Returns the half moves number according to fifty moves rules.
+	 *
 	 * @return the half moves number
 	 */
 	int getHalfMovesCounter();
 
 	/**
 	 * Returns the number of complete moves.
+	 *
 	 * @return the number of moves
 	 */
 	int getMovesCounter();
@@ -216,13 +204,14 @@ public interface Position extends Serializable {
 	 * <p>
 	 * 00 01 02 03 04 05 06 07
 	 * <p>
-	 * 
+	 *
 	 * @returns the squares array
 	 */
 	int[] getSquares();
 
 	/**
 	 * default hash implementation
+	 *
 	 * @return
 	 */
 	default int hash() {
@@ -307,117 +296,147 @@ public interface Position extends Serializable {
 
 	/**
 	 * Sets the array of bitboards, length has to be always 12.
-	 * <p> Setting a different length array will lead to unpredictable behavior.
+	 * <p>
+	 * Setting a different length array will lead to unpredictable behavior.
+	 *
 	 * @param bits
 	 */
 	void setBits(long[] bits);
 
 	/**
 	 * Sets checkmate boolean value.
-	 * <p> Setting this value manually could potentially lead to inconsistencies.
+	 * <p>
+	 * Setting this value manually could potentially lead to inconsistencies.
+	 *
 	 * @param checkmate
 	 */
 	void setCheckmate(boolean checkmate);
 
 	/**
 	 * Sets en passant value.
-	 * <p> Setting this value manually could potentially lead to inconsistencies.
+	 * <p>
+	 * Setting this value manually could potentially lead to inconsistencies.
+	 *
 	 * @param enPassant
 	 */
 	void setEnPassant(int enPassant);
 
 	/**
 	 * Sets fifty moves boolean value.
-	 * <p> Setting this value manually could potentially lead to inconsistencies.
+	 * <p>
+	 * Setting this value manually could potentially lead to inconsistencies.
+	 *
 	 * @param fiftyMoves
 	 */
 	void setFiftyMoves(boolean fiftyMoves);
 
 	/**
 	 * Sets half moves counter value.
-	 * <p> Setting this value manually could potentially lead to inconsistencies.
+	 * <p>
+	 * Setting this value manually could potentially lead to inconsistencies.
+	 *
 	 * @param halfMovesCounter
 	 */
 	void setHalfMovesCounter(int halfMovesCounter);
 
 	/**
 	 * Sets lack of material boolean value.
-	 * <p> Setting this value manually could potentially lead to inconsistencies.
+	 * <p>
+	 * Setting this value manually could potentially lead to inconsistencies.
+	 *
 	 * @param lackOfMaterial
 	 */
 	void setLackOfMaterial(boolean lackOfMaterial);
 
 	/**
 	 * Sets long castle black boolean value.
-	 * <p> Setting this value manually could potentially lead to inconsistencies.
+	 * <p>
+	 * Setting this value manually could potentially lead to inconsistencies.
+	 *
 	 * @param longCastleBlack
 	 */
 	void setLongCastleBlack(boolean longCastleBlack);
 
 	/**
 	 * Sets long castle white boolean value.
-	 * <p> Setting this value manually could potentially lead to inconsistencies.
+	 * <p>
+	 * Setting this value manually could potentially lead to inconsistencies.
+	 *
 	 * @param longCastleWhite
 	 */
 	void setLongCastleWhite(boolean longCastleWhite);
 
 	/**
 	 * Sets moves counter value.
-	 * 
+	 *
 	 * @param movesCounter
 	 */
 	void setMovesCounter(int movesCounter);
 
 	/**
 	 * Sets repetitions boolean value.
-	 * <p> Setting this value manually could potentially lead to inconsistencies.
+	 * <p>
+	 * Setting this value manually could potentially lead to inconsistencies.
+	 *
 	 * @param repetitions
 	 */
 	void setRepetitions(boolean repetitions);
 
 	/**
 	 * Sets short castle black boolean value.
-	 * <p> Setting this value manually could potentially lead to inconsistencies.
+	 * <p>
+	 * Setting this value manually could potentially lead to inconsistencies.
+	 *
 	 * @param shortCastleBlack
 	 */
 	void setShortCastleBlack(boolean shortCastleBlack);
 
 	/**
 	 * Sets a particular bitboard according to the pieceOrdinal parameter.
-	 * <p> Setting this value manually could potentially lead to inconsistencies.
+	 * <p>
+	 * Setting this value manually could potentially lead to inconsistencies.
+	 *
 	 * @param bitRepresentation, pieceOrdinal
 	 */
 	void changePieceBit(long bitRepresentation, int pieceOrdinal);
-	
+
 	/**
 	 * Sets short castle white boolean value.
-	 * <p> Setting this value manually could potentially lead to inconsistencies.
+	 * <p>
+	 * Setting this value manually could potentially lead to inconsistencies.
+	 *
 	 * @param shortCastleWhite
 	 */
 	void setShortCastleWhite(boolean shortCastleWhite);
 
 	/**
 	 * Sets the squares array. This will be reflected in the the bits array.
+	 *
 	 * @param squares
 	 */
 	void setSquares(int[] squares);
 
 	/**
 	 * Sets stalemate boolean value.
-	 * <p> Setting this value manually could potentially lead to inconsistencies.
+	 * <p>
+	 * Setting this value manually could potentially lead to inconsistencies.
+	 *
 	 * @param stalemate
 	 */
 	void setStalemate(boolean stalemate);
 
 	/**
 	 * Sets whiteMove boolean value.
-	 * <p> Setting this value manually could potentially lead to inconsistencies.
+	 * <p>
+	 * Setting this value manually could potentially lead to inconsistencies.
+	 *
 	 * @param whiteMove
 	 */
 	void setWhiteMove(boolean whiteMove);
 
 	/**
 	 * Default method for string representation.
+	 *
 	 * @return
 	 */
 	default String stringRepresentation() {
@@ -477,9 +496,10 @@ public interface Position extends Serializable {
 		sb.append("Fen: " + toFen());
 		return sb.toString();
 	}
-	
+
 	/**
 	 * Default method for fen representation.
+	 *
 	 * @return
 	 */
 	default String toFen() {
