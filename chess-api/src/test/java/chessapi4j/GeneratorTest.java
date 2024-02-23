@@ -17,7 +17,7 @@ public class GeneratorTest {
 	}
 
 	@Test
-	void numberOfPositions() {
+	void numberOfPositions1() {
 		Position position = PositionFactory.instance();
 		Generator generator = GeneratorFactory.instance(position);
 		assertEquals(20, generationTest(1, generator));
@@ -87,6 +87,14 @@ public class GeneratorTest {
 	}
 
 	private int generationTest(int depth, Generator generator) {
+		if (depth == 0)
+			return 1;
+		generator.generateLegalMoves();
+		List<Generator> children = generator.getChildrenGenerators();
+		return children.parallelStream().map(c -> singleGenerationTest(depth - 1, c)).reduce((a, b) -> a + b).orElse(0);
+	}
+
+	private int singleGenerationTest(int depth, Generator generator) {
 		if (depth == 0)
 			return 1;
 		generator.generateLegalMoves();
