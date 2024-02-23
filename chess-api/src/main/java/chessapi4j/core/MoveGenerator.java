@@ -11,20 +11,20 @@ import chessapi4j.Position;
 
 
 /**
- * 
+ *
  * @author lunalobos
  *
  */
 class MoveGenerator extends AbstractGenerator {
-	
-	private long[] bits;
 
-	private int checkCount;
+	protected long[] bits;
 
-	private List<BitPosition> children;
+	protected int checkCount;
 
-	private long friends, enemys, checkMask, nextWhiteMove, inCheck, inCheckMask;
-	private BitPosition position;
+	protected List<BitPosition> children;
+
+	protected long friends, enemys, checkMask, nextWhiteMove, inCheck, inCheckMask;
+	protected BitPosition position;
 
 	public MoveGenerator(BitPosition position) {
 		this.position = position;
@@ -85,7 +85,7 @@ class MoveGenerator extends AbstractGenerator {
 		p.setHalfMovesCounter(choice[(int) (isPawnMove | isEnemyCapture)]);
 	}
 
-	private List<BitPosition> bishopMoves(long br, int square, int pieceType, int[] pawnsDirections, int kingSquare) {
+	protected List<BitPosition> bishopMoves(long br, int square, int pieceType, int[] pawnsDirections, int kingSquare) {
 		long defense = defenseDirection(kingSquare, square);
 		long pseudoLegalMoves = visibleSquares(position, BISHOP_DIRECTIONS, square);
 		long[] pin = new long[] { -1L, pseudoLegalMoves & checkMask & defense };
@@ -95,7 +95,7 @@ class MoveGenerator extends AbstractGenerator {
 		return generatePositions(legalMoves, pieceType, square, pawnsDirections);
 	}
 
-	private void createCheckMask(int kingSquare) {
+	protected void createCheckMask(int kingSquare) {
 		long empty = ~(enemys | friends);
 		int[] enemyRookChoice = new int[] { Piece.WR.ordinal(), Piece.BR.ordinal() };
 		int[] enemyQueenChoice = new int[] { Piece.WQ.ordinal(), Piece.BQ.ordinal() };
@@ -132,10 +132,10 @@ class MoveGenerator extends AbstractGenerator {
 			long[] choice = new long[] { 0L, friendsBD | visibleEmptyOrEnemyBD };
 			checkMask = checkMask | choice[(int) (enemysThreadsBD >>> squaresMap(enemysThreadsBD))];
 		}
-		
+
 	}
-	
-	
+
+
 
 	private long defenseDirection(int kingSquare, int pieceSquare) {
 		int[][] matrix = QUEEN_MEGAMATRIX[kingSquare];
@@ -290,7 +290,7 @@ class MoveGenerator extends AbstractGenerator {
 		return position;
 	}
 
-	private long isInCheckWhithMask(int kingPiece, long[] bits, long whiteMoveNumeric, int[] pawnsDirections) {
+	protected long isInCheckWhithMask(int kingPiece, long[] bits, long whiteMoveNumeric, int[] pawnsDirections) {
 
 		int kingSquare = squaresMap(bits[kingPiece - 1]);
 		long isInCheck = 0L;
@@ -461,7 +461,7 @@ class MoveGenerator extends AbstractGenerator {
 		return kingLocation & ~piecesInterruption1 & ~piecesInterruption2 & castleEnable & ~check1 & ~check2 & ~inCheck;
 	}
 
-	private List<BitPosition> kingMoves(int square, int pieceType) {
+	protected List<BitPosition> kingMoves(int square, int pieceType) {
 		int[] kingDirections = KING_MATRIX[square];
 		long emptySquares = ~(enemys | friends);
 		long emptyOrEnemy = emptySquares | enemys;
@@ -487,7 +487,7 @@ class MoveGenerator extends AbstractGenerator {
 		return positions;
 	}
 
-	private List<BitPosition> knightMoves(long br, int square, int pieceType, int[] pawnsDirections) {
+	protected List<BitPosition> knightMoves(long br, int square, int pieceType, int[] pawnsDirections) {
 		int[] knightDirections = KNIGHT_MATRIX[square];
 		long emptySquares = ~(enemys | friends);
 		long emptyOrEnemy = emptySquares | enemys;
@@ -635,7 +635,7 @@ class MoveGenerator extends AbstractGenerator {
 		position.setEnPassant(-1);
 	}
 
-	private List<BitPosition> pawnMoves(long br, int square, int[] pawnsDirections, int pieceType, int[][] matrix1,
+	protected List<BitPosition> pawnMoves(long br, int square, int[] pawnsDirections, int pieceType, int[][] matrix1,
 			int[][] matrix2, int kingSquare) {
 		int[] captureArray = matrix2[square];
 		long captureMoves = 0L;
@@ -688,7 +688,7 @@ class MoveGenerator extends AbstractGenerator {
 		return positions;
 	}
 
-	private List<BitPosition> queenMoves(long br, int square, int pieceType, int[] pawnsDirections, int kingSquare) {
+	protected List<BitPosition> queenMoves(long br, int square, int pieceType, int[] pawnsDirections, int kingSquare) {
 		long defense = defenseDirection(kingSquare, square);
 		long pseudoLegalMoves = visibleSquares(position, QUEEN_DIRECTIONS, square);
 		long[] pin = new long[] { -1L, pseudoLegalMoves & checkMask & defense };
@@ -698,7 +698,7 @@ class MoveGenerator extends AbstractGenerator {
 		return generatePositions(legalMoves, pieceType, square, pawnsDirections);
 	}
 
-	private List<BitPosition> rookMoves(long br, int square, int pieceType, int[] pawnsDirections, int kingSquare) {
+	protected List<BitPosition> rookMoves(long br, int square, int pieceType, int[] pawnsDirections, int kingSquare) {
 		long defense = defenseDirection(kingSquare, square);
 		long pseudoLegalMoves = visibleSquares(position, ROOK_DIRECTIONS, square);
 		long[] pin = new long[] { -1L, pseudoLegalMoves & checkMask & defense };

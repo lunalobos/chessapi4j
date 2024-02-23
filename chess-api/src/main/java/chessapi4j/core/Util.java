@@ -7,7 +7,7 @@ import chessapi4j.Position;
 
 /**
  * Utility class to avoid boilerplate code.
- * 
+ *
  * @author lunalobos
  *
  */
@@ -34,7 +34,7 @@ public class Util {
 			p = (BitPosition) position;
 		else
 			p = new BitPosition(position.toFen());
-		return AbstractGenerator.visibleSquares(p, directionsIndexs, square);
+		return new MoveGenerator((BitPosition) position).visibleSquares(p, directionsIndexs, square);
 	}
 
 	public static List<Long> longToList(long bitRep) {
@@ -75,9 +75,9 @@ public class Util {
 
 	public static boolean isInCheck(Position position) {
 		if (position instanceof BitPosition)
-			return AbstractGenerator.isInCheck((BitPosition) position) == 1;
+			return new MoveGenerator((BitPosition) position).isInCheck((BitPosition) position) == 1;
 		else
-			return AbstractGenerator.isInCheck(new BitPosition(position.toFen())) == 1;
+			return new MoveGenerator((BitPosition) position).isInCheck(new BitPosition(position.toFen())) == 1;
 	}
 
 	public static int countPieces(Position pos) {

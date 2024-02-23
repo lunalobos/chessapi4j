@@ -7,7 +7,7 @@ import chessapi4j.Generator;
 import chessapi4j.Piece;
 
 /**
- * 
+ *
  * @author lunalobos
  *
  */
@@ -258,7 +258,7 @@ abstract class AbstractGenerator implements Generator {
 		return maskedDifference >>> 4;
 	}
 
-	protected static long isInCheck(BitPosition position) {
+	protected long isInCheck(BitPosition position) {
 		int kingPiece = -Piece.WK.ordinal() * (int) position.getWhiteMoveNumeric() + Piece.BK.ordinal();
 		int kingSquare = squaresMap(position.getBits()[kingPiece - 1]);
 		if (kingSquare >= 64)
@@ -268,12 +268,12 @@ abstract class AbstractGenerator implements Generator {
 		return isInCheck(kingPiece, position.getBits(), position.getWhiteMoveNumeric(), pawnsDirections);
 	}
 
-	protected static long isInCheck(BitPosition position, int[] pawnsDirections) {
+	protected long isInCheck(BitPosition position, int[] pawnsDirections) {
 		int kingPiece = -Piece.WK.ordinal() * (int) position.getWhiteMoveNumeric() + Piece.BK.ordinal();
 		return isInCheck(kingPiece, position.getBits(), position.getWhiteMoveNumeric(), pawnsDirections);
 	}
 
-	protected static long isInCheck(int kingPiece, long[] bits, long whiteMoveNumeric, int[] pawnsDirections) {
+	protected long isInCheck(int kingPiece, long[] bits, long whiteMoveNumeric, int[] pawnsDirections) {
 
 		int kingSquare = squaresMap(bits[kingPiece - 1]);
 		long isInCheck = 0L;
@@ -365,11 +365,11 @@ abstract class AbstractGenerator implements Generator {
 		return directionVisible;
 	}
 
-	protected static long visibleSquares(BitPosition position, int[] directionsIndexs, int square) {
+	protected long visibleSquares(BitPosition position, int[] directionsIndexs, int square) {
 		return visibleSquares(position.getBits(), directionsIndexs, square, position.getWhiteMoveNumeric());
 	}
 
-	protected static long visibleSquares(long[] bits, int[] directionsIndexs, int square, long whiteMoveNumeric) {
+	protected long visibleSquares(long[] bits, int[] directionsIndexs, int square, long whiteMoveNumeric) {
 		int[][] matrix = QUEEN_MEGAMATRIX[square];
 		long moves = 0L;
 		int aux = (int) (6L & (whiteMoveNumeric << 1 | whiteMoveNumeric << 2));
@@ -380,4 +380,6 @@ abstract class AbstractGenerator implements Generator {
 		}
 		return moves;
 	}
+
+
 }

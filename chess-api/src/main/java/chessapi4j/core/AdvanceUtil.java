@@ -11,7 +11,7 @@ import chessapi4j.Position;
 
 /**
  * Low-level utilities that are not entirely safe but very fast.
- * 
+ *
  * @author Migue
  *
  */
@@ -38,7 +38,7 @@ public class AdvanceUtil {
 			PIECE_MASK[Piece.BB.ordinal()] | PIECE_MASK[Piece.WK.ordinal()] | PIECE_MASK[Piece.BK.ordinal()] // K kb
 	};
 
-	private static final IntFunction[] BIT_COUNT_FUNCTIONS = new IntFunction[] { i -> 0, 
+	private static final IntFunction[] BIT_COUNT_FUNCTIONS = new IntFunction[] { i -> 0,
 			i -> i,
 			i -> 1 << Piece.values().length, i -> 1 << Piece.values().length, i -> 1 << Piece.values().length,
 			i -> 1 << Piece.values().length, i -> 1 << Piece.values().length, i -> 1 << Piece.values().length,
@@ -51,13 +51,13 @@ public class AdvanceUtil {
 
 	/**
      * Returns 1 if the position is in check, 0 otherwise.
-     * 
+     *
      * @param position
      * @throws CastClassException if the entered position is not obtained from the PositionFactory
      * @return 1 if the position is in check, 0 otherwise.
      */
 	public static int isInCheck(Position position) {
-		return (int) AbstractGenerator.isInCheck((BitPosition) position);
+		return (int) new MoveGenerator((BitPosition)position).isInCheck((BitPosition) position);
 	}
 
 	static {
@@ -71,7 +71,7 @@ public class AdvanceUtil {
 
 	/**
      * Returns 1 if the position is in a draw due to insufficient material, 0 otherwise.
-     * 
+     *
      * @param position
      * @return 1 if the position is in a draw due to insufficient material, 0 otherwise.
      */
@@ -89,7 +89,7 @@ public class AdvanceUtil {
 
 	/**
      * Returns 1 if the position can be a draw due to the 50-move rule, 0 otherwise.
-     * 
+     *
      * @param position
      * @return 1 if the position can be a draw due to the 50-move rule, 0 otherwise.
      */
