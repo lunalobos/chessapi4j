@@ -1,46 +1,42 @@
-package chessapi4j.core;
+package chessapi4j;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import chessapi4j.Move;
-import chessapi4j.MovementException;
-import chessapi4j.Piece;
-
 /**
- * Factory class for Move interface.
- * 
+ * Factory class for {@code Move} instances.
+ *
  * @author lunalobos
  *
  */
 public class MoveFactory {
 	/**
 	 * New instance.
-	 * 
+	 *
 	 * @param origin
 	 * @param destiny
 	 * @return a move representation instance
 	 */
 	public static Move instance(int origin, int destiny) {
-		return new BitMove(1L << destiny, origin, -1);
+		return new Move(1L << destiny, origin, -1);
 	}
 
 	/**
 	 * New coronation instance.
-	 * 
+	 *
 	 * @param origin
 	 * @param destiny
 	 * @param coronationPiece
 	 * @return a move representation instance
 	 */
 	public static Move instance(int origin, int destiny, int coronationPiece) {
-		return new BitMove(1L << destiny, origin, coronationPiece);
+		return new Move(1L << destiny, origin, coronationPiece);
 	}
 
 	/**
 	 * Takes a move string (UCI notation) and a boolean indicating the player who
 	 * moves and return the move representation.
-	 * 
+	 *
 	 * @param move
 	 * @param whiteMove
 	 * @return a move representation instance
@@ -62,18 +58,18 @@ public class MoveFactory {
 				try {
 					int promotion = promotionPiece.equals("") ? -1
 							: Piece.valueOf((whiteMove ? "W" : "B") + promotionPiece.toUpperCase()).ordinal();
-					
+
 					return instance(origin, target, promotion);
 				} catch(Exception e) {
-					System.out.println(String.format("Error with promotion. Move: %s, WhiteMove: %b, Piece: %s", 
+					System.out.println(String.format("Error with promotion. Move: %s, WhiteMove: %b, Piece: %s",
 							move, whiteMove, Piece.valueOf((whiteMove ? "W" : "B") + promotionPiece.toUpperCase())));
-					
+
 				}
-				
-			} else 
+
+			} else
 				return instance(origin, target);
 		}
-		
-		throw new MovementException("Invalid move string.");
+
+		throw new MovementException(String.format("Invalid move string: %s", move));
 	};
 }
