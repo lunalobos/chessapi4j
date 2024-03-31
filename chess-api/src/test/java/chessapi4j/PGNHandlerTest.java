@@ -8,7 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 class PGNHandlerTest {
-	
+
 	@AfterEach
 	void tearDown() throws Exception {
 	}
@@ -17,7 +17,7 @@ class PGNHandlerTest {
 	void testParseGame() {
 		String path = "example.pgn";
 		List<Game> games = PGNHandler.parseGames(path);
-		assertEquals(true, true);
+		assertEquals(true, !games.isEmpty());
 	}
 
 }

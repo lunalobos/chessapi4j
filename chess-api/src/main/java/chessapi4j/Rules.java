@@ -6,12 +6,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import chessapi4j.core.GeneratorFactory;
-import chessapi4j.core.Util;
-
 /**
- * Utility class for game's rules.
- * 
+ * Utility class for game rules.
+ *
  * @author lunalobos
  *
  */
@@ -36,7 +33,7 @@ public class Rules {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param position
 	 * @return
 	 */
@@ -45,7 +42,7 @@ public class Rules {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param position
 	 * @return
 	 */
@@ -57,19 +54,18 @@ public class Rules {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param position
 	 * @return
 	 */
 	private static int movesCounter(Position position) {
-		Generator g = GeneratorFactory.instance(position);
-		g.generateLegalMoves();
-
-		return g.getChildren().size();
+		return GeneratorFactory.instance().generateChildren(position).size();
 	}
 
 	/**
-	 * 
+	 * Set the internal variables checkmate, stalemate, fiftyMoves, lackOfMaterial
+	 * of the given position object
+	 *
 	 * @param position
 	 */
 	public static void setStatus(Position position) {
@@ -86,18 +82,19 @@ public class Rules {
 	}
 
 	/**
-	 * Allows determining if an specific move is legal for a given position.
-	 * 
+	 * Allows determinate if an specific move is legal for a given position.
+	 *
 	 * @param position
 	 * @param move
+	 *
+	 * @return {@code true} if the move is legal, {@code false} otherwise
 	 */
 	public static boolean legal(Position position, Move move) {
-		Generator generator = GeneratorFactory.instance(position);
-		generator.generateLegalMoves();
-		List<String> moves = generator.getLegalMoves().stream().map(m -> m.toString())
-				.collect(Collectors.toCollection(LinkedList::new));
-		return moves.contains(move.toString());
+//		System.out.println(GeneratorFactory.instance().generateMoves(position,
+//				GeneratorFactory.instance().generateChildren(position)));
+		return GeneratorFactory.instance()
+				.generateMoves(position, GeneratorFactory.instance().generateChildren(position)).stream()
+				.anyMatch(m -> m.equals(move));
 	}
-	
-	
+
 }

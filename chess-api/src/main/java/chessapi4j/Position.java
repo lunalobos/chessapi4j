@@ -2,27 +2,127 @@ package chessapi4j;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import chessapi4j.core.Util;
+import java.util.Optional;
 
 /**
- * Interface for position representation.
+ * Position representation
  *
  * @author lunalobos
- *
  */
-public interface Position extends Serializable {
+public final class Position implements Serializable {
+	private static final long serialVersionUID = -3129022190813874561L;
+
+	private long[] bits;
+	private long whiteMoveNumeric, shortCastleWhiteNumeric, longCastleWhiteNumeric, shortCastleBlackNumeric,
+			longCastleBlackNumeric;
+	private int enPassant;
+
+	private int movesCounter;// moves counter
+	private int halfMovesCounter;// for 50 move draw rule
+
+	private transient boolean checkmate;
+	private transient boolean stalemate;
+	private transient boolean fiftyMoves;
+	private transient boolean repetitions;
+	private transient boolean lackOfMaterial;
+
+	public Position() {
+		enPassant = -1;
+		bits = new long[12];
+		bits[0] = 0b0000000000000000000000000000000000000000000000001111111100000000L;
+		bits[1] = 0b0000000000000000000000000000000000000000000000000000000001000010L;
+		bits[2] = 0b0000000000000000000000000000000000000000000000000000000000100100L;
+		bits[3] = 0b0000000000000000000000000000000000000000000000000000000010000001L;
+		bits[4] = 0b0000000000000000000000000000000000000000000000000000000000001000L;
+		bits[5] = 0b0000000000000000000000000000000000000000000000000000000000010000L;
+		bits[6] = 0b0000000011111111000000000000000000000000000000000000000000000000L;
+		bits[7] = 0b0100001000000000000000000000000000000000000000000000000000000000L;
+		bits[8] = 0b0010010000000000000000000000000000000000000000000000000000000000L;
+		bits[9] = 0b1000000100000000000000000000000000000000000000000000000000000000L;
+		bits[10] = 0b0000100000000000000000000000000000000000000000000000000000000000L;
+		bits[11] = 0b0001000000000000000000000000000000000000000000000000000000000000L;
+		whiteMoveNumeric = 1L;
+		shortCastleWhiteNumeric = 1L;
+		longCastleWhiteNumeric = 1L;
+		shortCastleBlackNumeric = 1L;
+		longCastleBlackNumeric = 1L;
+		setMovesCounter(1);
+	}
+
+	protected Position(long[] bits, int enPassant, long whiteMoveNumeric, long shortCastleWhiteNumeric,
+			long shortCastleBlackNumeric, long longCastleWhiteNumeric, long longCastleBlackNumeric, int movesCounter,
+			int halfMovesCounter) {
+		this.enPassant = enPassant;
+
+		this.movesCounter = movesCounter;
+		this.halfMovesCounter = halfMovesCounter;
+		this.checkmate = false;
+		this.stalemate = false;
+		this.fiftyMoves = false;
+		this.repetitions = false;
+		this.lackOfMaterial = false;
+		this.bits = bits;
+		this.whiteMoveNumeric = whiteMoveNumeric;
+		this.shortCastleWhiteNumeric = shortCastleWhiteNumeric;
+		this.longCastleWhiteNumeric = longCastleWhiteNumeric;
+		this.shortCastleBlackNumeric = shortCastleBlackNumeric;
+		this.longCastleBlackNumeric = longCastleBlackNumeric;
+	}
+
+	public Position(String fen) {
+		fromFen(fen);
+	}
+
+	public final long bk() {
+		return shortCastleBlackNumeric;
+	}
+
+	public final long bq() {
+		return longCastleBlackNumeric;
+	}
 
 	/**
 	 * Interchange players turn to move.
 	 */
-	default void changeColorToMove() {
-		setWhiteMove(!isWhiteMove());
+	public final void changeColorToMove() {
+		whiteMoveNumeric = ~whiteMoveNumeric & 1L;
 	}
 
-	default void fromFen(String fen) {
+	/**
+	 * Sets a particular bitboard according to the pieceOrdinal parameter.
+	 * <p>
+	 * Setting this value manually could potentially lead to inconsistencies.
+	 *
+	 * @param bitRepresentation, pieceOrdinal
+	 */
+	public final void changePieceBit(long bitRepresentation, int piece) {
+		getBits()[piece - 1] = bitRepresentation;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Position))
+			return false;
+		if (obj == this)
+			return true;
+		Position o = (Position) obj;
+		long op = 0L;
+		for (int i = 0; i < 12; i++) {
+			op = op | (bits[i] ^ o.getBits()[i]);
+		}
+		op = op | (whiteMoveNumeric ^ o.wm());
+		op = op | (shortCastleWhiteNumeric ^ o.wk());
+		op = op | (longCastleWhiteNumeric ^ o.wq());
+		op = op | (shortCastleBlackNumeric ^ o.bk());
+		op = op | (longCastleBlackNumeric ^ o.bq());
+		op = op | (long) (enPassant ^ o.enPassant);
+		return op == 0L;
+	}
+
+	private void fromFen(String fen) {
 		int[] squares = new int[64];
 
 		String[] parts = fen.split(" ");
@@ -141,14 +241,16 @@ public interface Position extends Serializable {
 	}
 
 	/**
-	 * Returns the bitboards array in Piece ordinal order excluding EMPTY.
+	 * Returns the bitboards array in {@code Piece} ordinal order excluding EMPTY.
 	 * <p>
 	 * This means that index 0 represents white pawns, index 1 represents white
 	 * knights and so on.
 	 *
 	 * @return the array of bitboards
 	 */
-	long[] getBits();
+	public final long[] getBits() {
+		return bits;
+	}
 
 	/**
 	 * Returns the index square of the piece that can be capture using en passant
@@ -162,137 +264,177 @@ public interface Position extends Serializable {
 	 * For a position like "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3
 	 * 0 1" this method will return the square index for e4, 28.
 	 *
-	 * @return
+	 * @return the index square of the piece that can be capture using en passant
+	 *         rule
 	 */
-	int getEnPassant();
+	public final int getEnPassant() {
+		return enPassant;
+	}
 
 	/**
 	 * Returns the half moves number according to fifty moves rules.
 	 *
 	 * @return the half moves number
 	 */
-	int getHalfMovesCounter();
+	public final int getHalfMovesCounter() {
+		return halfMovesCounter;
+	}
 
 	/**
 	 * Returns the number of complete moves.
 	 *
 	 * @return the number of moves
 	 */
-	int getMovesCounter();
+	public final int getMovesCounter() {
+		return movesCounter;
+	}
 
 	/**
 	 * This method returns a 64 length array. It contains the piece value for each
-	 * square according to Piece's ordinal values.
+	 * square according to {@code Piece} ordinal values.
 	 * <p>
 	 * Each index represents a square, the value represents a piece
 	 * <p>
-	 * ---------Board---------
+	 *
+	 * {@code ---------Board---------}
 	 * <p>
-	 * 56 57 58 59 60 61 62 63
+	 * {@code 56 57 58 59 60 61 62 63}
 	 * <p>
-	 * 48 49 50 51 52 53 54 55
+	 * {@code 48 49 50 51 52 53 54 55}
 	 * <p>
-	 * 40 41 42 43 44 45 46 47
+	 * {@code 40 41 42 43 44 45 46 47}
 	 * <p>
-	 * 32 33 34 35 36 37 38 39
+	 * {@code 32 33 34 35 36 37 38 39}
 	 * <p>
-	 * 24 25 26 27 28 29 30 31
+	 * {@code 24 25 26 27 28 29 30 31}
 	 * <p>
-	 * 16 17 18 19 20 21 22 23
+	 * {@code 16 17 18 19 20 21 22 23}
 	 * <p>
-	 * 08 09 10 11 12 13 14 15
+	 * {@code 08 09 10 11 12 13 14 15}
 	 * <p>
-	 * 00 01 02 03 04 05 06 07
+	 * {@code 00 01 02 03 04 05 06 07}
 	 * <p>
 	 *
 	 * @returns the squares array
 	 */
-	int[] getSquares();
-
-	/**
-	 * default hash implementation
-	 *
-	 * @return
-	 */
-	default int hash() {
-		int hash = 56;
-		int[] squares = getSquares();
+	public final int[] getSquares() {
+		int[] squares = new int[64];
 		for (int i = 0; i < 64; i++) {
-			hash += squares[i];
+			int piece = 0;
+			for (int j = 1; j < 13; j++) {
+				piece += j * (int) (((1L << i) & bits[j - 1]) >>> i);
+			}
+			squares[i] = piece;
 		}
-		hash += getEnPassant();
-		hash += isShortCastleWhite() ? 1 : 0;
-		hash += isShortCastleBlack() ? 1 : 0;
-		hash += isLongCastleWhite() ? 1 : 0;
-		hash += isLongCastleBlack() ? 1 : 0;
+		return squares;
+	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 103963;
+		int hash = 1;
+		for (long bitBoard : getBits()) {
+			hash = hash * prime + (int) (bitBoard ^ (bitBoard >>> 32));
+		}
+		hash = hash * prime + (int) whiteMoveNumeric;
+		hash = hash * prime + (int) shortCastleWhiteNumeric;
+		hash = hash * prime + (int) longCastleWhiteNumeric;
+		hash = hash * prime + (int) shortCastleBlackNumeric;
+		hash = hash * prime + (int) longCastleBlackNumeric;
+		hash = hash * prime + getEnPassant();
 		return hash;
 	}
 
 	/**
 	 * Increments movesCounter.
 	 */
-	void increaseMovesCounter();
+	public final void increaseMovesCounter() {
+		setMovesCounter(getMovesCounter() + (int) (1L & wm()));
+	}
 
 	/**
 	 * If this method returns true means this position is checkmate.
 	 */
-	boolean isCheckmate();
+	public final boolean isCheckmate() {
+		return checkmate;
+	}
 
 	/**
 	 * If this method returns true means this position can be draw according to
 	 * Fifty Moves's rule.
 	 */
-	boolean isFiftyMoves();
+	public final boolean isFiftyMoves() {
+		return fiftyMoves;
+	}
 
 	/**
 	 * If this method returns true means this position is a draw because of lack of
 	 * material.
 	 */
-	boolean isLackOfMaterial();
+	public final boolean isLackOfMaterial() {
+		return lackOfMaterial;
+	}
 
 	/**
 	 * If this method returns true means black is able to castle queen side.
 	 */
-	boolean isLongCastleBlack();
+	public final boolean isLongCastleBlack() {
+		return bq() == 1L;
+	}
 
 	/**
 	 * If this method returns true means white is able to castle queen side.
 	 */
-	boolean isLongCastleWhite();
+	public final boolean isLongCastleWhite() {
+		return wq() == 1L;
+	}
 
 	/**
 	 * If this method returns true means this position is a draw because of
 	 * repetitions.
 	 */
-	boolean isRepetitions();
+	public final boolean isRepetitions() {
+		return repetitions;
+	}
 
 	/**
 	 * If this method returns true means black is able to castle king side.
 	 */
-	boolean isShortCastleBlack();
+	public final boolean isShortCastleBlack() {
+		return bk() == 1L;
+	}
 
 	/**
 	 * If this method returns true means white is able to castle king side.
 	 */
-	boolean isShortCastleWhite();
+	public final boolean isShortCastleWhite() {
+		return wk() == 1L;
+	}
 
 	/**
 	 * If this method returns true means this position is a draw because of
 	 * stalemate.
 	 */
-	boolean isStalemate();
+	public final boolean isStalemate() {
+		return stalemate;
+	}
 
 	/**
 	 * If this method returns true means it is white turn to move, otherwise it is
 	 * black turn.
 	 */
-	boolean isWhiteMove();
+	public final boolean isWhiteMove() {
+		return wm() == 1L;
+	}
 
 	/**
 	 * Returns a deep clone of this object.
 	 */
-	Position makeClone();
+	public final Position makeClone() {
+		return new Position(bits.clone(), getEnPassant(), whiteMoveNumeric, shortCastleWhiteNumeric,
+				shortCastleBlackNumeric, longCastleWhiteNumeric, longCastleBlackNumeric, getMovesCounter(),
+				getHalfMovesCounter());
+	}
 
 	/**
 	 * Sets the array of bitboards, length has to be always 12.
@@ -301,7 +443,18 @@ public interface Position extends Serializable {
 	 *
 	 * @param bits
 	 */
-	void setBits(long[] bits);
+	public final void setBits(long[] bits) {
+		this.bits = bits;
+
+	}
+
+	public final void setBK(long bk) {
+		this.shortCastleBlackNumeric = bk;
+	}
+
+	public final void setBQ(long bq) {
+		this.longCastleBlackNumeric = bq;
+	}
 
 	/**
 	 * Sets checkmate boolean value.
@@ -310,7 +463,9 @@ public interface Position extends Serializable {
 	 *
 	 * @param checkmate
 	 */
-	void setCheckmate(boolean checkmate);
+	public final void setCheckmate(boolean checkmate) {
+		this.checkmate = checkmate;
+	}
 
 	/**
 	 * Sets en passant value.
@@ -319,7 +474,9 @@ public interface Position extends Serializable {
 	 *
 	 * @param enPassant
 	 */
-	void setEnPassant(int enPassant);
+	public final void setEnPassant(int enPassant) {
+		this.enPassant = enPassant;
+	}
 
 	/**
 	 * Sets fifty moves boolean value.
@@ -328,7 +485,9 @@ public interface Position extends Serializable {
 	 *
 	 * @param fiftyMoves
 	 */
-	void setFiftyMoves(boolean fiftyMoves);
+	public final void setFiftyMoves(boolean fiftyMoves) {
+		this.fiftyMoves = fiftyMoves;
+	}
 
 	/**
 	 * Sets half moves counter value.
@@ -337,7 +496,9 @@ public interface Position extends Serializable {
 	 *
 	 * @param halfMovesCounter
 	 */
-	void setHalfMovesCounter(int halfMovesCounter);
+	public final void setHalfMovesCounter(int halfMovesCounter) {
+		this.halfMovesCounter = halfMovesCounter;
+	}
 
 	/**
 	 * Sets lack of material boolean value.
@@ -346,7 +507,9 @@ public interface Position extends Serializable {
 	 *
 	 * @param lackOfMaterial
 	 */
-	void setLackOfMaterial(boolean lackOfMaterial);
+	public final void setLackOfMaterial(boolean lackOfMaterial) {
+		this.lackOfMaterial = lackOfMaterial;
+	}
 
 	/**
 	 * Sets long castle black boolean value.
@@ -355,7 +518,9 @@ public interface Position extends Serializable {
 	 *
 	 * @param longCastleBlack
 	 */
-	void setLongCastleBlack(boolean longCastleBlack);
+	public final void setLongCastleBlack(boolean longCastleBlack) {
+		longCastleBlackNumeric = longCastleBlack ? 1L : 0L;
+	}
 
 	/**
 	 * Sets long castle white boolean value.
@@ -364,14 +529,18 @@ public interface Position extends Serializable {
 	 *
 	 * @param longCastleWhite
 	 */
-	void setLongCastleWhite(boolean longCastleWhite);
+	public final void setLongCastleWhite(boolean longCastleWhite) {
+		longCastleWhiteNumeric = longCastleWhite ? 1L : 0L;
+	}
 
 	/**
 	 * Sets moves counter value.
 	 *
 	 * @param movesCounter
 	 */
-	void setMovesCounter(int movesCounter);
+	public final void setMovesCounter(int movesCounter) {
+		this.movesCounter = movesCounter;
+	}
 
 	/**
 	 * Sets repetitions boolean value.
@@ -380,7 +549,9 @@ public interface Position extends Serializable {
 	 *
 	 * @param repetitions
 	 */
-	void setRepetitions(boolean repetitions);
+	public final void setRepetitions(boolean repetitions) {
+		this.repetitions = repetitions;
+	}
 
 	/**
 	 * Sets short castle black boolean value.
@@ -389,16 +560,9 @@ public interface Position extends Serializable {
 	 *
 	 * @param shortCastleBlack
 	 */
-	void setShortCastleBlack(boolean shortCastleBlack);
-
-	/**
-	 * Sets a particular bitboard according to the pieceOrdinal parameter.
-	 * <p>
-	 * Setting this value manually could potentially lead to inconsistencies.
-	 *
-	 * @param bitRepresentation, pieceOrdinal
-	 */
-	void changePieceBit(long bitRepresentation, int pieceOrdinal);
+	public final void setShortCastleBlack(boolean shortCastleBlack) {
+		shortCastleBlackNumeric = shortCastleBlack ? 1L : 0L;
+	}
 
 	/**
 	 * Sets short castle white boolean value.
@@ -407,14 +571,23 @@ public interface Position extends Serializable {
 	 *
 	 * @param shortCastleWhite
 	 */
-	void setShortCastleWhite(boolean shortCastleWhite);
+	public final void setShortCastleWhite(boolean shortCastleWhite) {
+		shortCastleWhiteNumeric = shortCastleWhite ? 1L : 0L;
+	}
 
 	/**
 	 * Sets the squares array. This will be reflected in the the bits array.
 	 *
 	 * @param squares
 	 */
-	void setSquares(int[] squares);
+	public final void setSquares(int[] squares) {
+		bits = new long[12];
+		for (int i = 0; i < 64; i++) {
+			if (squares[i] > 0) {
+				bits[squares[i] - 1] = bits[squares[i] - 1] | (1L << i);
+			}
+		}
+	}
 
 	/**
 	 * Sets stalemate boolean value.
@@ -423,7 +596,9 @@ public interface Position extends Serializable {
 	 *
 	 * @param stalemate
 	 */
-	void setStalemate(boolean stalemate);
+	public final void setStalemate(boolean stalemate) {
+		this.stalemate = stalemate;
+	}
 
 	/**
 	 * Sets whiteMove boolean value.
@@ -432,14 +607,28 @@ public interface Position extends Serializable {
 	 *
 	 * @param whiteMove
 	 */
-	void setWhiteMove(boolean whiteMove);
+	public final void setWhiteMove(boolean whiteMove) {
+		setWM(whiteMove ? 1L : 0L);
+	}
+
+	public final void setWK(long wk) {
+		this.shortCastleWhiteNumeric = wk;
+	}
+
+	public final void setWM(long wm) {
+		this.whiteMoveNumeric = wm;
+	}
+
+	public final void setWQ(long wq) {
+		this.longCastleWhiteNumeric = wq;
+	}
 
 	/**
-	 * Default method for string representation.
+	 * Method for string representation.
 	 *
 	 * @return
 	 */
-	default String stringRepresentation() {
+	private String stringRepresentation() {
 		int[] squares = getSquares();
 		StringBuilder sb = new StringBuilder();
 		sb.append("\n+---+---+---+---+---+---+---+---+ \n");
@@ -498,11 +687,11 @@ public interface Position extends Serializable {
 	}
 
 	/**
-	 * Default method for fen representation.
+	 * Method for fen representation.
 	 *
 	 * @return
 	 */
-	default String toFen() {
+	public final String toFen() {
 		StringBuilder fenSB = new StringBuilder();
 		int[] squares = getSquares();
 		for (int i = 7; i >= 0; i--) {
@@ -591,5 +780,40 @@ public interface Position extends Serializable {
 				.append(halfMoveClock).append(" ").append(fullMoveCounter);
 
 		return fenSB.toString();
+	}
+
+	@Override
+	public String toString() {
+		return stringRepresentation();
+	}
+
+	public final long wk() {
+		return shortCastleWhiteNumeric;
+	}
+
+	public final long wm() {
+		return whiteMoveNumeric;
+	}
+
+	public final long wq() {
+		return longCastleWhiteNumeric;
+	}
+
+	/**
+	 * Returns the position resulting from the given move.
+	 *
+	 * @param move
+	 * @return the position resulting from the given move
+	 */
+	public Optional<Position> childFromMove(Move move) {
+		Generator generator = GeneratorFactory.instance();
+		List<Position> children = generator.generateChildren(this);
+		List<Move> moves = generator.generateMoves(this, children);
+		Iterator<Move> moveIterator = moves.iterator();
+		for (Position child : children) {
+			if (moveIterator.next().equals(move))
+				return Optional.of(child);
+		}
+		return Optional.empty();
 	}
 }

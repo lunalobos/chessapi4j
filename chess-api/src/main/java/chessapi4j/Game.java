@@ -6,13 +6,11 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import chessapi4j.core.PlayFactory;
-import chessapi4j.core.PositionFactory;
-
 /**
  * The Game class represents a chess game. The class Provides a structured
  * representation of a chess game and has methods to access, modify, and
  * represent the game in PGN format.
+ *
  * @author lunalobos
  */
 public class Game {
@@ -22,7 +20,7 @@ public class Game {
 
 	/**
 	 * Constructs a Game object with the specified parameters.
-	 * 
+	 *
 	 * @param event           the event tag
 	 * @param site            the site tag
 	 * @param date            the date tag
@@ -47,9 +45,9 @@ public class Game {
 		this.moves = moves;
 	}
 
-	/** 
+	/**
 	 * Returns the event tag.
-	 * 
+	 *
 	 * @return the event tag
 	 */
 	public Tag getEvent() {
@@ -58,7 +56,7 @@ public class Game {
 
 	/**
 	 * Sets the event tag.
-	 * 
+	 *
 	 * @param event the event tag to set
 	 */
 	public void setEvent(Tag event) {
@@ -67,7 +65,7 @@ public class Game {
 
 	/**
 	 * Returns the site tag.
-	 * 
+	 *
 	 * @return the site tag
 	 */
 	public Tag getSite() {
@@ -76,7 +74,7 @@ public class Game {
 
 	/**
 	 * Sets the site tag.
-	 * 
+	 *
 	 * @param site the site tag to set
 	 */
 	public void setSite(Tag site) {
@@ -85,7 +83,7 @@ public class Game {
 
 	/**
 	 * Returns the date tag.
-	 * 
+	 *
 	 * @return the date tag
 	 */
 	public Tag getDate() {
@@ -94,7 +92,7 @@ public class Game {
 
 	/**
 	 * Sets the date tag.
-	 * 
+	 *
 	 * @param date the date tag to set
 	 */
 	public void setDate(Tag date) {
@@ -103,7 +101,7 @@ public class Game {
 
 	/**
 	 * Returns the round tag.
-	 * 
+	 *
 	 * @return the round tag
 	 */
 	public Tag getRound() {
@@ -112,7 +110,7 @@ public class Game {
 
 	/**
 	 * Sets the round tag.
-	 * 
+	 *
 	 * @param round the round tag to set
 	 */
 	public void setRound(Tag round) {
@@ -121,7 +119,7 @@ public class Game {
 
 	/**
 	 * Returns the white tag.
-	 * 
+	 *
 	 * @return the white tag
 	 */
 	public Tag getWhite() {
@@ -129,9 +127,9 @@ public class Game {
 	}
 
 	/**
-	 * 
+	 *
 	 * Sets the white tag.
-	 * 
+	 *
 	 * @param white the white tag to set
 	 */
 	public void setWhite(Tag white) {
@@ -140,7 +138,7 @@ public class Game {
 
 	/**
 	 * Returns the black tag.
-	 * 
+	 *
 	 * @return the black tag
 	 */
 	public Tag getBlack() {
@@ -149,7 +147,7 @@ public class Game {
 
 	/**
 	 * Sets the black tag.
-	 * 
+	 *
 	 * @param black the black tag to set
 	 */
 	public void setBlack(Tag black) {
@@ -158,7 +156,7 @@ public class Game {
 
 	/**
 	 * Returns the result tag.
-	 * 
+	 *
 	 * @return the result tag
 	 */
 	public Tag getResult() {
@@ -167,7 +165,7 @@ public class Game {
 
 	/**
 	 * Sets the result tag.
-	 * 
+	 *
 	 * @param result the result tag to set
 	 */
 	public void setResult(Tag result) {
@@ -176,7 +174,7 @@ public class Game {
 
 	/**
 	 * Returns the supplemental tags.
-	 * 
+	 *
 	 * @return the supplemental tags
 	 */
 	public Set<Tag> getSuplementalTags() {
@@ -185,7 +183,7 @@ public class Game {
 
 	/**
 	 * Sets the supplemental tags.
-	 * 
+	 *
 	 * @param suplementalTags the supplemental tags to set
 	 */
 	public void setSuplementalTags(Set<Tag> suplementalTags) {
@@ -194,7 +192,7 @@ public class Game {
 
 	/**
 	 * Returns the list of moves.
-	 * 
+	 *
 	 * @return the list of moves
 	 */
 	public List<PGNMove> getMoves() {
@@ -203,16 +201,16 @@ public class Game {
 
 	/**
 	 * Sets the list of moves.
-	 * 
+	 *
 	 * @param moves the list of moves to set
 	 */
 	public void setMoves(List<PGNMove> moves) {
 		this.moves = moves;
 	}
 
-	/** 
+	/**
 	 * Calculates the hash code for the Game object.
-	 * 
+	 *
 	 * @return the hash code value
 	 */
 	@Override
@@ -222,7 +220,7 @@ public class Game {
 
 	/**
 	 * Checks if this Game object is equal to another object.
-	 * 
+	 *
 	 * @param obj the object to compare with
 	 * @return true if the objects are equal, false otherwise
 	 */
@@ -243,16 +241,17 @@ public class Game {
 	}
 
 	/**
-	 * 
+	 *
 	 * The string representation is always the PGN export format representation.
+	 *
 	 * @return the string representation of this object
 	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		
-		sb.append("\n").append(event).append("\n").append(site).append("\n").append(date).append("\n").append(round).append("\n")
-				.append(white).append("\n").append(black).append("\n").append(result).append("\n");
+
+		sb.append("\n").append(event).append("\n").append(site).append("\n").append(date).append("\n").append(round)
+				.append("\n").append(white).append("\n").append(black).append("\n").append(result).append("\n");
 		for (Tag tag : suplementalTags) {
 			sb.append(tag).append("\n");
 		}
@@ -261,9 +260,9 @@ public class Game {
 		List<Tag> fenTagList = suplementalTags.stream().filter(tag -> tag.getName().equals("FEN"))
 				.collect(Collectors.toCollection(LinkedList::new));
 		if (!fenTagList.isEmpty())
-			position = PositionFactory.instance(fenTagList.get(0).getValue());
+			position = new Position(fenTagList.get(0).getValue());
 		else
-			position = PositionFactory.instance();
+			position = new Position();
 		sb.append(movesToString(position, moves));
 		sb.append(result.getValue());
 		sb.append("\n");
@@ -272,14 +271,14 @@ public class Game {
 
 	/**
 	 * Converts the list of moves to a string representation in SAN Format.
-	 * 
+	 *
 	 * @param position the current position
 	 * @param moves    the list of moves
 	 * @return the string representation of moves
 	 */
 	private String movesToString(Position position, List<PGNMove> moves) {
 		StringBuilder sb = new StringBuilder();
-		
+
 		for (PGNMove move : moves) {
 			String sanMove = PGNHandler.toSAN(position, move);
 			if (position.isWhiteMove())
@@ -301,15 +300,9 @@ public class Game {
 				sb.append(movesToString(position, move.getRav()));
 			}
 
-			Play play = PlayFactory.instance(position, move);
-			try {
-				play.executeMove();
-			} catch (MovementException e) {
-				throw new IllegalArgumentException("Not valid move");
-			}
-			position = play.getPosition();
+			position = position.childFromMove(move).orElseThrow(() -> new IllegalArgumentException("Not valid move"));
 		}
-		
+
 		return sb.toString();
 	}
 }

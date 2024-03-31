@@ -1,4 +1,4 @@
-package chessapi4j.core;
+package chessapi4j;
 
 import java.util.Arrays;
 
@@ -6,13 +6,10 @@ import java.util.function.Function;
 
 import java.util.stream.IntStream;
 
-import chessapi4j.Piece;
-import chessapi4j.Position;
-
 /**
  * Low-level utilities that are not entirely safe but very fast.
- * 
- * @author Migue
+ *
+ * @author lunalobos
  *
  */
 public class AdvanceUtil {
@@ -38,7 +35,7 @@ public class AdvanceUtil {
 			PIECE_MASK[Piece.BB.ordinal()] | PIECE_MASK[Piece.WK.ordinal()] | PIECE_MASK[Piece.BK.ordinal()] // K kb
 	};
 
-	private static final IntFunction[] BIT_COUNT_FUNCTIONS = new IntFunction[] { i -> 0, 
+	private static final IntFunction[] BIT_COUNT_FUNCTIONS = new IntFunction[] { i -> 0,
 			i -> i,
 			i -> 1 << Piece.values().length, i -> 1 << Piece.values().length, i -> 1 << Piece.values().length,
 			i -> 1 << Piece.values().length, i -> 1 << Piece.values().length, i -> 1 << Piece.values().length,
@@ -50,14 +47,13 @@ public class AdvanceUtil {
 	private static final int[] HALF_MOVES = new int[500];
 
 	/**
-     * Returns 1 if the position is in check, 0 otherwise.
-     * 
+     * Returns {@code 1} if the position is in check, {@code 0} otherwise.
+     *
      * @param position
-     * @throws CastClassException if the entered position is not obtained from the PositionFactory
-     * @return 1 if the position is in check, 0 otherwise.
+     * @return {@code 1} if the position is in check, {@code 0} otherwise.
      */
 	public static int isInCheck(Position position) {
-		return (int) AbstractGenerator.isInCheck((BitPosition) position);
+		return (int) GeneratorFactory.pseudoInternalSingleton.isInCheck(position);
 	}
 
 	static {
@@ -70,10 +66,10 @@ public class AdvanceUtil {
 	}
 
 	/**
-     * Returns 1 if the position is in a draw due to insufficient material, 0 otherwise.
-     * 
+     * Returns {@code 1} if the position is in a draw due to insufficient material, {@code 0} otherwise.
+     *
      * @param position
-     * @return 1 if the position is in a draw due to insufficient material, 0 otherwise.
+     * @return {@code 1} if the position is in a draw due to insufficient material, {@code 0} otherwise.
      */
 	public static int lackOfMaterial(Position position) {
 		int material = IntStream.range(1, Piece.values().length)
@@ -88,10 +84,10 @@ public class AdvanceUtil {
 	}
 
 	/**
-     * Returns 1 if the position can be a draw due to the 50-move rule, 0 otherwise.
-     * 
+     * Returns {@code 1} if the position can be a draw due to the 50-move rule, {@code 0} otherwise.
+     *
      * @param position
-     * @return 1 if the position can be a draw due to the 50-move rule, 0 otherwise.
+     * @return {@code 1} if the position can be a draw due to the 50-move rule, {@code 0} otherwise.
      */
 	public static int fiftyMoves(Position position) {
 		return HALF_MOVES[position.getHalfMovesCounter()];

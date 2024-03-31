@@ -21,13 +21,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import chessapi4j.core.GeneratorFactory;
-import chessapi4j.core.MoveFactory;
-import chessapi4j.core.PlayFactory;
-import chessapi4j.core.PositionFactory;
-import chessapi4j.core.Util;
 /**
- * This class provides methods and tools for manipulating and converting chess moves into PGN format.
+ * This class provides methods and tools for manipulating and converting chess
+ * moves into PGN format.
+ *
  * @author lunalobos
  */
 public class PGNHandler {
@@ -39,8 +36,9 @@ public class PGNHandler {
 	private static final String NAG_REGEX = "\\$[1-9][0-9]?[0-9]?";
 	private static final String COMMENT_REGEX = "[{](?<comment>.*?)[}]";
 	private static final String RAV_REGEX = "[(](?<rav>.*?)[)]";
-	private static final String MOVE_REGEX = "(" + NUMBER_REGEX + ")?\\s*(?<move>\\b(" + REGULAR_MOVE_REGEX + "|" + CASTLE_REGEX
-			+ ")(?<checkOrMate>[+#])?\\b)\\s*(?<nags>(" + NAG_REGEX + "\\s*)+)?\\s*?\\s*(" + COMMENT_REGEX + ")?\\s*(" + RAV_REGEX + ")?\\s*";
+	private static final String MOVE_REGEX = "(" + NUMBER_REGEX + ")?\\s*(?<move>\\b(" + REGULAR_MOVE_REGEX + "|"
+			+ CASTLE_REGEX + ")(?<checkOrMate>[+#])?\\b)\\s*(?<nags>(" + NAG_REGEX + "\\s*)+)?\\s*?\\s*("
+			+ COMMENT_REGEX + ")?\\s*(" + RAV_REGEX + ")?\\s*";
 	private static final String TAG_REGEX = "\\[(?<name>[A-Za-z0-9_]+)\\s+\"(?<value>.*?)\"\\]";
 	/**
 	 * Numeric Annotation Glyphs mapping according to
@@ -154,7 +152,7 @@ public class PGNHandler {
 	 * Coordinate Notation) to Standard Algebraic Notation (SAN) format.
 	 *
 	 * @param position The current position of the chess game.
-	 * @param uciMove  The move in Universal Chess Interface (UCI) format to be
+	 * @param move  The move in Universal Chess Interface (UCI) format to be
 	 *                 converted.
 	 * @return The move converted to Standard Algebraic Notation (SAN) format.
 	 * @throws IllegalArgumentException if the move is illegal or cannot be
@@ -162,7 +160,7 @@ public class PGNHandler {
 	 */
 	public static String toSAN(Position position, Move move) {
 		if (!Rules.legal(position, move))
-			throw new IllegalArgumentException("Illegal move.");
+			throw new IllegalArgumentException(String.format("Illegal move %s for position\n%s", move, position));
 		StringBuilder sbSAN = new StringBuilder();
 
 		// Identify the piece being moved.
@@ -171,9 +169,11 @@ public class PGNHandler {
 
 		// Determine if there are one or more pieces of the same type that can move to
 		// the same destination.
-		Generator generator = GeneratorFactory.instance(position);
-		generator.generateLegalMoves();
-		List<Move> moves = generator.getLegalMoves().stream().filter(m -> m.getDestiny() == move.getDestiny())
+
+		GeneratorFactory.instance().generateMoves(position, GeneratorFactory.instance().generateChildren(position));
+		List<Move> moves = GeneratorFactory.instance()
+				.generateMoves(position, GeneratorFactory.instance().generateChildren(position)).stream()
+				.filter(m -> m.getTarget() == move.getTarget())
 				.filter(m -> Piece.values()[position.getSquares()[m.getOrigin()]] == Piece
 						.values()[position.getSquares()[move.getOrigin()]])
 				.filter(m -> m.getOrigin() != move.getOrigin()).collect(Collectors.toCollection(LinkedList::new));
@@ -207,18 +207,18 @@ public class PGNHandler {
 			sbSAN.append(Util.getColLetter(move.getOrigin()));
 
 		// Determining if a piece is captured
-		boolean capture = position.getSquares()[move.getDestiny()] != Piece.EMPTY.ordinal();
+		boolean capture = position.getSquares()[move.getTarget()] != Piece.EMPTY.ordinal();
 		if (capture)
 			sbSAN.append("x");
 
 		// Append destiny square
-		sbSAN.append(Util.getColLetter(move.getDestiny()) + (Util.getRow(move.getDestiny()) + 1));
+		sbSAN.append(Util.getColLetter(move.getTarget()) + (Util.getRow(move.getTarget()) + 1));
 
 		// Determine if it is a promotion. If so, append "=" + promotedPiece to the
 		// destination square.
-		boolean isPromotion = move.getCoronationPiece() != -1 && Util.isCoronation(move.getDestiny());
+		boolean isPromotion = move.getPromotionPiece() != -1 && Util.isPromotion(move.getTarget());
 		if (isPromotion)
-			sbSAN.append("=" + PIECES[move.getCoronationPiece()]);
+			sbSAN.append("=" + PIECES[move.getPromotionPiece()]);
 
 		// Check if the move is a castling move
 		boolean isCastle = (piece == Piece.WK | piece == Piece.BK)
@@ -231,18 +231,12 @@ public class PGNHandler {
 		}
 
 		// Determine if it is a check or checkmate
-		Play play = PlayFactory.instance(position, move);
-		try {
-			play.executeMove();
-			Position p = play.getPosition();
-			Rules.setStatus(p);
-			if (p.isCheckmate())
-				sbSAN.append("#");
-			else if (Rules.isInCheck(p))
-				sbSAN.append("+");
-		} catch (MovementException e) {
-			throw new IllegalArgumentException("Illegal move.");
-		}
+		Position p = position.childFromMove(move).orElseThrow(() -> new IllegalArgumentException("Illegal move"));
+		Rules.setStatus(p);
+		if (p.isCheckmate())
+			sbSAN.append("#");
+		else if (Rules.isInCheck(p))
+			sbSAN.append("+");
 
 		return sbSAN.toString();
 	}
@@ -281,15 +275,16 @@ public class PGNHandler {
 	 */
 	public static String toUCI(Position position, String sanMove) {
 		StringBuilder sbUCI = new StringBuilder();
-		String regex = "\\b(" + REGULAR_MOVE_REGEX + "|" + CASTLE_REGEX+ ")(?<checkOrMate>[+#])?\\b";
+		String regex = "\\b(" + REGULAR_MOVE_REGEX + "|" + CASTLE_REGEX + ")(?<checkOrMate>[+#])?\\b";
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(sanMove);
 		boolean finded = matcher.find();
-		if(!finded)
-			throw new IllegalArgumentException("The given expression is not in the standard algebraic notation format.");
+		if (!finded)
+			throw new IllegalArgumentException(
+					"The given expression is not in the standard algebraic notation format.");
 		// Check if the move is a castling move
-		
-		boolean castleFinded = matcher.group("castle") !=  null;
+
+		boolean castleFinded = matcher.group("castle") != null;
 		if (castleFinded) {
 			boolean longCastle = matcher.group("long") != null;
 			if (!longCastle) {
@@ -301,10 +296,11 @@ public class PGNHandler {
 		}
 
 		// Process the regular move in SAN format
-		String origin = (matcher.group("colOrigin") == null ? "" : matcher.group("colOrigin")) 
+		String origin = (matcher.group("colOrigin") == null ? "" : matcher.group("colOrigin"))
 				+ (matcher.group("rowOrigin") == null ? "" : matcher.group("rowOrigin"));
 		final String target = matcher.group("colTarget") + matcher.group("rowTarget");
-		final String promotionPiece = matcher.group("promotion") != null ? matcher.group("promotion").toLowerCase() : "";
+		final String promotionPiece = matcher.group("promotion") != null ? matcher.group("promotion").toLowerCase()
+				: "";
 		if (origin.length() == 2) {
 			// Append origin, target, and promotion piece if present
 			sbUCI.append(origin);
@@ -313,46 +309,48 @@ public class PGNHandler {
 			return sbUCI.toString();
 		}
 
-		final Piece piece = Piece
-				.valueOf((position.isWhiteMove() ? "W" : "B") + ((matcher.group("piece") == null || matcher.group("piece").equals(""))  ? "P" : matcher.group("piece")));
-		Generator generator = GeneratorFactory.instance(position);
-		generator.generateLegalMoves();
-		List<Move> moves = generator.getLegalMoves().stream().filter(m -> {
-			char[] chars = target.toCharArray();
-			int xDestiny = Util.getColIndex("" + chars[0]);
-			int yDestiny = Integer.parseInt("" + chars[1]) - 1;
-			int destiny = Util.getSquareIndex(xDestiny, yDestiny);
-			return m.getDestiny() == destiny;
-		}).filter(m -> {
-			Piece movePiece = Piece.values()[position.getSquares()[m.getOrigin()]];
-			return movePiece == piece;
-		}).filter(m -> Piece.values()[position.getSquares()[m.getOrigin()]] == piece).filter(m -> {
-			int row = -1;
-			int col = -1;
-			try {
-				if (origin.length() == 1)
-					row = Integer.parseInt(origin) - 1;
-			} catch (Exception e) {
+		final Piece piece = Piece.valueOf((position.isWhiteMove() ? "W" : "B")
+				+ ((matcher.group("piece") == null || matcher.group("piece").equals("")) ? "P"
+						: matcher.group("piece")));
 
-			}
-			if (row == -1 && origin.length() == 1) {
-				col = Util.getColIndex(origin);
-			}
-			if (col != -1) {
-				int column = Util.getCol(m.getOrigin());
-				return column == col;
-			} else if (row != -1) {
-				int r = Util.getRow(m.getOrigin());
-				return r == row;
-			} else
-				return true;
-		}).filter(m -> {
-			if (m.getCoronationPiece() != -1) {
-				String promoted = Piece.values()[m.getCoronationPiece()].toString().substring(1, 2).toLowerCase();
-				return promoted.equals(promotionPiece);
-			} else
-				return true;
-		}).collect(Collectors.toCollection(LinkedList::new));
+		List<Move> moves = GeneratorFactory.instance()
+				.generateMoves(position, GeneratorFactory.instance().generateChildren(position)).stream().filter(m -> {
+					char[] chars = target.toCharArray();
+					int xDestiny = Util.getColIndex("" + chars[0]);
+					int yDestiny = Integer.parseInt("" + chars[1]) - 1;
+					int destiny = Util.getSquareIndex(xDestiny, yDestiny);
+					return m.getTarget() == destiny;
+				}).filter(m -> {
+					Piece movePiece = Piece.values()[position.getSquares()[m.getOrigin()]];
+					return movePiece == piece;
+				}).filter(m -> Piece.values()[position.getSquares()[m.getOrigin()]] == piece).filter(m -> {
+					int row = -1;
+					int col = -1;
+					try {
+						if (origin.length() == 1)
+							row = Integer.parseInt(origin) - 1;
+					} catch (Exception e) {
+
+					}
+					if (row == -1 && origin.length() == 1) {
+						col = Util.getColIndex(origin);
+					}
+					if (col != -1) {
+						int column = Util.getCol(m.getOrigin());
+						return column == col;
+					} else if (row != -1) {
+						int r = Util.getRow(m.getOrigin());
+						return r == row;
+					} else
+						return true;
+				}).filter(m -> {
+					if (m.getPromotionPiece() != -1) {
+						String promoted = Piece.values()[m.getPromotionPiece()].toString().substring(1, 2)
+								.toLowerCase();
+						return promoted.equals(promotionPiece);
+					} else
+						return true;
+				}).collect(Collectors.toCollection(LinkedList::new));
 		return moves.get(0).toString();
 	}
 
@@ -428,15 +426,10 @@ public class PGNHandler {
 					nagsList.add(nag);
 				}
 			}
-
-			// moves are executed using the Play class and the resulting position is updated
-			Play play = PlayFactory.instance(position, m);
-			try {
-				play.executeMove();
-				position = play.getPosition();
-			} catch (MovementException e) {
-				throw new IllegalArgumentException(String.format("Illegal move. Line: %s, Move:%s, Position: %s", line, move, position.toFen()));
-			}
+			final Position parent = position.makeClone();
+			// moves are executed and the resulting position is updated
+			position = position.childFromMove(m).orElseThrow(
+					() -> new IllegalArgumentException(String.format("Illegal move. Line: %s, Move:%s, Moves:%s Position:\n%s", line, m, moves, parent)));
 
 			// PGNMove object is configured with the captured RAVs, NAGs, and comments
 			m.setRav(ravMoves);
@@ -445,19 +438,20 @@ public class PGNHandler {
 
 			// this PGNMove object is added to a list of moves
 			moves.add(m);
+
 		}
 		return moves;
 	}
 
 	/**
-	 * 
+	 *
 	 * Parses a file containing chess game data in PGN format and returns a list of
 	 * Game objects.
-	 * 
+	 *
 	 * @param path the path to the file to be parsed
-	 * 
+	 *
 	 * @return a list of Game objects parsed from the file
-	 * 
+	 *
 	 * @throws IllegalArgumentException if the path is invalid or inaccessible
 	 */
 
@@ -469,7 +463,7 @@ public class PGNHandler {
 				Matcher tagMatcher = tagPattern.matcher(line);
 				boolean tagFinded = tagMatcher.find();
 				if (tagFinded)
-					return new Line(line, "tag");				
+					return new Line(line, "tag");
 				return new Line(line, "moves");
 			}).collect(new GameCollector());
 
@@ -649,22 +643,22 @@ class GameBuilder {
 	}
 
 	public Game build() {
-		if(Objects.isNull(event))
+		if (Objects.isNull(event))
 			event = new Tag("Event", "Unknown");
-		if(Objects.isNull(site))
+		if (Objects.isNull(site))
 			site = new Tag("Site", "Unknown");
-		if(Objects.isNull(date))
+		if (Objects.isNull(date))
 			date = new Tag("Date", "Unknown");
-		if(Objects.isNull(round))
+		if (Objects.isNull(round))
 			round = new Tag("Round", "Unknown");
-		if(Objects.isNull(white))
+		if (Objects.isNull(white))
 			white = new Tag("White", "Unknown");
-		if(Objects.isNull(black))
+		if (Objects.isNull(black))
 			black = new Tag("Black", "Unknown");
-		if(Objects.isNull(result))
+		if (Objects.isNull(result))
 			result = new Tag("Result", "Unknown");
 		Objects.requireNonNull(moves);
-			
+
 		return new Game(event, site, date, round, white, black, result, suplementalTags, moves);
 	}
 
@@ -674,7 +668,7 @@ class GameBuilder {
 				+ white + ", black=" + black + ", result=" + result + ", suplementalTags=" + suplementalTags
 				+ ", moves=" + moves + "]";
 	}
-	
+
 }
 
 class GameCollector implements Collector<Line, GameListBuilder, List<Game>> {
@@ -741,7 +735,7 @@ class GameListBuilder {
 		currentType = newType;
 		if (newType.equals("tag"))
 			parseTag(line);
-		else if(newType.equals("moves"))
+		else if (newType.equals("moves"))
 			moveLineBuilder.append(" ").append(line.getValue());
 	}
 
@@ -757,12 +751,12 @@ class GameListBuilder {
 	private void parseMoves(Line line) {
 		Position position;
 		if (current.getFen() != null)
-			position = PositionFactory.instance(current.getFen());
+			position = new Position(current.getFen());
 		else
-			position = PositionFactory.instance();
+			position = new Position();
 		try {
 			current.moves(PGNHandler.captureMoves(position, line.getValue()));
-		} catch(IndexOutOfBoundsException e) {
+		} catch (IndexOutOfBoundsException e) {
 			throw new IndexOutOfBoundsException(current + line.getValue());
 		}
 	}
