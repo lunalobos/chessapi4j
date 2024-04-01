@@ -57,7 +57,8 @@ class MontecarloSearch implements Search {
 			md.calculate(this.depth);
 		}).collect(Collectors.toCollection(ArrayList::new));
 
-		Collections.sort(candidates, (c1, c2) -> -Double.compare(c1.getScore(), c2.getScore()));
+		Collections.sort(candidates,
+				(c1, c2) -> (initialPosition.isWhiteMove() ? -1 : 1) * Double.compare(c1.getScore(), c2.getScore()));
 
 		$totalScore = candidates.stream().mapToDouble(c -> c.getScore()).sum();
 		candidates.stream().forEach(md -> {
@@ -72,13 +73,11 @@ class MontecarloSearch implements Search {
 		Iterator<Move> moveIterator = GeneratorFactory.instance().generateMoves(initialPosition, children).iterator();
 		List<MoveData> candidates = new LinkedList<>();
 		while (posIterator.hasNext()) {
-			candidates.add(new MoveData(moveIterator.next(), posIterator.next(), sampleSize,
-					$evaluationFactory, $generatorFactory));
+			candidates.add(new MoveData(moveIterator.next(), posIterator.next(), sampleSize, $evaluationFactory,
+					$generatorFactory));
 		}
 		return candidates.parallelStream();
 	}
-
-
 
 }
 
