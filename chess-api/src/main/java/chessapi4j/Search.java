@@ -41,18 +41,17 @@ public interface Search {
 	Optional<Move> seekBestMove(Position p, Supplier<Evaluator> evaluatorFactory, int depth, int sampleSize);
 
 	/**
-	 * Seek for the best move if any. An evaluator factory injection is required. A
-	 * generator factory it's also required. This method allows to inject better
-	 * {@code Generator} implementations.
+	 * Seek for the best move if any. An evaluator factory injection is required.
 	 *
 	 * @param p                initial position
 	 * @param evaluatorFactory factory for evaluator implementation
 	 * @param depth            search depth
-	 * @param generatorFactory factory for legal moves generator
 	 * @param sampleSize       sample size in case the algorithms requires such
 	 *                         parameter.
+	 * @param searchMoves	   moves to search
 	 * @return an optional with the best move if any
 	 */
-	Optional<Move> seekBestMove(Position p, Supplier<Evaluator> evaluatorFactory, int depth,
-			Supplier<Generator> generatorFactory, int sampleSize);
+	Optional<Move> seekBestMove(Position p, Supplier<Evaluator> evaluatorFactory, int depth, int sampleSize, String searchMoves);
+
+
 }

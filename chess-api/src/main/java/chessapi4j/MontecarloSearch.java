@@ -6,7 +6,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -23,7 +26,6 @@ class MontecarloSearch implements Search {
 
 	private int depth;
 	private Supplier<Evaluator> $evaluationFactory;
-	private Supplier<Generator> $generatorFactory;
 	private Position initialPosition;
 	private int sampleSize;
 	private double $totalScore;
@@ -36,12 +38,30 @@ class MontecarloSearch implements Search {
 
 	@Override
 	public Optional<Move> seekBestMove(Position p, Supplier<Evaluator> evaluatorFactory, int depth, int numberOfMoves) {
-		return seekBestMove(p, evaluatorFactory, depth, () -> GeneratorFactory.instance(), numberOfMoves);
+		return seekBestMove(p, evaluatorFactory, depth, numberOfMoves, null);
 	}
 
 	@Override
-	public Optional<Move> seekBestMove(Position p, Supplier<Evaluator> evaluatorFactory, int depth,
-			Supplier<Generator> generatorFactory, int sampleSize) {
+	public Optional<Move> seekBestMove(Position p, Supplier<Evaluator> evaluatorFactory, int depth, int sampleSize,
+			String searchMoves) {
+
+		final List<Move> searchMovesList = new LinkedList<>();
+
+		Pattern movePattern = Pattern.compile("[a-z1-8]{4,5}");
+
+		Matcher moveMatcher = movePattern.matcher(searchMoves == null ? "" : searchMoves);
+
+		while (moveMatcher.find()) {
+			try {
+				searchMovesList.add(MoveFactory.instance(moveMatcher.group(), p.isWhiteMove()));
+
+			} catch (MovementException e) {
+
+			}
+		}
+
+		final Predicate<MoveData> moveFilter = searchMovesList.isEmpty() ? moveData -> true
+				: moveData -> searchMovesList.contains(moveData.getMove());
 
 		initialPosition = p;
 
@@ -49,11 +69,9 @@ class MontecarloSearch implements Search {
 
 		this.depth = depth < 5 ? 5 : depth;
 
-		this.$generatorFactory = generatorFactory;
-
 		this.sampleSize = sampleSize;
 
-		candidates = candidateMoves().peek(md -> {
+		candidates = candidateMoves().filter(moveFilter).peek(md -> {
 			md.calculate(this.depth);
 		}).collect(Collectors.toCollection(ArrayList::new));
 
@@ -73,8 +91,7 @@ class MontecarloSearch implements Search {
 		Iterator<Move> moveIterator = GeneratorFactory.instance().generateMoves(initialPosition, children).iterator();
 		List<MoveData> candidates = new LinkedList<>();
 		while (posIterator.hasNext()) {
-			candidates.add(new MoveData(moveIterator.next(), posIterator.next(), sampleSize, $evaluationFactory,
-					$generatorFactory));
+			candidates.add(new MoveData(moveIterator.next(), posIterator.next(), sampleSize, $evaluationFactory));
 		}
 		return candidates.parallelStream();
 	}
@@ -86,22 +103,20 @@ class MoveData {
 
 	private int $positionsCounter;
 	private Supplier<Evaluator> $evaluationFactory;
-	private Supplier<Generator> $generatorFactory;
 	private Move move;
 	@ToString.Exclude
 	private Position position;
 	private int $sampleSize;
 	private double score;
 
-	public MoveData(Move move, Position position, int sample, Supplier<Evaluator> factory,
-			Supplier<Generator> generatorFactory) {
+	public MoveData(Move move, Position position, int sample, Supplier<Evaluator> factory) {
 		this.move = move;
 		this.position = position;
 		score = 0.0;
 		this.$sampleSize = sample;
 		this.$evaluationFactory = factory;
 		$positionsCounter = 0;
-		$generatorFactory = generatorFactory;
+
 	}
 
 	public double calculate(int depth) {
@@ -112,7 +127,7 @@ class MoveData {
 
 	private int firstItearion(int depth) {
 
-		List<Position> children = $generatorFactory.get().generateChildren(position);
+		List<Position> children = GeneratorFactory.instance().generateChildren(position);
 		int output = 0;
 		for (Position child : children) {
 			output += secondIteration(child, depth - 1);
@@ -121,7 +136,7 @@ class MoveData {
 	}
 
 	private int secondIteration(Position p, int depth) {
-		List<Position> children = $generatorFactory.get().generateChildren(p);
+		List<Position> children = GeneratorFactory.instance().generateChildren(p);
 		int output = 0;
 		for (Position child : children) {
 			output += subsequentIteration(child, depth - 1);
@@ -134,7 +149,7 @@ class MoveData {
 			$positionsCounter++;
 			return $evaluationFactory.get().evaluate(p);
 		}
-		List<Position> children = $generatorFactory.get().generateChildren(p);
+		List<Position> children = GeneratorFactory.instance().generateChildren(p);
 		if (children.size() == 0) {
 			Rules.setStatus(position);
 			int c = position.isWhiteMove() ? 1 : -1;
