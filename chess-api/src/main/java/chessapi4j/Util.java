@@ -1,19 +1,43 @@
+/*
+ * Copyright 2024 Miguel Angel Luna Lobos
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    https://github.com/lunalobos/chessapi4j/blob/master/LICENSE
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package chessapi4j;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Utility class to avoid boilerplate code. Not all of these class methods are
  * safe, be careful.
  *
  * @author lunalobos
- *
+ * @since 1.0.0
  */
 public class Util {
 	private static final String[] COLS = new String[] { "a", "b", "c", "d", "e", "f", "g", "h" };
 
+	/**
+	 * This matrix contains all the information about queen's movements. The idea is
+	 * that the first index corresponds to the square and the second one to the
+	 * direction and sense ({@code MoveDirection} ordinal order ). After calling
+	 * these two, we obtain an array of the squares to which the queen can move if
+	 * the board is empty in progressive order (without the initial square).
+	 */
 	public static final int[][][] QUEEN_MEGAMATRIX = new int[][][] {
 			{ { 9, 18, 27, 36, 45, 54, 63 }, {}, {}, {}, { 8, 16, 24, 32, 40, 48, 56 }, {}, { 1, 2, 3, 4, 5, 6, 7 },
 					{} },
@@ -144,47 +168,60 @@ public class Util {
 			{ {}, {}, { 54, 45, 36, 27, 18, 9, 0 }, {}, {}, { 55, 47, 39, 31, 23, 15, 7 }, {},
 					{ 62, 61, 60, 59, 58, 57, 56 } } };;
 
+	/**
+	 * This array indicates the directions in which the queen can move according to
+	 * the ordinal indices of the {@code MoveDirection} enum class.
+	 */
 	public static final int[] QUEEN_DIRECTIONS = new int[] { 0, 1, 2, 3, 4, 5, 6, 7 };
 
+	/**
+	 * This array indicates the directions in which the bishop can move according to
+	 * the ordinal indices of the {@code MoveDirection} enum class.
+	 */
 	public static final int[] BISHOP_DIRECTIONS = new int[] { 0, 1, 2, 3 };
 
+	/**
+	 * This array indicates the directions in which the rook can move according to
+	 * the ordinal indices of the {@code MoveDirection} enum class.
+	 */
 	public static final int[] ROOK_DIRECTIONS = new int[] { 4, 5, 6, 7 };
 
-	public static final int[][] WHITE_PAWN_MATRIX_2 = new int[][] { { 9 }, { 8, 10 }, { 9, 11 }, { 10, 12 }, { 11, 13 },
-			{ 12, 14 }, { 13, 15 }, { 14 }, { 17 }, { 16, 18 }, { 17, 19 }, { 18, 20 }, { 19, 21 }, { 20, 22 },
-			{ 21, 23 }, { 22 }, { 25 }, { 24, 26 }, { 25, 27 }, { 26, 28 }, { 27, 29 }, { 28, 30 }, { 29, 31 }, { 30 },
-			{ 33 }, { 32, 34 }, { 33, 35 }, { 34, 36 }, { 35, 37 }, { 36, 38 }, { 37, 39 }, { 38 }, { 41 }, { 40, 42 },
-			{ 41, 43 }, { 42, 44 }, { 43, 45 }, { 44, 46 }, { 45, 47 }, { 46 }, { 49 }, { 48, 50 }, { 49, 51 },
-			{ 50, 52 }, { 51, 53 }, { 52, 54 }, { 53, 55 }, { 54 }, { 57 }, { 56, 58 }, { 57, 59 }, { 58, 60 },
-			{ 59, 61 }, { 60, 62 }, { 61, 63 }, { 62 }, {}, {}, {}, {}, {}, {}, {}, {} };
+	/**
+	 * Retrieves visible squares bitboard representation.
+	 *
+	 * @param position
+	 * @param directionAndSense
+	 * @param square
+	 * @return
+	 *
+	 * @since 1.2.3
+	 */
+	public static long visibleSquares(Position position, MoveDirection directionAndSense, Square square) {
+		return Generator.visibleSquares(position.getBits(), new int[] { directionAndSense.ordinal() }, square.ordinal(),
+				position.wm());
+	}
 
-	public static final int[][] BLACK_PAWN_MATRIX_2 = new int[][] { {}, {}, {}, {}, {}, {}, {}, {}, { 1 }, { 0, 2 },
-			{ 1, 3 }, { 2, 4 }, { 3, 5 }, { 4, 6 }, { 5, 7 }, { 6 }, { 9 }, { 8, 10 }, { 9, 11 }, { 10, 12 },
-			{ 11, 13 }, { 12, 14 }, { 13, 15 }, { 14 }, { 17 }, { 16, 18 }, { 17, 19 }, { 18, 20 }, { 19, 21 },
-			{ 20, 22 }, { 21, 23 }, { 22 }, { 25 }, { 24, 26 }, { 25, 27 }, { 26, 28 }, { 27, 29 }, { 28, 30 },
-			{ 29, 31 }, { 30 }, { 33 }, { 32, 34 }, { 33, 35 }, { 34, 36 }, { 35, 37 }, { 36, 38 }, { 37, 39 }, { 38 },
-			{ 41 }, { 40, 42 }, { 41, 43 }, { 42, 44 }, { 43, 45 }, { 44, 46 }, { 45, 47 }, { 46 }, { 49 }, { 48, 50 },
-			{ 49, 51 }, { 50, 52 }, { 51, 53 }, { 52, 54 }, { 53, 55 }, { 54 } };
+	/**
+	 * Retrieves visible squares in all directions bitboard representation.
+	 *
+	 * @param position
+	 * @param square
+	 * @return
+	 *
+	 * @since 1.2.3
+	 */
+	public static long visibleSquares(Position position, Square square) {
 
-	public static final int[][] KNIGHT_MATRIX = new int[][] { { 17, 10 }, { 18, 16, 11 }, { 19, 17, 12, 8 },
-			{ 20, 18, 13, 9 }, { 21, 19, 14, 10 }, { 22, 20, 15, 11 }, { 23, 21, 12 }, { 22, 13 }, { 25, 18, 2 },
-			{ 26, 24, 19, 3 }, { 27, 25, 20, 16, 4, 0 }, { 28, 26, 21, 17, 5, 1 }, { 29, 27, 22, 18, 6, 2 },
-			{ 30, 28, 23, 19, 7, 3 }, { 31, 29, 20, 4 }, { 30, 21, 5 }, { 33, 26, 1, 10 }, { 34, 32, 27, 2, 0, 11 },
-			{ 35, 33, 28, 24, 3, 1, 12, 8 }, { 36, 34, 29, 25, 4, 2, 13, 9 }, { 37, 35, 30, 26, 5, 3, 14, 10 },
-			{ 38, 36, 31, 27, 6, 4, 15, 11 }, { 39, 37, 28, 7, 5, 12 }, { 38, 29, 6, 13 }, { 41, 34, 9, 18 },
-			{ 42, 40, 35, 10, 8, 19 }, { 43, 41, 36, 32, 11, 9, 20, 16 }, { 44, 42, 37, 33, 12, 10, 21, 17 },
-			{ 45, 43, 38, 34, 13, 11, 22, 18 }, { 46, 44, 39, 35, 14, 12, 23, 19 }, { 47, 45, 36, 15, 13, 20 },
-			{ 46, 37, 14, 21 }, { 49, 42, 17, 26 }, { 50, 48, 43, 18, 16, 27 }, { 51, 49, 44, 40, 19, 17, 28, 24 },
-			{ 52, 50, 45, 41, 20, 18, 29, 25 }, { 53, 51, 46, 42, 21, 19, 30, 26 }, { 54, 52, 47, 43, 22, 20, 31, 27 },
-			{ 55, 53, 44, 23, 21, 28 }, { 54, 45, 22, 29 }, { 57, 50, 25, 34 }, { 58, 56, 51, 26, 24, 35 },
-			{ 59, 57, 52, 48, 27, 25, 36, 32 }, { 60, 58, 53, 49, 28, 26, 37, 33 }, { 61, 59, 54, 50, 29, 27, 38, 34 },
-			{ 62, 60, 55, 51, 30, 28, 39, 35 }, { 63, 61, 52, 31, 29, 36 }, { 62, 53, 30, 37 }, { 58, 33, 42 },
-			{ 59, 34, 32, 43 }, { 60, 56, 35, 33, 44, 40 }, { 61, 57, 36, 34, 45, 41 }, { 62, 58, 37, 35, 46, 42 },
-			{ 63, 59, 38, 36, 47, 43 }, { 60, 39, 37, 44 }, { 61, 38, 45 }, { 41, 50 }, { 42, 40, 51 },
-			{ 43, 41, 52, 48 }, { 44, 42, 53, 49 }, { 45, 43, 54, 50 }, { 46, 44, 55, 51 }, { 47, 45, 52 },
-			{ 46, 53 } };
+		return IntStream.of(Util.QUEEN_DIRECTIONS)
+				.mapToLong(index -> Util.visibleSquares(position, MoveDirection.values()[index],
+						Square.values()[Long.numberOfTrailingZeros(position.getBits()[Piece.WQ.ordinal() - 1])]))
+				.reduce((a, b) -> a | b).orElse(0L);
+	}
 
-	public static long visibleSquares(Position position, int[] directionsIndexs, int square) {
+	/*
+	 * Retrieves visible squares bitboard representation.
+	 */
+	protected static long visibleSquares(Position position, int[] directionsIndexs, int square) {
 
 		return Generator.visibleSquares(position.getBits(), directionsIndexs, square, position.wm());
 	}
@@ -217,6 +254,18 @@ public class Util {
 	}
 
 	/**
+	 * Column number for the given square object
+	 *
+	 * @param square
+	 * @return the column number for the given square
+	 *
+	 * @since 1.2.3
+	 */
+	public static int getCol(Square square) {
+		return square.ordinal() & 7;
+	}
+
+	/**
 	 * Row number for the given square (zero-based)
 	 *
 	 * @param square
@@ -227,10 +276,28 @@ public class Util {
 	}
 
 	/**
+	 * Row number for the given square object
+	 *
+	 * @param square
+	 * @return the row number for the given square
+	 *
+	 * @since 1.2.3
+	 */
+	public static int getRow(Square square) {
+		return square.ordinal() >> 3;
+	}
+
+	/**
 	 * Column character for the given square
+	 *
+	 * WARNING: the square number can only be in the range of 0 (included) to 64
+	 * (excluded) otherwise ArrayIndexOutOfBoundsException will be thrown.
 	 *
 	 * @param square
 	 * @return the column character for the given square
+	 *
+	 * @throws {@code ArrayIndexOutOfBoundsException} if square is not a valid
+	 * square number
 	 */
 	public static String getColLetter(int square) {
 		int colNum = getCol(square);
@@ -259,7 +326,29 @@ public class Util {
 	}
 
 	/**
-	 * Square number for the given square in algebraic notation
+	 * Promotion checker for the given target square. This method returns true if
+	 * the given square is in the 1st or 8th row.
+	 * <p>
+	 * This method doesn't work for relative promotions based on a specific side; it
+	 * simply checks the row.
+	 *
+	 * @param targetSquare
+	 * @return true if it is a promotion square
+	 *
+	 * @since 1.2.3
+	 */
+	public static boolean isPromotion(Square targetSquare) {
+		return Generator.isPromotion(targetSquare.ordinal()) == 1L;
+	}
+
+	/**
+	 * Square number for the given square in algebraic notation.
+	 * <p>
+	 * WARNING: If the input string is not a valid square, the behavior of this
+	 * function is unpredictable and may result in fatal exceptions.
+	 * <p>
+	 * For a secure functionality, resort to the method
+	 * {@link #getSquareIndex(Square)}.
 	 *
 	 * @param square
 	 * @return square number for the given square in algebraic notation
@@ -272,19 +361,37 @@ public class Util {
 	}
 
 	/**
-	 * Column number for the given column character
+	 * Square number for the given square in algebraic notation.
 	 *
-	 * @param col
+	 * @param square
+	 * @return square number for the given square in algebraic notation
+	 *
+	 * @since 1.2.3
+	 */
+	public static int getSquareIndex(Square square) {
+		return square.ordinal();
+	}
+
+	/**
+	 * Column number for the given column character
+	 * <p>
+	 * If the input string is not a valid column, the result will be less than
+	 * {@code 0}.
+	 *
+	 * @param column the column name (a, b, c, ... , h)
 	 * @return the column number for the given column character
 	 */
-	public static int getColIndex(String col) {
-		return Arrays.binarySearch(COLS, col);
+	public static int getColIndex(String column) {
+		return Arrays.binarySearch(COLS, column);
 	}
 
 	/**
 	 * True if the position is in check false otherwise.
+	 * <p>
+	 * WARNING: If the position inserted is not a valid position, the behavior of
+	 * this method is undefined and may result in fatal exceptions.
 	 *
-	 * @param position
+	 * @param position the position to check for a check
 	 * @return true if the position is in check false otherwise
 	 */
 	public static boolean isInCheck(Position position) {
@@ -294,7 +401,7 @@ public class Util {
 	/**
 	 * Piece counter for the given position.
 	 *
-	 * @param position
+	 * @param position the position to look at
 	 * @return the number of pieces for the given position
 	 */
 	public static int countPieces(Position position) {

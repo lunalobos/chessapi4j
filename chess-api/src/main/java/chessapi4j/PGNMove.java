@@ -1,31 +1,50 @@
+/*
+ * Copyright 2024 Miguel Angel Luna Lobos
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    https://github.com/lunalobos/chessapi4j/blob/master/LICENSE
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package chessapi4j;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
- * Represents a move with Portable Game Notation (PGN) properties.
+ * Represents a move with Portable Game Notation (PGN) properties. This class extends the
+ * Move class and adds PGN specific properties. The position previous to the move is
+ * needed to be passed in the constructors. ToString method returns the SAN move
+ * notation. 
  *
  * @author lunalobos
+ * @since 1.1.0
  */
 public class PGNMove extends Move {
 
 	private List<Integer> suffixAnnotations;
 	private List<PGNMove> rav;
 	private String comment;
+	private Position position;
 
 	/**
 	 * Constructs a PGNMove object with the specified origin, target, and promotion
 	 * piece.
 	 *
 	 * @param origin          the origin square of the move
-	 * @param destiny         the destiny square of the move
+	 * @param target          the target square of the move
 	 * @param coronationPiece the piece type for coronation (if applicable)
 	 */
-	public PGNMove(int origin, int destiny, int coronationPiece) {
-		super(1L << destiny, origin, coronationPiece);
+	public PGNMove(int origin, int target, int coronationPiece, Position position) {
+		super(1L << target, origin, coronationPiece);
+		this.position = position;
 	}
 
 	/**
@@ -33,8 +52,8 @@ public class PGNMove extends Move {
 	 *
 	 * @param move: the Move object to construct from
 	 */
-	public PGNMove(Move move) {
-		this(move.getOrigin(), move.getTarget(), move.getPromotionPiece());
+	public PGNMove(Move move, Position position) {
+		this(move.getOrigin(), move.getTarget(), move.getPromotionPiece(), position);
 	}
 
 	/**
@@ -134,23 +153,26 @@ public class PGNMove extends Move {
 		this.comment = comment;
 	}
 
+	/**
+	 * Sets the position for the move. Using this method is not recommended.
+	 * A position should be provided when creating the PGNMove object.
+	 * @param position
+	 */
+	public void setPosition(Position position) {
+		this.position = position;
+	}
+
+	/**
+	 * Returns the position previous to the move.
+	 * @return
+	 */
+	public Position getPosition() {
+		return position;
+	}
+
+	@Override
 	public String toString() {
-		int y = Util.getRow(getOrigin()) + 1;
-		int y_ = Util.getRow(getTarget()) + 1;
-		String collum = Util.getColLetter(getOrigin());
-		String collum_ = Util.getColLetter(getTarget());
-		if (getPromotionPiece() < 0)
-			return collum + y + collum_ + y_;
-		else {
-			String regex = "(?<color>[BW])(?<piece>[NBRQ])";
-			Pattern pattern = Pattern.compile(regex);
-			Matcher matcher = pattern.matcher(Piece.values()[getPromotionPiece()].toString());
-			boolean finded = matcher.find();
-			if (!finded)
-				throw new IllegalArgumentException("Invalid move.");
-			String promotion = matcher.group("piece").toLowerCase();
-			return collum + y + collum_ + y_ + promotion;// UCI notation;
-		}
+		return PGNHandler.toSAN(position, new Move(1L << getTarget(), getOrigin(), getPromotionPiece()));
 	}
 
 	@Override
@@ -172,7 +194,8 @@ public class PGNMove extends Move {
 		PGNMove other = (PGNMove) obj;
 		return getOrigin() == other.getOrigin() && getTarget() == other.getTarget()
 				&& getPromotionPiece() == other.getPromotionPiece() && Objects.equals(comment, other.comment)
-				&& Objects.equals(rav, other.rav) && Objects.equals(suffixAnnotations, other.suffixAnnotations);
+				&& Objects.equals(rav, other.rav) && Objects.equals(suffixAnnotations, other.suffixAnnotations)
+				&& Objects.equals(position, other.position);
 	}
 
 }

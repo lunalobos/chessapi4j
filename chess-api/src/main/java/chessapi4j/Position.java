@@ -1,3 +1,18 @@
+/*
+ * Copyright 2024 Miguel Angel Luna Lobos
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    https://github.com/lunalobos/chessapi4j/blob/master/LICENSE
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package chessapi4j;
 
 import java.io.Serializable;
@@ -11,6 +26,7 @@ import java.util.Optional;
  * Position representation
  *
  * @author lunalobos
+ * @since 1.0.0
  */
 public final class Position implements Serializable {
 	private static final long serialVersionUID = -3129022190813874561L;
@@ -346,7 +362,7 @@ public final class Position implements Serializable {
 	}
 
 	/**
-	 * Increments movesCounter.
+	 * Increments movesCounter when white moves.
 	 */
 	public final void increaseMovesCounter() {
 		setMovesCounter(getMovesCounter() + (int) (1L & wm()));
@@ -425,6 +441,16 @@ public final class Position implements Serializable {
 	 */
 	public final boolean isWhiteMove() {
 		return wm() == 1L;
+	}
+
+	/**
+	 * Returns the side to move.
+	 *
+	 * @return the side to move
+	 * @since 1.2.3
+	 */
+	public final Side sideToMove() {
+		return Side.values()[(int) whiteMoveNumeric];
 	}
 
 	/**
@@ -815,5 +841,48 @@ public final class Position implements Serializable {
 				return Optional.of(child);
 		}
 		return Optional.empty();
+	}
+
+	/**
+	 * Retrieves the {@code Piece} object that represent the piece present in th
+	 * given {@code Square} object given as argument
+	 *
+	 * @param square
+	 * @return the {@code Piece} object that represent the piece present in the
+	 *         given square
+	 *
+	 * @since 1.2.3
+	 */
+	public Piece getPiece(Square square) {
+		return Piece.values()[getSquares()[square.ordinal()]];
+	}
+
+	/**
+	 * Retrieves the {@code Bitboard} object that represent the positions of the
+	 * given {@code Piece}.
+	 *
+	 * @param piece
+	 * @return the {@code Bitboard} object that represent the positions of the piece
+	 *
+	 * @since 1.2.3
+	 */
+	public Bitboard getBitboard(Piece piece) {
+		return new Bitboard(bits[piece.ordinal() - 1]);
+	}
+
+	/**
+	 * Retrieves a {@code List} with all the squares where is a piece like the given
+	 * as argument.
+	 *
+	 * @param piece
+	 * @return a {@code List} with all the squares where is a piece like the given
+	 *         as argument
+	 *
+	 * @since 1.2.3
+	 */
+	public List<Square> getSquares(Piece piece) {
+		return Util.longToList(bits[piece.ordinal() - 1]).stream().map(l -> Long.numberOfTrailingZeros(l))
+				.map(i -> Square.get(i)).collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
+
 	}
 }

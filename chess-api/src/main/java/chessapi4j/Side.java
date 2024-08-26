@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 package chessapi4j;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.Test;
-
-class RulesTest {
-
-	@Test
-	void test() {
-		try {
-			boolean isLegal = Rules.legal(new Position(), MoveFactory.instance("e2e4", false));
-			assertEquals(true, isLegal);
-		} catch (MovementException e) {
-			e.printStackTrace();
-		}
-	}
-
+/**
+ * Enum for sides on the board.
+ *
+ * @author lunalobos
+ *
+ * @since 1.2.3
+ */
+public enum Side {
+	/**
+	 * Black side
+	 */
+	BLACK,
+	/**
+	 * White side
+	 */
+	WHITE;
 }
