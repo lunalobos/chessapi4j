@@ -1,5 +1,21 @@
+/*
+ * Copyright 2024 Miguel Angel Luna Lobos
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    https://github.com/lunalobos/chessapi4j/blob/master/LICENSE
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package chessapi4j;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -12,11 +28,13 @@ import java.util.stream.Collectors;
  * represent the game in PGN format.
  *
  * @author lunalobos
+ * @since 1.1.0
  */
-public class Game {
+public class Game implements Iterable<Position>{
 	private Tag event, site, date, round, white, black, result;
 	private Set<Tag> suplementalTags;
 	private List<PGNMove> moves;
+	private List<Position> positions;
 
 	/**
 	 * Constructs a Game object with the specified parameters.
@@ -43,6 +61,7 @@ public class Game {
 		this.result = result;
 		this.suplementalTags = suplementalTags;
 		this.moves = moves;
+		positions = createHistory(moves, suplementalTags);
 	}
 
 	/**
@@ -209,6 +228,59 @@ public class Game {
 	}
 
 	/**
+	 * Add the move to the game and returns the last position.
+	 *
+	 * @param move to add to the game
+	 * @return the last position of the game
+	 * @throws MovementException
+	 *
+	 * @since 1.2.3
+	 */
+	public Position addMove(Move move) throws MovementException {
+		var lastPosition = positions.getLast();
+		positions.add(lastPosition.childFromMove(MoveFactory.instance(move))
+				.orElseThrow(() -> new MovementException(String.format("%s is not legal", move))));
+		if(move instanceof PGNMove) {
+			moves.add((PGNMove)move);
+		} else {
+			moves.add(new PGNMove(move, lastPosition));
+		}
+
+		return positions.getLast();
+	}
+
+	/**
+	 * Returns the position at the given move.
+	 *
+	 * @param moveNumber the move number
+	 * @param sideToMove the side to move
+	 * @param after if true, return the position after the move
+	 * @return the position at the given move number
+	 *
+	 * @since 1.2.3
+	 */
+	public Position positionAt(int moveNumber, Side sideToMove, boolean after) {
+		int index = (moveNumber - 1) * 2 + (sideToMove == Side.BLACK ? 1 : 0);
+		return positions.get(index + (after ? 1 : 0));
+	}
+
+	private List<Position> createHistory(List<PGNMove> moves, Set<Tag> suplementalTags) {
+		Position initial = suplementalTags.stream().filter(tag -> tag.getName().toLowerCase().equals("fen"))
+				.map(tag -> new Position(tag.getValue())).findFirst().orElse(new Position());
+		Iterator<PGNMove> moveIterator = moves.iterator();
+		List<Position> positions = new LinkedList<>();
+		positions.add(initial);
+		Position current = initial;
+		while (moveIterator.hasNext()) {
+			PGNMove pgnMove = moveIterator.next();
+			Move move = MoveFactory.instance(pgnMove.getOrigin(), pgnMove.getTarget(), pgnMove.getPromotionPiece());
+			current = current.childFromMove(move).orElseThrow(() -> new IllegalArgumentException());
+			positions.add(current);
+		}
+		return positions;
+	}
+
+	/**
 	 * Calculates the hash code for the Game object.
 	 *
 	 * @return the hash code value
@@ -280,7 +352,7 @@ public class Game {
 		StringBuilder sb = new StringBuilder();
 
 		for (PGNMove move : moves) {
-			String sanMove = PGNHandler.toSAN(position, move);
+			String sanMove = move.toString();
 			if (position.isWhiteMove())
 				sb.append(position.getMovesCounter() + ". ");
 
@@ -305,4 +377,17 @@ public class Game {
 
 		return sb.toString();
 	}
+
+	/**
+	 * An iterator that iterates over the game positions.
+	 *
+	 * @return an iterator that iterates over the game positions
+	 *
+	 * @since 1.2.3
+	 */
+	@Override
+	public Iterator<Position> iterator() {
+		return positions.iterator();
+	}
+
 }

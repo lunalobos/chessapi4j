@@ -1,3 +1,18 @@
+/*
+ * Copyright 2024 Miguel Angel Luna Lobos
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    https://github.com/lunalobos/chessapi4j/blob/master/LICENSE
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package chessapi4j;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -5,14 +20,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-class PGNConverterTest {
+class ToSAN {
 
 	@AfterEach
 	void tearDown() throws Exception {
 	}
 
 	@Test
-	void testToSAN() {
+	void test() {
 		// startpos e4
 		try {
 			Move e4 = MoveFactory.instance("e2e4", true);
@@ -133,60 +148,5 @@ class PGNConverterTest {
 		} catch (MovementException e) {
 			fail(e.getMessage());
 		}
-	}
-
-	@Test
-	void toUCI() {
-//		String sanMove;
-//		String uciMove;
-//		String expectedUCIMove;
-//		Position position;
-//		try {
-//			sanMove = "e4";
-//			position = PositionFactory.instance();
-//			uciMove = PGNHandler.toUCI(position, sanMove);
-//			expectedUCIMove = "e2e4";
-//			assertEquals(expectedUCIMove, uciMove);
-//		} catch (Exception e) {
-//			fail(e.getMessage());
-//		}
-//		try {
-//			sanMove = "O-O";
-//			position = PositionFactory.instance("rnbqkb1r/ppp2ppp/3p1n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4");
-//			uciMove = PGNHandler.toUCI(position, sanMove);
-//			expectedUCIMove = "e1g1";
-//			assertEquals(expectedUCIMove, uciMove);
-//		} catch (Exception e) {
-//			fail(e.getMessage());
-//		}
-//
-//		try {
-//			sanMove = "O-O-O";
-//			position = PositionFactory.instance("r2q1rk1/pppbbppp/2np1n2/4p3/2B1P3/2NPBN2/PPPQ1PPP/R3K2R w KQ - 0 8");
-//			uciMove = PGNHandler.toUCI(position, sanMove);
-//			expectedUCIMove = "e1c1";
-//			assertEquals(expectedUCIMove, uciMove);
-//		} catch (Exception e) {
-//			fail(e.getMessage());
-//		}
-//
-//		try {
-//			sanMove = "e8=Q";
-//			position = PositionFactory.instance("8/1k1KP3/8/8/8/8/8/8 w - - 0 0");
-//			uciMove = PGNHandler.toUCI(position, sanMove);
-//			expectedUCIMove = "e7e8q";
-//			assertEquals(expectedUCIMove, uciMove);
-//		} catch (Exception e) {
-//			fail(e.getMessage());
-//		}
-//
-//		try {
-//			sanMove = "InvalidMove";
-//			position = PositionFactory.instance();
-//			uciMove = PGNHandler.toUCI(position, sanMove);
-//			fail("Exception wasn't detected.");
-//		} catch (Exception e) {
-//			assertEquals(e.getMessage(), "The given expression is not in the standard algebraic notation format.");
-//		}
 	}
 }

@@ -15,20 +15,44 @@
  */
 package chessapi4j;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.Test;
-
-class RulesTest {
-
-	@Test
-	void test() {
-		try {
-			boolean isLegal = Rules.legal(new Position(), MoveFactory.instance("e2e4", false));
-			assertEquals(true, isLegal);
-		} catch (MovementException e) {
-			e.printStackTrace();
-		}
-	}
-
+/**
+ * Basic enum for move direction and sense.
+ *
+ * @author lunalobos
+ *
+ * @since 1.2.3
+ */
+public enum MoveDirection {
+	/**
+	 * Up right
+	 */
+	UR,
+	/**
+	 * Up left
+	 */
+	UL,
+	/**
+	 * Down left
+	 */
+	DL,
+	/**
+	 * Down right
+	 */
+	DR,
+	/**
+	 * Up
+	 */
+	U,
+	/**
+	 * Down
+	 */
+	D,
+	/**
+	 * Right
+	 */
+	R,
+	/**
+	 * Left
+	 */
+	L;
 }

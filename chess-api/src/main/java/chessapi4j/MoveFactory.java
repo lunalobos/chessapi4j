@@ -1,3 +1,19 @@
+/*
+ * Copyright 2024 Miguel Angel Luna Lobos
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    https://github.com/lunalobos/chessapi4j/blob/master/LICENSE
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package chessapi4j;
 
 import java.util.regex.Matcher;
@@ -7,30 +23,69 @@ import java.util.regex.Pattern;
  * Factory class for {@code Move} instances.
  *
  * @author lunalobos
- *
+ * @since 1.0.0
  */
 public class MoveFactory {
 	/**
 	 * New instance.
 	 *
 	 * @param origin
-	 * @param destiny
+	 * @param target
 	 * @return a move representation instance
 	 */
-	public static Move instance(int origin, int destiny) {
-		return new Move(1L << destiny, origin, -1);
+	public static Move instance(int origin, int target) {
+		return new Move(1L << target, origin, -1);
 	}
 
 	/**
 	 * New coronation instance.
 	 *
 	 * @param origin
-	 * @param destiny
+	 * @param target
 	 * @param coronationPiece
 	 * @return a move representation instance
 	 */
-	public static Move instance(int origin, int destiny, int coronationPiece) {
-		return new Move(1L << destiny, origin, coronationPiece);
+	public static Move instance(int origin, int target, int coronationPiece) {
+		return new Move(1L << target, origin, coronationPiece);
+	}
+
+	/**
+	 * New instance.
+	 *
+	 * @param origin
+	 * @param target
+	 * @return a move representation instance
+	 *
+	 * @since 1.2.3
+	 */
+	public static Move instance(Square origin, Square target) {
+		return new Move(1L << target.ordinal(), origin.ordinal(), -1);
+	}
+
+	/**
+	 * New coronation instance.
+	 *
+	 * @param origin
+	 * @param target
+	 * @param coronationPiece
+	 * @return a move representation instance
+	 *
+	 * @since 1.2.3
+	 */
+	public static Move instance(Square origin, Square target, Piece coronationPiece) {
+		return new Move(1L << target.ordinal(), origin.ordinal(), coronationPiece.ordinal());
+	}
+
+
+	/**
+	 * New instance.
+	 *
+	 * @param move
+	 *
+	 * @since 1.2.3
+	 */
+	public static Move instance(Move move) {
+		return instance(move.getOrigin(), move.getTarget(), move.getPromotionPiece());
 	}
 
 	/**
@@ -60,9 +115,9 @@ public class MoveFactory {
 							: Piece.valueOf((whiteMove ? "W" : "B") + promotionPiece.toUpperCase()).ordinal();
 
 					return instance(origin, target, promotion);
-				} catch(Exception e) {
-					System.out.println(String.format("Error with promotion. Move: %s, WhiteMove: %b, Piece: %s",
-							move, whiteMove, Piece.valueOf((whiteMove ? "W" : "B") + promotionPiece.toUpperCase())));
+				} catch (Exception e) {
+					System.out.println(String.format("Error with promotion. Move: %s, WhiteMove: %b, Piece: %s", move,
+							whiteMove, Piece.valueOf((whiteMove ? "W" : "B") + promotionPiece.toUpperCase())));
 
 				}
 

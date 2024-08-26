@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>chessapi4j</groupId>
 	<artifactId>chessapi4j</artifactId>
-	<version>1.2.2-RELEASE</version>
+	<version>1.2.3-RELEASE</version>
 	<name>ChessAPI4j</name>
 
 	<properties>
@@ -31,19 +31,6 @@
 			<version>1.18.30</version>
 			<scope>provided</scope>
 		</dependency>
-
-<!--		<dependency>-->
-<!--			<groupId>com.koloboke</groupId>-->
-<!--			<artifactId>koloboke-api-jdk8</artifactId>-->
-<!--			<version>1.0.0</version>-->
-<!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>com.koloboke</groupId>-->
-<!--			<artifactId>koloboke-impl-jdk8</artifactId>-->
-<!--			<version>1.0.0</version>-->
-<!--			<scope>runtime</scope>-->
-<!--		</dependency>-->
-
 	</dependencies>
 	<build>
 		<plugins>

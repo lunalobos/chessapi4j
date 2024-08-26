@@ -1,3 +1,18 @@
+/*
+ * Copyright 2024 Miguel Angel Luna Lobos
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    https://github.com/lunalobos/chessapi4j/blob/master/LICENSE
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package chessapi4j;
 
 import java.util.Arrays;
@@ -11,6 +26,7 @@ import java.util.stream.IntStream;
  *
  * @author lunalobos
  *
+ * @since 1.2.0
  */
 public class AdvanceUtil {
 
@@ -35,8 +51,7 @@ public class AdvanceUtil {
 			PIECE_MASK[Piece.BB.ordinal()] | PIECE_MASK[Piece.WK.ordinal()] | PIECE_MASK[Piece.BK.ordinal()] // K kb
 	};
 
-	private static final IntFunction[] BIT_COUNT_FUNCTIONS = new IntFunction[] { i -> 0,
-			i -> i,
+	private static final IntFunction[] BIT_COUNT_FUNCTIONS = new IntFunction[] { i -> 0, i -> i,
 			i -> 1 << Piece.values().length, i -> 1 << Piece.values().length, i -> 1 << Piece.values().length,
 			i -> 1 << Piece.values().length, i -> 1 << Piece.values().length, i -> 1 << Piece.values().length,
 			i -> 1 << Piece.values().length, i -> 1 << Piece.values().length, i -> 1 << Piece.values().length,
@@ -47,11 +62,11 @@ public class AdvanceUtil {
 	private static final int[] HALF_MOVES = new int[500];
 
 	/**
-     * Returns {@code 1} if the position is in check, {@code 0} otherwise.
-     *
-     * @param position
-     * @return {@code 1} if the position is in check, {@code 0} otherwise.
-     */
+	 * Returns {@code 1} if the position is in check, {@code 0} otherwise.
+	 *
+	 * @param position
+	 * @return {@code 1} if the position is in check, {@code 0} otherwise.
+	 */
 	public static int isInCheck(Position position) {
 		return (int) GeneratorFactory.pseudoInternalSingleton.isInCheck(position);
 	}
@@ -66,29 +81,29 @@ public class AdvanceUtil {
 	}
 
 	/**
-     * Returns {@code 1} if the position is in a draw due to insufficient material, {@code 0} otherwise.
-     *
-     * @param position
-     * @return {@code 1} if the position is in a draw due to insufficient material, {@code 0} otherwise.
-     */
+	 * Returns {@code 1} if the position is in a draw due to insufficient material,
+	 * {@code 0} otherwise.
+	 *
+	 * @param position
+	 * @return {@code 1} if the position is in a draw due to insufficient material,
+	 *         {@code 0} otherwise.
+	 */
 	public static int lackOfMaterial(Position position) {
 		int material = IntStream.range(1, Piece.values().length)
-				.map(i -> BIT_COUNT_FUNCTIONS[Long.bitCount(position.getBits()[i-1])].apply(PIECE_MASK[i]))
+				.map(i -> BIT_COUNT_FUNCTIONS[Long.bitCount(position.getBits()[i - 1])].apply(PIECE_MASK[i]))
 				.reduce(0, (a, b) -> a | b);
-		return itLacks(material);
-	}
-
-	private static int itLacks(int material) {
 		return Arrays.stream(MATERIAL).mapToInt(i -> i).map(i -> INVERSE[Integer.signum(i ^ material)]).reduce(0,
 				(a, b) -> a | b);
 	}
 
 	/**
-     * Returns {@code 1} if the position can be a draw due to the 50-move rule, {@code 0} otherwise.
-     *
-     * @param position
-     * @return {@code 1} if the position can be a draw due to the 50-move rule, {@code 0} otherwise.
-     */
+	 * Returns {@code 1} if the position can be a draw due to the 50-move rule,
+	 * {@code 0} otherwise.
+	 *
+	 * @param position
+	 * @return {@code 1} if the position can be a draw due to the 50-move rule,
+	 *         {@code 0} otherwise.
+	 */
 	public static int fiftyMoves(Position position) {
 		return HALF_MOVES[position.getHalfMovesCounter()];
 	}
