@@ -731,7 +731,7 @@ Fen: r3r1k1/3n3p/p2Rb1q1/2P1Q3/4p3/P3P3/1B3PPP/6K1 w - - 5 31
   a   b   c   d   e   f   g   h
 Fen: 6r1/4rk1p/pQP1b3/5q2/4p2P/P3P1P1/1B1R1n2/6K1 w - - 0 38
 
-```console
+```
 
 </details>
 
