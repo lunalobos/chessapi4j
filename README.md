@@ -752,7 +752,65 @@ ChessAPI4j is licensed under the Apache License, Version 2.0 ("License"). You ma
 
 ## Getting Started with ChessAPI4j
 
-To use the library, you must have Java 21 or higher and Maven 3.8 or higher. You must clone this repository and then use Maven to install it.
+To use the library you need Java 21 or higher and Maven 3.8 or higher. Start by cloning this repository and then using Maven to install it.
+
+### Step 1: Clone the repository
+
+```console
+
+$ git clone git@github.com:lunalobos/chessapi4j.git
+
+```
+
+### Step 2: Verify your Maven and Java versions
+
+I recommend use [Semeru jDK](https://developer.ibm.com/languages/java/semeru-runtimes/downloads/) and downloading Maven from [here](https://maven.apache.org/download.cgi).
+
+```console
+
+$ mvn -version
+Apache Maven 3.9.6 (bc0240f3c744dd6b6ec2920b3cd08dcc295161ae)
+Maven home: C:\apache-maven-3.9.6
+Java version: 21.0.4, vendor: IBM Corporation, runtime: C:\semeru-jdk-21.0.4+7
+Default locale: es_ES, platform encoding: UTF-8
+OS name: "windows 10", version: "10.0", arch: "amd64", family: "windows"
+
+$ java -version
+openjdk version "21.0.4" 2024-07-16 LTS
+IBM Semeru Runtime Open Edition 21.0.4.0 (build 21.0.4+7-LTS)
+Eclipse OpenJ9 VM 21.0.4.0 (build openj9-0.46.0, JRE 21 Windows 10 amd64-64-Bit Compressed References 20240716_229 (JIT enabled, AOT enabled)
+OpenJ9   - 1a6f6128aa
+OMR      - 840a9adba
+JCL      - 7d844187b25 based on jdk-21.0.4+7)
+
+```
+
+### Step 3: Build and install the artifact
+
+Navigate to the cloned repository and install the artifact using Maven.
+
+```console
+
+$ cd chessapi4j
+$ mvn clean install
+
+```
+
+### Step 4: Add the dependency to your project
+
+Now, you can import the artifact into your project. Add the following to your dependencies:
+
+```xml
+
+<dependency>
+   <groupId>chessapi4j</groupId>
+   <artifactId>chessapi4j</artifactId>
+   <version>1.2.3-RELEASE</version>
+</dependency>
+
+```
+
+I hope I can publish this artifact to the Maven repository soon.
 
 ## Author
 
