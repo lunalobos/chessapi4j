@@ -787,7 +787,7 @@ Navigate to the cloned repository and install the artifact using Maven.
 
 ```console
 
-$ cd chessapi4j
+$ cd chessapi4j/chess-api
 $ mvn clean install
 
 ```
