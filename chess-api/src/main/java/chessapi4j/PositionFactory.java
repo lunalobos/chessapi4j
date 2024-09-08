@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Optional;
 
 /**
  * Utility factory class for {@code Position} instances.
@@ -81,4 +82,16 @@ public class PositionFactory {
 		}
 		return fp;
 	}
+
+	/**
+	 * If the provided FEN is valid, it returns an {@code Optional} containing the position; otherwise, 
+	 * it returns an empty {@code Optional}.
+	 * 
+	 * @param fen the fen string
+	 * @return an optional containing the position if the fen is valid
+	 * @since 1.2.4
+	 */
+	public Optional<Position> secureInstance(String fen){
+		return Rules.isValidFen(fen) ? Optional.of(new Position(fen)) : Optional.empty();
+	}	
 }

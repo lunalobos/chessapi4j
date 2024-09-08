@@ -549,6 +549,7 @@ public final class Generator {
 		return maskedDifference >>> 4;
 	}
 
+	// If position has no king in the side that has to move it will throw ArrayIndexOutOfBoundsException
 	protected long isInCheck(Position position) {
 		final int kingPiece = -Piece.WK.ordinal() * (int) position.wm() + Piece.BK.ordinal();
 		final int kingSquare = squaresMap(position.getBits()[kingPiece - 1]);
@@ -953,7 +954,6 @@ public final class Generator {
 			enemies = white;
 		}
 		for (int index : directionsIndexs) {
-
 			moves = moves
 					| VISIBLE_METRICS.getVisible(square, index, QUEEN_MEGAMATRIX[square][index], friends, enemies);
 		}
@@ -963,7 +963,6 @@ public final class Generator {
 	private static long visibleSquaresFast(int[] directionsIndexs, int square, long friends, long enemies) {
 		long moves = 0L;
 		for (int index : directionsIndexs) {
-
 			moves = moves
 					| VISIBLE_METRICS.getVisible(square, index, QUEEN_MEGAMATRIX[square][index], friends, enemies);
 		}
