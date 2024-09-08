@@ -33,7 +33,7 @@ class PGNHandlerTest {
 	void testParseGame() {
 		String path = "example.pgn";
 		List<Game> games = PGNHandler.parseGames(Paths.get(path));
-		assertTrue(!games.isEmpty());
+		assertFalse(games.isEmpty());
 		// some assertions
 		assertEquals("Bc4", games.get(0).getMoves().get(6).toString());
 		assertEquals("Ke3", games.get(1).getMoves().get(72).toString());

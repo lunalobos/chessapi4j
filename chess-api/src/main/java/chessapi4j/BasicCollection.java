@@ -21,6 +21,9 @@ import java.util.Iterator;
 
 /**
  * An experimental class. It is intended to be used in a future release.
+ * 
+ * @author lunalobos
+ * @since 1.2.3
  */
 class BasicCollection<T> implements Collection<T> {
 

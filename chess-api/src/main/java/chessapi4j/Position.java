@@ -143,9 +143,6 @@ public final class Position implements Serializable {
 
 		String[] parts = fen.split(" ");
 
-		if (parts.length != 6)
-			throw new IllegalArgumentException("The string parsed to this constructor is not a normalized fen string");
-
 		String[] rows = parts[0].split("/");
 		List<Character> emptyPossibilities = new LinkedList<>(
 				Arrays.asList(new Character[] { '1', '2', '3', '4', '5', '6', '7', '8' }));

@@ -61,7 +61,7 @@ import chessapi4j.*;
 public class PositionExample {
     public static void main(String[] args) {
         // Create a new initial position
-        Position position = new Position();
+        var position = new Position();
         
         // See what the toFen() method returns
         System.out.println(position.toFen());
@@ -114,14 +114,14 @@ import chessapi4j.*;
 public class BitboardExample {
     public static void main(String[] args) {
         // Create a bitboard with certain squares marked.
-        Bitboard bitboard = new Bitboard(Square.B1, Square.C2, Square.E4);
+        var bitboard = new Bitboard(Square.B1, Square.C2, Square.E4);
         
         // Let's see this in the console, we should see that the squares specified in the constructor appear as a 1.
         System.out.printf("%s\n", bitboard);
 
         // Now let's take a real-world example.
-        Position position = new Position();
-        Bitboard whitePawns = position.getBitboard(Piece.WP);
+        var position = new Position();
+        var whitePawns = position.getBitboard(Piece.WP);
         
         // We should see the initial positions of the white pawns marked with a 1.
         System.out.printf("%s\n", whitePawns);
@@ -188,7 +188,7 @@ public class MoveExample {
         // This factory method requires the string with the move in UCI notation
         // and a boolean parameter that is true when the move was made by white
         // and false when it was made by black.
-        Move move = MoveFactory.instance("e2e4", true);
+        var move = MoveFactory.instance("e2e4", true);
         
         // Let's see the properties of this object
         System.out.printf("Origin square: %s\nTarget square: %s\nPromotion: %b\n", 
@@ -230,6 +230,47 @@ Move bitboard representation:
 ```
 </details>
 
+### FEN Validation and Position Creation
+You can manage and validate chess positions using FEN strings through two key methods: isValidFen from the Rules class and secureInstance from the PositionFactory class. These methods ensure that FEN strings represent legal chess positions and provide safe ways to create corresponding Position objects.
+
+#### How to Use the isValidFen Method
+The isValidFen method is part of the Rules class and is responsible for checking whether a given FEN (Forsyth-Edwards Notation) string represents a legal chess position. This method doesn't verify if the position could be reached through valid moves in a real game; it only ensures that the basic rules are followed. Below are the key rules checked by this method.
+
+- FEN Format: Ensures the FEN string adheres to the correct format.
+- Presence of Kings: Confirms that both a white and black king are present on the board.
+- Side to Move Not in Check: Verifies that the side not to move is not in check.
+- Pawns on the 8th Rank: Ensures there are no pawns placed on the 8th rank, as this would be an illegal position.
+- Castling Rights: If castling is available, the kings and rooks must be in their correct starting positions.
+- En Passant: Checks if the en passant square is valid based on the presence of a pawn in the correct rank to trigger this indication.
+
+```java
+
+var fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+var isLegalPosition = Rules.isValidFen(fen);
+
+if (isLegalPosition) {
+    System.out.println("The FEN represents a legal position.");
+} else {
+    System.out.println("The FEN does not represent a legal position.");
+}
+
+```
+#### How to Use the secureInstance Method
+The secureInstance method belongs to the PositionFactory class and acts as a safe factory method for creating Position instances from a FEN string. It checks the validity of the FEN string using the isValidFen method from the Rules class. If the FEN string is valid, it returns an Optional containing the Position object. Otherwise, it returns an empty Optional.
+
+```java
+
+var fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+var positionOpt = PositionFactory.secureInstance(fen);
+
+positionOpt.ifPresentOrElse(
+    position -> System.out.println("Valid position created!"),
+    () -> System.out.println("Invalid FEN string, no position created.")
+);
+
+```
+
+
 ### Move Generation
 The library includes a move generator. It provides two utility methods for move generation. On one hand, "generateChildren" generates all positions derived from the position given as an argument. On the other hand, if we have already generated the child positions, the "generateMoves" method returns the list of Move objects in the same order as the list of child positions given as an argument. The methods of Generator are instance methods. To use an instance of this class, it is necessary to use the GeneratorFactory factory class.
 
@@ -241,17 +282,17 @@ import java.util.List;
 public class MoveGenerationExample {
     public static void main(String[] args) {
         // Create a valid position.
-        Position position = new Position("r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10");
+        var position = new Position("r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10");
 
         // Obtain an instance of Generator and calculate the positions derived from the position just created.
-        List<Position> children = GeneratorFactory.instance().generateChildren(position);
+        var children = GeneratorFactory.instance().generateChildren(position);
 
         // If we manually evaluate this position, we can demonstrate that the number of derived positions is 46.
         System.out.printf("The number of derived positions %s 46\n", children.size() == 46 ? "is" : "is not");
 
         // Now let's generate the derived moves
-        List<Move> moves = GeneratorFactory.instance().generateMoves(position, children);
-        String formattedMoves = moves.stream()
+        var moves = GeneratorFactory.instance().generateMoves(position, children);
+        var formattedMoves = moves.stream()
                 .map(move -> move.toString() + ",")
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
@@ -282,14 +323,14 @@ import java.util.NoSuchElementException;
 public class UtilExample {
     public static void main(String[] args) throws NoSuchElementException {
         // Create a valid position.
-        final Position position = new Position("3q1r2/2p3kp/r2p1npQ/p1nPp3/1p2P1P1/5P2/PPP5/1NKR2NR b - - 1 17");
+        var position = new Position("3q1r2/2p3kp/r2p1npQ/p1nPp3/1p2P1P1/5P2/PPP5/1NKR2NR b - - 1 17");
 
         // Let's use the Util class to check if white, the playing side, is in check (which it is).
-        boolean inCheck = Util.isInCheck(position);
+        var inCheck = Util.isInCheck(position);
         System.out.printf("The position %s is %s check.\n", position.toFen(), inCheck ? "in" : "not in");
 
         // Let's check the visible squares for the white queen
-        long visibleWQSquares = Util.visibleSquares(position, position.getSquares(Piece.WQ).stream().findFirst().orElseThrow());
+        var visibleWQSquares = Util.visibleSquares(position, position.getSquares(Piece.WQ).stream().findFirst().orElseThrow());
 
         // Note that in this case, the visible squares do not include enemy pieces, and that's because white pieces 
         // don't move. This is a behavior of this method; only enemy pieces are visible if it's our turn.
@@ -353,26 +394,26 @@ public class PGNInputExample {
         // Let's create the tags and other parameters for this example
         // Remember that all of these tags will come from some real input; there is no sense in manually creating them
         // except for demonstration purposes
-        Tag event = new Tag("event", "FooTournament");
-        Tag site = new Tag("site", "BarCity");
-        Tag date = new Tag("date", "2024.04.17");
-        Tag round = new Tag("round", "1");
-        Tag white = new Tag("white", "foo");
-        Tag black = new Tag("black", "bar");
-        Tag result = new Tag("result", ""); // it is unknown yet
+        var event = new Tag("event", "FooTournament");
+        var site = new Tag("site", "BarCity");
+        var date = new Tag("date", "2024.04.17");
+        var round = new Tag("round", "1");
+        var white = new Tag("white", "foo");
+        var black = new Tag("black", "bar");
+        var result = new Tag("result", ""); // it is unknown yet
         Set<Tag> supplementalTags = new HashSet<>();
         List<PGNMove> moves = new ArrayList<>();
 
         // Let's create the game object
-        Game game = new Game(event, site, date, round, white, black, result, supplementalTags, moves);
+        var game = new Game(event, site, date, round, white, black, result, supplementalTags, moves);
         
         // We can see that the initial position of this object is the initial position of the game
-        Position initial = game.positionAt(1, Side.WHITE);
+        var initial = game.positionAt(1, Side.WHITE);
         System.out.printf("%s\n", initial);
 
         // Now let's add moves; please ignore the fact that we are playing the fool's mate,
         // the idea is to bring a quick result to export to PGN.
-        Position current = game.addMove(MoveFactory.instance("e2e4", true));
+        var current = game.addMove(MoveFactory.instance("e2e4", true));
         System.out.printf("%s\n", current);
         current = game.addMove(MoveFactory.instance("e7e5", false));
         System.out.printf("%s\n", current);
@@ -391,7 +432,7 @@ public class PGNInputExample {
         game.setResult(new Tag("result","1-0"));
 
         // The toString() method of the Game class is the game in PGN format
-        String pgnGame = game.toString();
+        var pgnGame = game.toString();
         System.out.printf("\nPGN format:\n%s\n", pgnGame);
     }
 }
@@ -600,7 +641,7 @@ public class PGNImportExample {
 
         // Let suppose we have a game in PGN format somewhere on our computer
         // In this example, we'll generate this file manually
-        String pgnGame = "[Event \"All Russian-ch06 Amateur\"]\n" +
+        var pgnGame = "[Event \"All Russian-ch06 Amateur\"]\n" +
                 "[Site \"St Petersburg\"]\n" +
                 "[Date \"1909.03.09\"]\n" +
                 "[Round \"17\"]\n" +
@@ -627,13 +668,13 @@ public class PGNImportExample {
                 "Bf7 28. bxc5 Qg6 29. Rd6 Be6 30. Qe5 Nd7 31. Qd4 Kf7 32. c6 Nf6 33. h3 Re7 34.\n" +
                 "h4 Rg8 35. g3 Qf5 36. Qb6 Ng4 37. Rd2 Nxf2 0-1";
 
-        BufferedWriter writer = Files.newBufferedWriter(Paths.get("example.pgn"), StandardOpenOption.CREATE);
+        var writer = Files.newBufferedWriter(Paths.get("example.pgn"), StandardOpenOption.CREATE);
         writer.write(pgnGame);
 
         // Now simply call the parseGames method of the PGNHandler class to import this file
         // Note that this method is for PGN files that can have multiple games, hence it returns
         // a list
-        Game game = PGNHandler.parseGames(Paths.get("example.pgn")).stream().findFirst().orElseThrow();
+        var game = PGNHandler.parseGames(Paths.get("example.pgn")).stream().findFirst().orElseThrow();
 
         // Let's see some positions from the game
         System.out.printf("%s\n", game.positionAt(13, Side.WHITE));

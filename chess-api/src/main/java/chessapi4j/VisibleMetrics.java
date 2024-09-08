@@ -51,7 +51,7 @@ class VisibleMetrics {
 		return VISIBLE_OPTIONS[square][index][TRAILING_ZEROS[image]];
 	}
 
-	private static void fillMap() {
+	private static final void fillMap() {
 		TRAILING_ZEROS[0] = 7;
 		for (int i = 1; i < 0b10000000; i++) {
 			TRAILING_ZEROS[i] = Integer.numberOfTrailingZeros(i);

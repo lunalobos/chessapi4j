@@ -31,9 +31,7 @@ public class GeneratorTest {
 
 	@Test
 	void numberOfPositions1() {
-
 		Position position = new Position();
-
 		Date d1 = new Date();
 		assertEquals(20, generationTest(1, position));
 		assertEquals(400, generationTest(2, position));
