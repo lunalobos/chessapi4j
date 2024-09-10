@@ -846,7 +846,7 @@ Now, you can import the artifact into your project. Add the following to your de
 <dependency>
    <groupId>chessapi4j</groupId>
    <artifactId>chessapi4j</artifactId>
-   <version>1.2.3-RELEASE</version>
+   <version>1.2.4-RELEASE</version>
 </dependency>
 
 ```
