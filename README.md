@@ -30,7 +30,7 @@ The following links correspond to the historical documentation of several releva
 * [PGN_standard_1994-03-12](https://ia902908.us.archive.org/26/items/pgn-standard-1994-03-12/PGN_standard_1994-03-12.txt)
 * [UCI_April_2006](https://www.shredderchess.com/download/div/uci.zip)
 
-You can see a copy of these files [here](https://github.com/lunalobos/chessapi4j/ref).
+You can see a copy of these files [here](https://github.com/lunalobos/chessapi4j/tree/master/ref).
 
 ## Some Notions on Board Representation
 
@@ -783,7 +783,7 @@ This library offers interfaces and implementations for various search and evalua
 I have created a series of unit tests that ensure the characteristics specified by the library. In particular, the Generator class has been thoroughly tested, and I have tried to optimize it as much as possible to improve its speed. PGNHandler also has been tested.
 
 ## Javadoc
-ChessAPI4j provides basic [javadoc](https://lunalobos.github.io/chessapi4j/chess-api/apidocs/index.html), which will clear up many of the doubts you may have.
+ChessAPI4j provides basic [javadoc](https://lunalobos.github.io/chessapi4j/apidocs/chessapi4j/package-summary.html), which will clear up many of the doubts you may have.
 
 ## Contributing
 I have not yet created rules for contributing. For now, each case will be analyzed individually without any fixed criteria. If you find bugs, please open an issue or write to my email.
