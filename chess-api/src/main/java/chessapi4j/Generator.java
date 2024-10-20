@@ -19,6 +19,7 @@ package chessapi4j;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
 /**
  * @author lunalobos
  */
@@ -26,32 +27,40 @@ class CheckInfo {
 	private long inCheck;
 	private long inCheckMask;
 	private int checkCount;
+
 	public CheckInfo(long inCheck, long inCheckMask, int checkCount) {
 		super();
 		this.inCheck = inCheck;
 		this.inCheckMask = inCheckMask;
 		this.checkCount = checkCount;
 	}
+
 	public long getInCheck() {
 		return inCheck;
 	}
+
 	public void setInCheck(long inCheck) {
 		this.inCheck = inCheck;
 	}
+
 	public long getInCheckMask() {
 		return inCheckMask;
 	}
+
 	public void setInCheckMask(long inCheckMask) {
 		this.inCheckMask = inCheckMask;
 	}
+
 	public int getCheckCount() {
 		return checkCount;
 	}
+
 	public void setCheckCount(int checkCount) {
 		this.checkCount = checkCount;
 	}
 
 }
+
 /**
  * This class is intended to generate all possible moves
  * from an original position.
@@ -159,12 +168,16 @@ public final class Generator {
 	protected static final int[] ROOK_DIRECTIONS = new int[] { 4, 5, 6, 7 };
 	private static final int[] ROOK_PIECES = new int[] { Piece.BR.ordinal(), Piece.WR.ordinal() };
 	private static final int[] ROOKS = new int[] { Piece.BR.ordinal(), Piece.WR.ordinal() };
-//	private static final long[] OPTIONS = new long[] { 0L, 1L, 0b11L, 0b111L, 0b1111L, 0b11111L, 0b111111L,
-//			0b1111111L };
+	// private static final long[] OPTIONS = new long[] { 0L, 1L, 0b11L, 0b111L,
+	// 0b1111L, 0b11111L, 0b111111L,
+	// 0b1111111L };
 	private static final int[] EP_CHOICE = new int[] { 8, -8 };
-//	private static final long[] CORONATION_REF = new long[] { 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L,
-//			0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-//			0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L };
+	// private static final long[] CORONATION_REF = new long[] { 1L, 1L, 1L, 1L, 1L,
+	// 1L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L,
+	// 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
+	// 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
+	// 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 1L, 1L,
+	// 1L, 1L, 1L, 1L };
 	private static final VisibleMetrics VISIBLE_METRICS = new VisibleMetrics();
 
 	protected Generator() {
@@ -349,9 +362,10 @@ public final class Generator {
 		}
 	}
 
-
 	/**
-	 * Generates the list of legal positions that arise from this particular position.
+	 * Generates the list of legal positions that arise from this particular
+	 * position.
+	 * 
 	 * @param position
 	 * @return the list of legal positions that arise from this particular position
 	 */
@@ -438,7 +452,9 @@ public final class Generator {
 	}
 
 	/**
-	 * Generates a list with the Move objects for the given children in the same order.
+	 * Generates a list with the Move objects for the given children in the same
+	 * order.
+	 * 
 	 * @param parent
 	 * @param children
 	 * @return a list with the Move objects for the given children in the same order
@@ -535,7 +551,7 @@ public final class Generator {
 	}
 
 	protected static final long isPromotion(int finalSquare) {
-//		return CORONATION_REF[finalSquare];
+		// return CORONATION_REF[finalSquare];
 		return ((((finalSquare >>> 3) & 7L) >>> 2) & ((((finalSquare >>> 3) & 7L) >>> 1) & 1L)
 				& (((finalSquare >>> 3) & 7L) & 1L))
 				| (((((63 - finalSquare) >>> 3) & 7L) >>> 2) & (((((63 - finalSquare) >>> 3) & 7L) >>> 1) & 1L)
@@ -549,7 +565,8 @@ public final class Generator {
 		return maskedDifference >>> 4;
 	}
 
-	// If position has no king in the side that has to move it will throw ArrayIndexOutOfBoundsException
+	// If position has no king in the side that has to move it will throw
+	// ArrayIndexOutOfBoundsException
 	protected long isInCheck(Position position) {
 		final int kingPiece = -Piece.WK.ordinal() * (int) position.wm() + Piece.BK.ordinal();
 		final int kingSquare = squaresMap(position.getBits()[kingPiece - 1]);
@@ -940,8 +957,8 @@ public final class Generator {
 		return 8 * (-2 * (int) whiteMoveNumeric + 1) + enPassant;
 	}
 
-	protected static long visibleSquares(long[] bits, int[] directionsIndexs, int square, long whiteMoveNumeric) {
-		long moves = 0L;
+	protected static long visibleSquares(long[] bits, int[] directionsIndexs, int square, 
+			long whiteMoveNumeric) {
 		final long black = bits[6] | bits[7] | bits[8] | bits[9] | bits[10] | bits[11];
 		final long white = bits[0] | bits[1] | bits[2] | bits[3] | bits[4] | bits[5];
 		long friends;
@@ -953,11 +970,8 @@ public final class Generator {
 			friends = black;
 			enemies = white;
 		}
-		for (int index : directionsIndexs) {
-			moves = moves
-					| VISIBLE_METRICS.getVisible(square, index, QUEEN_MEGAMATRIX[square][index], friends, enemies);
-		}
-		return moves;
+		return VISIBLE_METRICS.computeVisible(square, directionsIndexs, QUEEN_MEGAMATRIX[square],
+				friends, enemies);
 	}
 
 	private static long visibleSquaresFast(int[] directionsIndexs, int square, long friends, long enemies) {

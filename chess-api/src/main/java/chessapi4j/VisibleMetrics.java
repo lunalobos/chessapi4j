@@ -32,6 +32,16 @@ class VisibleMetrics {
 		fillMap();
 	}
 
+	public final long computeVisible(int square, int[] directionsIndexs, int[][] directions, long friends,
+			long enemies) {
+		long moves = 0L;
+		for (int index : directionsIndexs) {
+			moves = moves
+					| getVisible(square, index, directions[index], friends, enemies);
+		}
+		return moves;
+	}
+
 	public final long getVisible(int square, int index, int[] direction, long friends, long enemies) {
 
 		// space transformation: board -> direction
@@ -75,6 +85,5 @@ class VisibleMetrics {
 		}
 
 	}
-
 
 }
