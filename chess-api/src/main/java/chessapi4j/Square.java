@@ -57,4 +57,8 @@ public enum Square {
 	public String getName() {
 		return toString().toLowerCase();
 	}
+
+	public Bitboard getBitboard() {
+		return new Bitboard(this);
+	}
 }

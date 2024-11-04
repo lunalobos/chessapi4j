@@ -15,6 +15,14 @@
  */
 package chessapi4j;
 
+import lombok.Data;
+import lombok.NonNull;
+import java.util.Random;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.stream.IntStream;
+import java.util.Collections;
+
 /**
  * Wrapped bitboard class for several debugging or experimenting purposes. I
  * don't recommend use it in high performance related functionality.
@@ -24,6 +32,59 @@ package chessapi4j;
  * @since 1.2.3
  */
 public class Bitboard {
+
+	/**
+	 * An object that contains the friends and enemies from a given position.
+	 * 
+	 * @author lunalobos
+	 */
+	@Data
+	public static class FriendsEnemiesPair {
+		@NonNull
+		private Bitboard friends;
+		@NonNull
+		private Bitboard enemys;
+	}
+
+	private static long randomLong(int bitPopulation, Random random) {
+
+		List<Integer> bits = new ArrayList<>();
+		bits.addAll(IntStream.range(0, random.nextInt(bitPopulation + 1))
+				.map(i -> 1).boxed().toList());
+		for (int i = 0; i < 64 - bits.size(); i++) {
+			bits.add(0);
+		}
+		Collections.shuffle(bits);
+		var output = 0L;
+		for (int i = 0; i < bits.size(); i++) {
+			output |= bits.get(i) << i;
+		}
+		return output;
+	}
+
+	/**
+	 * Get an empty bitboard.
+	 * 
+	 * @return an empty bitboard
+	 * 
+	 * @since 1.2.5
+	 */
+	public static Bitboard empty(){
+		return new Bitboard(0L);
+	}
+
+	/**
+	 * Get a random pair of friends and enemies.
+	 * 
+	 * @return
+	 */
+	public static FriendsEnemiesPair randomPair(Random random) {
+		var friends = randomLong(16, random);
+		var enemies = randomLong(16, random);
+		enemies = enemies & ~friends;
+		return new FriendsEnemiesPair(new Bitboard(friends), new Bitboard(enemies));
+	}
+
 	/**
 	 * Apply the "and bit to bit" operation over the values of the bitboards and
 	 * retrieves a new {@code Bitboard} object that wraps the result of this
@@ -187,6 +248,65 @@ public class Bitboard {
 		;
 		value &= ~(highest);
 		return new Bitboard(highest);
+	}
+
+	/**
+	 * Computes the bitwise AND of the two bitboards.
+	 *
+	 * @param bitboard the other bitboard
+	 * @return a new bitboard with the result of the AND operation
+	 */
+	public Bitboard and(Bitboard bitboard) {
+		return Bitboard.and(this, bitboard);
+	}
+
+	/**
+	 * Computes the bitwise OR of the two bitboards.
+	 *
+	 * @param bitboard the other bitboard
+	 * @return a new bitboard with the result of the OR operation
+	 */
+	public Bitboard or(Bitboard bitboard) {
+		return Bitboard.or(this, bitboard);
+	}
+
+	/**
+	 * Computes the bitwise XOR of the two bitboards.
+	 *
+	 * @param bitboard the other bitboard
+	 * @return a new bitboard with the result of the XOR operation
+	 */
+	public Bitboard xor(Bitboard bitboard) {
+		return Bitboard.xor(this, bitboard);
+	}
+
+	/**
+	 * Performs a bitwise right shift (>>>) on the given bitboard.
+	 *
+	 * @param shift the number of bits to shift
+	 * @return a new {@code Bitboard} object with the result of the shift
+	 */
+	public Bitboard shiftRight(int shift) {
+		return Bitboard.shiftRight(this, shift);
+	}
+
+	/**
+	 * Performs a bitwise left shift (<<) on the given bitboard.
+	 *
+	 * @param shift the number of bits to shift
+	 * @return a new {@code Bitboard} object with the result of the shift
+	 */
+	public Bitboard shiftLeft(int shift) {
+		return Bitboard.shiftLeft(this, shift);
+	}
+
+	/**
+	 * Negates the given bitboard.
+	 *
+	 * @return a new bitboard with the negated value
+	 */
+	public Bitboard not() {
+		return Bitboard.not(this);
 	}
 
 	@Override

@@ -192,7 +192,7 @@ public class Util {
 	 * @param position
 	 * @param directionAndSense
 	 * @param square
-	 * @return
+	 * @return the bitboard representing the visible squares
 	 *
 	 * @since 1.2.3
 	 */
@@ -206,7 +206,7 @@ public class Util {
 	 *
 	 * @param position
 	 * @param square
-	 * @return
+	 * @return the bitboard representing the visible squares
 	 *
 	 * @since 1.2.3
 	 */
@@ -247,7 +247,7 @@ public class Util {
 	 * Column number for the given square (zero-based)
 	 *
 	 * @param square
-	 * @return the column number for the given square
+	 * @return the column number for the given square 0-based
 	 */
 	public static int getCol(int square) {
 		return square & 7;
@@ -257,7 +257,7 @@ public class Util {
 	 * Column number for the given square object
 	 *
 	 * @param square
-	 * @return the column number for the given square
+	 * @return the column number for the given square 0-based
 	 *
 	 * @since 1.2.3
 	 */
@@ -307,12 +307,25 @@ public class Util {
 	/**
 	 * Square for the given column and row
 	 *
-	 * @param col
-	 * @param row
+	 * @param col 0-based
+	 * @param row 0-based
 	 * @return the column character for the given square
 	 */
 	public static int getSquareIndex(int col, int row) {
 		return col + row * 8;
+	}
+
+	/**
+	 * Square for the given column and row
+	 *
+	 * @param col 0-based
+	 * @param row 0-based
+	 * @return the column character for the given square
+	 * 
+	 * @since 1.2.5
+	 */
+	public static Square getSquare(int col, int row) {
+		return Square.values()[col + row * 8];
 	}
 
 	/**
@@ -382,7 +395,7 @@ public class Util {
 	 * @return the column number for the given column character
 	 */
 	public static int getColIndex(String column) {
-		return Arrays.binarySearch(COLS, column);
+		return Arrays.binarySearch(COLS, column.toLowerCase());
 	}
 
 	/**
@@ -411,5 +424,40 @@ public class Util {
 			sum += Long.bitCount(bitRep);
 		}
 		return sum;
+	}
+	
+	/**
+	 * Returns a bitboard representing the given column.
+	 *
+	 * @param column the column name (a, b, c, ... , h)
+	 * @return a bitboard representing the given column
+	 * 
+	 * @since 1.2.5
+	 */
+	public static Bitboard column(String column){
+		int col = getColIndex(column);
+		var value = Bitboard.empty();
+		for(int i = 0; i < 8; i++){
+			var square = getSquare(col, i);
+			value = Bitboard.or(value, square.getBitboard());
+		}
+		return value;
+	}
+
+	/**
+	 * Returns a bitboard representing the given row.
+	 *
+	 * @param row the row number (1, 2, 3, ... , 8)
+	 * @return a bitboard representing the given row
+	 * 
+	 * @since 1.2.5
+	 */
+	public static Bitboard row(int row){
+		var value = Bitboard.empty();
+		for(int i = 0; i < 8; i++){
+			var square = getSquare(i, row - 1);
+			value = Bitboard.or(value, square.getBitboard());
+		}
+		return value;
 	}
 }
