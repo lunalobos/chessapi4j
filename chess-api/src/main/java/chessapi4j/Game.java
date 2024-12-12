@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * The Game class represents a chess game. The class Provides a structured
  * representation of a chess game and has methods to access, modify, and
  * represent the game in PGN format.
- *
+ *	
  * @author lunalobos
  * @since 1.1.0
  */
