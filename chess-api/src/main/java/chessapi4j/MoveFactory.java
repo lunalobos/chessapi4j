@@ -125,6 +125,6 @@ public class MoveFactory {
 				return instance(origin, target);
 		}
 
-		throw new MovementException(String.format("Invalid move string: %s", move));
+		throw MovementException.invalidString(move);
 	};
 }

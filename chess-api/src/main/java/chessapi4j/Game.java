@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  * @author lunalobos
  * @since 1.1.0
  */
-public class Game implements Iterable<Position>{
+public class Game implements Iterable<Position> {
 	private Tag event, site, date, round, white, black, result;
 	private Set<Tag> suplementalTags;
 	private List<PGNMove> moves;
@@ -239,9 +239,9 @@ public class Game implements Iterable<Position>{
 	public Position addMove(Move move) throws MovementException {
 		var lastPosition = positions.getLast();
 		positions.add(lastPosition.childFromMove(MoveFactory.instance(move))
-				.orElseThrow(() -> new MovementException(String.format("%s is not legal", move))));
-		if(move instanceof PGNMove) {
-			moves.add((PGNMove)move);
+				.orElseThrow(() -> new MovementException(move, lastPosition)));
+		if (move instanceof PGNMove) {
+			moves.add((PGNMove) move);
 		} else {
 			moves.add(new PGNMove(move, lastPosition));
 		}
@@ -250,11 +250,38 @@ public class Game implements Iterable<Position>{
 	}
 
 	/**
+	 * Adds a move to the game. The move is expected to be in UCI Notation. The move
+	 * is executed in the current position of the game and the new position is added
+	 * to the list of positions of the game. The last position of the game is
+	 * returned.
+	 *
+	 * @param move the move in UCI/SAN format
+	 * @return the last position of the game
+	 * @throws MovementException if the move is illegal
+	 * 
+	 * @since 1.2.5
+	 */
+	public Position addMove(String move) throws MovementException {
+		return addMove(MoveFactory.instance(move, currentPosition().isWhiteMove()));
+	}
+
+	/**
+	 * Returns the current position of the game.
+	 *
+	 * @return the current position
+	 *
+	 * @since 1.2.5
+	 */
+	public Position currentPosition() {
+		return positions.getLast();
+	}
+
+	/**
 	 * Returns the position at the given move.
 	 *
 	 * @param moveNumber the move number
 	 * @param sideToMove the side to move
-	 * @param after if true, return the position after the move
+	 * @param after      if true, return the position after the move
 	 * @return the position at the given move number
 	 *
 	 * @since 1.2.3

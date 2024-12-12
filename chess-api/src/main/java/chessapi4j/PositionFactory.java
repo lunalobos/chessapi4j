@@ -77,8 +77,9 @@ public class PositionFactory {
 	public static Position fromMoves(Position p, List<Move> moves) throws MovementException {
 		Position fp = p.makeClone();
 		for (Move move : moves) {
+			final var copy = fp;
 			fp = fp.childFromMove(move)
-					.orElseThrow(() -> new MovementException(String.format("Invalid move %s.", move)));
+					.orElseThrow(() -> new MovementException(move, copy));
 		}
 		return fp;
 	}
