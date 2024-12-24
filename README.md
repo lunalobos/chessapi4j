@@ -1,3 +1,5 @@
+[![Static Badge](https://img.shields.io/badge/javadoc-1.2.6-brightgreen?style=plastic)](https://lunalobos.github.io/chessapi4j/apidocs/chessapi4j/package-summary.html)
+
 # Overview
 
 ChessAPI4j is a Java library that allows representing and performing operations related to chess. With this library, it is possible to create representations of positions, generate legal moves, execute moves, detect moves between different positions, work with PGN files (import and export), use or implement heuristic evaluations of positions, and use or implement algorithms for searching the best move.
@@ -30,7 +32,7 @@ The following links correspond to the historical documentation of several releva
 * [PGN_standard_1994-03-12](https://ia902908.us.archive.org/26/items/pgn-standard-1994-03-12/PGN_standard_1994-03-12.txt)
 * [UCI_April_2006](https://www.shredderchess.com/download/div/uci.zip)
 
-You can see a copy of these files [here](https://github.com/lunalobos/chessapi4j/ref).
+You can see a copy of these files [here](https://github.com/lunalobos/chessapi4j/tree/master/ref).
 
 ## Some Notions on Board Representation
 
@@ -846,7 +848,7 @@ Now, you can import the artifact into your project. Add the following to your de
 <dependency>
    <groupId>chessapi4j</groupId>
    <artifactId>chessapi4j</artifactId>
-   <version>1.2.5-RELEASE</version>
+   <version>1.2.6-RELEASE</version>
 </dependency>
 
 ```
