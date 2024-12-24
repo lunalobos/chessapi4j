@@ -1,6 +1,6 @@
 [![Static Badge](https://img.shields.io/badge/javadoc-1.2.6-brightgreen?style=plastic)](https://lunalobos.github.io/chessapi4j/apidocs/chessapi4j/package-summary.html)
 
-![chessapi4j](https://chessapi4j.my.canva.site/media/e20fdd642abcefc915f73acb67aa6ac1.jpg)
+![chessapi4j](https://chessapi4j.my.canva.site/media/7547b1586c5d91c735c3b3a67838eb13.png)
 
 # Overview
 
