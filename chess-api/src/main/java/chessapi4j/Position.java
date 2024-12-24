@@ -45,6 +45,9 @@ public final class Position implements Serializable {
 	private transient boolean repetitions;
 	private transient boolean lackOfMaterial;
 
+	/**
+	 * Creates a new position with the started position.
+	 */
 	public Position() {
 		enPassant = -1;
 		bits = new long[12];
@@ -88,14 +91,33 @@ public final class Position implements Serializable {
 		this.longCastleBlackNumeric = longCastleBlackNumeric;
 	}
 
+	/**
+	 * Constructs a Position from a FEN string.
+	 * 
+	 * <p>
+	 * The FEN string must be valid.
+	 * </p>
+	 * 
+	 * @param fen
+	 */
 	public Position(String fen) {
 		fromFen(fen);
 	}
 
+	/**
+	 * Returns the black short castle rights as a long.
+	 * 
+	 * @return the black short castle rights as a long
+	 */
 	public final long bk() {
 		return shortCastleBlackNumeric;
 	}
 
+	/**
+	 * Returns the black long castle rights as a long.
+	 * 
+	 * @return the black long castle rights as a long
+	 */
 	public final long bq() {
 		return longCastleBlackNumeric;
 	}
@@ -159,42 +181,42 @@ public final class Position implements Serializable {
 					}
 				} else {
 					switch (character) {
-					case 'P':
-						squares[h * 8 + i] = Piece.WP.ordinal();
-						break;
-					case 'N':
-						squares[h * 8 + i] = Piece.WN.ordinal();
-						break;
-					case 'B':
-						squares[h * 8 + i] = Piece.WB.ordinal();
-						break;
-					case 'R':
-						squares[h * 8 + i] = Piece.WR.ordinal();
-						break;
-					case 'Q':
-						squares[h * 8 + i] = Piece.WQ.ordinal();
-						break;
-					case 'K':
-						squares[h * 8 + i] = Piece.WK.ordinal();
-						break;
-					case 'p':
-						squares[h * 8 + i] = Piece.BP.ordinal();
-						break;
-					case 'n':
-						squares[h * 8 + i] = Piece.BN.ordinal();
-						break;
-					case 'b':
-						squares[h * 8 + i] = Piece.BB.ordinal();
-						break;
-					case 'r':
-						squares[h * 8 + i] = Piece.BR.ordinal();
-						break;
-					case 'q':
-						squares[h * 8 + i] = Piece.BQ.ordinal();
-						break;
-					case 'k':
-						squares[h * 8 + i] = Piece.BK.ordinal();
-						break;
+						case 'P':
+							squares[h * 8 + i] = Piece.WP.ordinal();
+							break;
+						case 'N':
+							squares[h * 8 + i] = Piece.WN.ordinal();
+							break;
+						case 'B':
+							squares[h * 8 + i] = Piece.WB.ordinal();
+							break;
+						case 'R':
+							squares[h * 8 + i] = Piece.WR.ordinal();
+							break;
+						case 'Q':
+							squares[h * 8 + i] = Piece.WQ.ordinal();
+							break;
+						case 'K':
+							squares[h * 8 + i] = Piece.WK.ordinal();
+							break;
+						case 'p':
+							squares[h * 8 + i] = Piece.BP.ordinal();
+							break;
+						case 'n':
+							squares[h * 8 + i] = Piece.BN.ordinal();
+							break;
+						case 'b':
+							squares[h * 8 + i] = Piece.BB.ordinal();
+							break;
+						case 'r':
+							squares[h * 8 + i] = Piece.BR.ordinal();
+							break;
+						case 'q':
+							squares[h * 8 + i] = Piece.BQ.ordinal();
+							break;
+						case 'k':
+							squares[h * 8 + i] = Piece.BK.ordinal();
+							break;
 					}
 					i++;
 				}
@@ -212,18 +234,18 @@ public final class Position implements Serializable {
 			char[] chars = castlePart.toCharArray();
 			for (char character : chars) {
 				switch (character) {
-				case 'K':
-					setShortCastleWhite(true);
-					break;
-				case 'k':
-					setShortCastleBlack(true);
-					break;
-				case 'Q':
-					setLongCastleWhite(true);
-					break;
-				case 'q':
-					setLongCastleBlack(true);
-					break;
+					case 'K':
+						setShortCastleWhite(true);
+						break;
+					case 'k':
+						setShortCastleBlack(true);
+						break;
+					case 'Q':
+						setLongCastleWhite(true);
+						break;
+					case 'q':
+						setLongCastleBlack(true);
+						break;
 				}
 			}
 		}
@@ -471,10 +493,26 @@ public final class Position implements Serializable {
 
 	}
 
+	/**
+	 * Sets black short castle rights as a long.
+	 * <p>
+	 * Setting this value manually could potentially lead to inconsistencies.
+	 *
+	 * @param bk
+	 *           black short castle rights as a long
+	 */
 	public final void setBK(long bk) {
 		this.shortCastleBlackNumeric = bk;
 	}
 
+	/**
+	 * Sets black long castle rights as a long.
+	 * <p>
+	 * Setting this value manually could potentially lead to inconsistencies.
+	 *
+	 * @param bq
+	 *           black long castle rights as a long
+	 */
 	public final void setBQ(long bq) {
 		this.longCastleBlackNumeric = bq;
 	}
@@ -634,14 +672,37 @@ public final class Position implements Serializable {
 		setWM(whiteMove ? 1L : 0L);
 	}
 
+	/**
+	 * Sets the white king side castle rights as a long.
+	 * <p>
+	 * Setting this value manually could potentially lead to inconsistencies.
+	 *
+	 * @param wk
+	 *           the white king side castle rights as a long
+	 */
 	public final void setWK(long wk) {
 		this.shortCastleWhiteNumeric = wk;
 	}
 
+	/**
+	 * Sets white move rights as a long, meaning 1 for white to move and 0 for black
+	 * to move.
+	 * <p>
+	 * Setting this value manually could potentially lead to inconsistencies.
+	 *
+	 * @param wm
+	 */
 	public final void setWM(long wm) {
 		this.whiteMoveNumeric = wm;
 	}
 
+	/**
+	 * Sets white long castle rights as a long.
+	 * <p>
+	 * Setting this value manually could potentially lead to inconsistencies.
+	 *
+	 * @param wq
+	 */
 	public final void setWQ(long wq) {
 		this.longCastleWhiteNumeric = wq;
 	}
@@ -658,44 +719,44 @@ public final class Position implements Serializable {
 		for (int i = 7; i >= 0; i--) {
 			for (int j = 0; j < 8; j++) {
 				switch (Piece.values()[squares[i * 8 + j]]) {
-				case WP:
-					sb.append("| P ");
-					break;
-				case WN:
-					sb.append("| N ");
-					break;
-				case WB:
-					sb.append("| B ");
-					break;
-				case WR:
-					sb.append("| R ");
-					break;
-				case WQ:
-					sb.append("| Q ");
-					break;
-				case WK:
-					sb.append("| K ");
-					break;
-				case BP:
-					sb.append("| p ");
-					break;
-				case BN:
-					sb.append("| n ");
-					break;
-				case BB:
-					sb.append("| b ");
-					break;
-				case BR:
-					sb.append("| r ");
-					break;
-				case BQ:
-					sb.append("| q ");
-					break;
-				case BK:
-					sb.append("| k ");
-					break;
-				default:
-					sb.append("|   ");
+					case WP:
+						sb.append("| P ");
+						break;
+					case WN:
+						sb.append("| N ");
+						break;
+					case WB:
+						sb.append("| B ");
+						break;
+					case WR:
+						sb.append("| R ");
+						break;
+					case WQ:
+						sb.append("| Q ");
+						break;
+					case WK:
+						sb.append("| K ");
+						break;
+					case BP:
+						sb.append("| p ");
+						break;
+					case BN:
+						sb.append("| n ");
+						break;
+					case BB:
+						sb.append("| b ");
+						break;
+					case BR:
+						sb.append("| r ");
+						break;
+					case BQ:
+						sb.append("| q ");
+						break;
+					case BK:
+						sb.append("| k ");
+						break;
+					default:
+						sb.append("|   ");
 				}
 				if (j == 7) {
 					int row = i + 1;
@@ -730,44 +791,44 @@ public final class Position implements Serializable {
 				if (squares[j] == Piece.EMPTY.ordinal() && j == i * 8 + 7)
 					rowFenSB.append((Integer) emptyCounter);
 				switch (Piece.values()[squares[j]]) {
-				case WP:
-					rowFenSB.append("P");
-					break;
-				case WN:
-					rowFenSB.append("N");
-					break;
-				case WB:
-					rowFenSB.append("B");
-					break;
-				case WR:
-					rowFenSB.append("R");
-					break;
-				case WQ:
-					rowFenSB.append("Q");
-					break;
-				case WK:
-					rowFenSB.append("K");
-					break;
-				case BP:
-					rowFenSB.append("p");
-					break;
-				case BN:
-					rowFenSB.append("n");
-					break;
-				case BB:
-					rowFenSB.append("b");
-					break;
-				case BR:
-					rowFenSB.append("r");
-					break;
-				case BQ:
-					rowFenSB.append("q");
-					break;
-				case BK:
-					rowFenSB.append("k");
-					break;
-				default:
-					rowFenSB.append("");
+					case WP:
+						rowFenSB.append("P");
+						break;
+					case WN:
+						rowFenSB.append("N");
+						break;
+					case WB:
+						rowFenSB.append("B");
+						break;
+					case WR:
+						rowFenSB.append("R");
+						break;
+					case WQ:
+						rowFenSB.append("Q");
+						break;
+					case WK:
+						rowFenSB.append("K");
+						break;
+					case BP:
+						rowFenSB.append("p");
+						break;
+					case BN:
+						rowFenSB.append("n");
+						break;
+					case BB:
+						rowFenSB.append("b");
+						break;
+					case BR:
+						rowFenSB.append("r");
+						break;
+					case BQ:
+						rowFenSB.append("q");
+						break;
+					case BK:
+						rowFenSB.append("k");
+						break;
+					default:
+						rowFenSB.append("");
 				}
 			}
 			if (i == 7)
@@ -810,14 +871,30 @@ public final class Position implements Serializable {
 		return stringRepresentation();
 	}
 
+	/**
+	 * Returns the white short castling rights as a long.
+	 * 
+	 * @return the white short castling rights as a long
+	 */
 	public final long wk() {
 		return shortCastleWhiteNumeric;
 	}
 
+	/**
+	 * Returns the white move rights as a long, meaning 1 for white to move and 0
+	 * for black to move.
+	 * 
+	 * @return the white move rights as a long
+	 */
 	public final long wm() {
 		return whiteMoveNumeric;
 	}
 
+	/**
+	 * Returns the white long castling rights as a long.
+	 * 
+	 * @return the white long castling rights as a long
+	 */
 	public final long wq() {
 		return longCastleWhiteNumeric;
 	}
@@ -881,5 +958,35 @@ public final class Position implements Serializable {
 		return Util.longToList(bits[piece.ordinal() - 1]).stream().map(l -> Long.numberOfTrailingZeros(l))
 				.map(i -> Square.get(i)).collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
 
+	}
+
+	/**
+	 * Checks if the game is over.
+	 * <p>
+	 * The game is over if it is checkmate, stalemate, fifty moves, lack of material
+	 * or
+	 * repetitions.
+	 *
+	 * @return true if the game is over, false otherwise
+	 * 
+	 * @since 1.2.6
+	 */
+	public boolean isGameOver() {
+		return isCheckmate() || isStalemate() || isFiftyMoves() || isLackOfMaterial() || isRepetitions();
+	}
+
+	/**
+	 * Retrieves if the current position is a forced draw.
+	 * <p>
+	 * A position is considered a draw if it results from stalemate, the fifty-move
+	 * rule, insufficient material, or threefold repetition.
+	 *
+	 * @return true if the position is a draw, false otherwise
+	 * 
+	 * @since 1.2.6
+	 */
+
+	public boolean isDraw() {
+		return isStalemate() || isFiftyMoves() || isLackOfMaterial() || isRepetitions();
 	}
 }

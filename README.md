@@ -1,3 +1,5 @@
+[![Static Badge](https://img.shields.io/badge/javadoc-1.2.6-brightgreen?style=plastic)](https://lunalobos.github.io/chessapi4j/apidocs/chessapi4j/package-summary.html)
+
 # Overview
 
 ChessAPI4j is a Java library that allows representing and performing operations related to chess. With this library, it is possible to create representations of positions, generate legal moves, execute moves, detect moves between different positions, work with PGN files (import and export), use or implement heuristic evaluations of positions, and use or implement algorithms for searching the best move.
