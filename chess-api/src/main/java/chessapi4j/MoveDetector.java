@@ -20,11 +20,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-
-
-
 /**
- * Class for move detection between two positions.
+ * Class for move detection between two positions. It can be useful for performance reasons.
  *
  * @author lunalobos
  *
@@ -39,7 +36,19 @@ public final class MoveDetector {
 	}
 
 	/**
-	 * Returns the move with no check for exceptions.
+	 * Returns the move between the positions. The answer can be empty if the
+	 * positions are not really related.
+	 *
+	 * @return the move
+	 * @since 1.2.6
+	 */
+	public Optional<Move> getMove() {
+		return Optional.ofNullable(getUnsafeMove());
+	}
+
+	/**
+	 * Returns the move between the positions. The answer can be null if the
+	 * positions are not really related.
 	 *
 	 * @return the move
 	 */
