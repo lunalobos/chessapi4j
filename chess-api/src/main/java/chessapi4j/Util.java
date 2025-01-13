@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Miguel Angel Luna Lobos
+ * Copyright 2025 Miguel Angel Luna Lobos
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -186,6 +186,8 @@ public class Util {
 	 */
 	public static final int[] ROOK_DIRECTIONS = new int[] { 4, 5, 6, 7 };
 
+	
+	
 	/**
 	 * Retrieves visible squares bitboard representation.
 	 *
@@ -197,7 +199,7 @@ public class Util {
 	 * @since 1.2.3
 	 */
 	public static long visibleSquares(Position position, MoveDirection directionAndSense, Square square) {
-		return Generator.visibleSquares(position.getBits(), new int[] { directionAndSense.ordinal() }, square.ordinal(),
+		return Generator.VISIBLE_METRICS.visibleSquares(position.getBits(), new int[] { directionAndSense.ordinal() }, square.ordinal(),
 				position.wm());
 	}
 
@@ -223,7 +225,7 @@ public class Util {
 	 */
 	protected static long visibleSquares(Position position, int[] directionsIndexs, int square) {
 
-		return Generator.visibleSquares(position.getBits(), directionsIndexs, square, position.wm());
+		return Generator.VISIBLE_METRICS.visibleSquares(position.getBits(), directionsIndexs, square, position.wm());
 	}
 
 	/**
@@ -358,6 +360,19 @@ public class Util {
 		int collum = getColIndex(new String(new char[] { chars[0] }));
 		int row = Integer.parseInt(new String(new char[] { chars[1] })) - 1;
 		return getSquareIndex(collum, row);
+	}
+
+
+	/**
+	 * Retrieves the square object for the given algebraic notation square.
+	 *
+	 * @param square the algebraic notation square
+	 * @return the square object for the given algebraic notation square
+	 *
+	 * @since 1.2.7
+	 */
+	public static Square getSquare(String square) {
+		return Square.values()[getSquareIndex(square)];
 	}
 
 	/**

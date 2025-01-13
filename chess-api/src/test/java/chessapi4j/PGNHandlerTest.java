@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Miguel Angel Luna Lobos
+ * Copyright 2025 Miguel Angel Luna Lobos
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,21 +18,18 @@ package chessapi4j;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
-import java.nio.file.Paths;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 class PGNHandlerTest {
-
 	@AfterEach
 	void tearDown() throws Exception {
 	}
 
 	@Test
 	void testParseGame() {
-		String path = "example.pgn";
-		List<Game> games = PGNHandler.parseGames(Paths.get(path));
+		List<Game> games = PGNHandler.parseGames(this.getClass().getClassLoader().getResourceAsStream("example.pgn"));
 		assertFalse(games.isEmpty());
 		// some assertions
 		assertEquals("Bc4", games.get(0).getMoves().get(6).toString());

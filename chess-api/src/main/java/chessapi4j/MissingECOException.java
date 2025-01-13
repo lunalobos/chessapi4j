@@ -15,20 +15,16 @@
  */
 package chessapi4j;
 
-import static org.junit.jupiter.api.Assertions.*;
+/**
+ * This exception is thrown when a game produce no result in the ECO code
+ * search.
+ * 
+ * @author lunalobos
+ * @since 1.2.7
+ */
+public class MissingECOException extends RuntimeException {
 
-import java.util.Optional;
-
-import org.junit.jupiter.api.Test;
-
-class SearchTest {
-
-	@Test
-	void test() {
-		Search search = SearchFactory.searchImpl();
-		Position p = new Position();
-		Optional<Move> move = search.seekBestMove(p, () -> EvaluatorFactory.getImpl(), 5, 3);
-		assertTrue(move.isPresent());
-	}
-
+    public MissingECOException(Game game) {
+        super("Missing ECO code for game: \n%s".formatted(game));
+    }
 }

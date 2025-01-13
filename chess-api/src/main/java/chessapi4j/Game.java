@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Miguel Angel Luna Lobos
+ * Copyright 2025 Miguel Angel Luna Lobos
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,23 +18,31 @@ package chessapi4j;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
 /**
  * The Game class represents a chess game. The class Provides a structured
  * representation of a chess game and has methods to access, modify, and
  * represent the game in PGN format.
- *	
+ * 
  * @author lunalobos
  * @since 1.1.0
  */
 public class Game implements Iterable<Position> {
+	private static final Eco eco = new Eco();
+
 	private Tag event, site, date, round, white, black, result;
 	private Set<Tag> suplementalTags;
 	private List<PGNMove> moves;
 	private List<Position> positions;
+	private EcoDescriptor ecoDescriptor;
+	private Map<String, String> tags;
 
 	/**
 	 * Constructs a Game object with the specified parameters.
@@ -52,6 +60,13 @@ public class Game implements Iterable<Position> {
 	public Game(Tag event, Tag site, Tag date, Tag round, Tag white, Tag black, Tag result, Set<Tag> suplementalTags,
 			List<PGNMove> moves) {
 		super();
+		Objects.requireNonNull(event, "Event tag cannot be null.");
+		Objects.requireNonNull(site, "Site tag cannot be null.");
+		Objects.requireNonNull(date, "Date tag cannot be null.");
+		Objects.requireNonNull(round, "Round tag cannot be null.");
+		Objects.requireNonNull(white, "White tag cannot be null.");
+		Objects.requireNonNull(black, "Black tag cannot be null.");
+		Objects.requireNonNull(result, "Result tag cannot be null.");
 		this.event = event;
 		this.site = site;
 		this.date = date;
@@ -59,9 +74,24 @@ public class Game implements Iterable<Position> {
 		this.white = white;
 		this.black = black;
 		this.result = result;
-		this.suplementalTags = suplementalTags;
+		this.suplementalTags = new CopyOnWriteArraySet<>(suplementalTags);
 		this.moves = moves;
 		positions = createHistory(moves, suplementalTags);
+
+		tags = new ConcurrentHashMap<>();
+		tags.put("Event", event.getValue());
+		tags.put("Site", site.getValue());
+		tags.put("Date", date.getValue());
+		tags.put("Round", round.getValue());
+		tags.put("White", white.getValue());
+		tags.put("Black", black.getValue());
+		tags.put("Result", result.getValue());
+
+		if (suplementalTags != null) {
+			for (Tag tag : suplementalTags) {
+				tags.put(tag.getName(), tag.getValue());
+			}
+		}
 	}
 
 	/**
@@ -80,6 +110,7 @@ public class Game implements Iterable<Position> {
 	 */
 	public void setEvent(Tag event) {
 		this.event = event;
+		tags.put("Event", event.getValue());
 	}
 
 	/**
@@ -98,6 +129,7 @@ public class Game implements Iterable<Position> {
 	 */
 	public void setSite(Tag site) {
 		this.site = site;
+		tags.put("Site", site.getValue());
 	}
 
 	/**
@@ -116,6 +148,7 @@ public class Game implements Iterable<Position> {
 	 */
 	public void setDate(Tag date) {
 		this.date = date;
+		tags.put("Date", date.getValue());
 	}
 
 	/**
@@ -134,6 +167,7 @@ public class Game implements Iterable<Position> {
 	 */
 	public void setRound(Tag round) {
 		this.round = round;
+		tags.put("Round", round.getValue());
 	}
 
 	/**
@@ -153,6 +187,7 @@ public class Game implements Iterable<Position> {
 	 */
 	public void setWhite(Tag white) {
 		this.white = white;
+		tags.put("White", white.getValue());
 	}
 
 	/**
@@ -171,6 +206,7 @@ public class Game implements Iterable<Position> {
 	 */
 	public void setBlack(Tag black) {
 		this.black = black;
+		tags.put("Black", black.getValue());
 	}
 
 	/**
@@ -189,6 +225,7 @@ public class Game implements Iterable<Position> {
 	 */
 	public void setResult(Tag result) {
 		this.result = result;
+		tags.put("Result", result.getValue());
 	}
 
 	/**
@@ -206,7 +243,17 @@ public class Game implements Iterable<Position> {
 	 * @param suplementalTags the supplemental tags to set
 	 */
 	public void setSuplementalTags(Set<Tag> suplementalTags) {
+		if (this.suplementalTags != null) {
+			for (Tag tag : suplementalTags) {
+				tags.remove(tag.getName());
+			}
+		}
 		this.suplementalTags = suplementalTags;
+		if (suplementalTags != null) {
+			for (Tag tag : suplementalTags) {
+				tags.put(tag.getName(), tag.getValue());
+			}
+		}
 	}
 
 	/**
@@ -415,6 +462,75 @@ public class Game implements Iterable<Position> {
 	@Override
 	public Iterator<Position> iterator() {
 		return positions.iterator();
+	}
+
+	/**
+	 * Retrieves the ECO (Encyclopaedia of Chess Openings) descriptor for the game.
+	 * If the ECO code is not explicitly set, it is determined by searching the ECO
+	 * codes database.
+	 * 
+	 * <p>
+	 * Note: Due to the inherent ambiguity in ECO code classification, the returned
+	 * ECO may differ from those assigned by other chess platforms like ChessBase
+	 * or Chess.com. In testing with a sample of 521 games from a ChessBase
+	 * database, the accuracy was found to be just above 70%. The ECO classification
+	 * includes many transpositions, and no standard specification exists for
+	 * handling them.
+	 * 
+	 * <p>
+	 * This library employs a direct approach for determining the ECO code. Starting
+	 * from the first move of the game, the moves are concatenated sequentially, and
+	 * all combinations are checked against the ECO database. The final ECO code
+	 * corresponds to the longest move sequence that matches an entry in the ECO
+	 * database.
+	 * 
+	 * @return the ECO descriptor for the game or null if the game has no moves
+	 * 
+	 * @throws MissingECOException if the ECO code cannot be found. This is an
+	 *                             unchecked exception and should never occur unless
+	 *                             the object is corrupted.
+	 * 
+	 * @since 1.2.7
+	 */
+	public EcoDescriptor getEcoDescriptor() {
+
+		return Optional.ofNullable(ecoDescriptor).orElse(calculateEcoDescriptor());
+	}
+
+	private EcoDescriptor calculateEcoDescriptor() {
+		if (moves.size() == 0)
+			return null;
+		var i = 0;
+		var movesBuilder = new StringBuilder();
+		var iterator = positions.iterator();
+		while (i < moves.size()) {
+			movesBuilder.append(moves.get(i).toString()).append(" ");
+			var position = iterator.next();
+			ecoDescriptor = eco.get(movesBuilder.toString().trim()).orElse(eco.get(position).orElse(ecoDescriptor));
+			i++;
+		}
+		if (ecoDescriptor == null)
+			throw new MissingECOException(this);
+		return ecoDescriptor;
+	}
+
+	/**
+	 * Returns the value of the tag with the given name. If the tag is not present
+	 * in the game, an empty Optional is returned.
+	 * 
+	 * @param tagName the name of the tag to search for
+	 * @return an Optional with the value of the tag if present, or an empty
+	 *         Optional if not present
+	 * 
+	 * @since 1.2.7
+	 */
+	public Optional<String> getTagValue(String tagName) {
+		var tagName_ = tagName.toUpperCase();
+		if (tagName_.equals("ECO") && tags.get(tagName_) == null) {
+			Optional.ofNullable(getEcoDescriptor()).map(EcoDescriptor::getEco)
+				.ifPresent(eco -> tags.put("ECO", eco));
+		}
+		return Optional.ofNullable(tags.get(tagName));
 	}
 
 }

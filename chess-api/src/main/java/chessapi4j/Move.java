@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Miguel Angel Luna Lobos
+ * Copyright 2025 Miguel Angel Luna Lobos
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,13 @@ public class Move {
 	private long move;
 	private int origin, promotionPiece;
 
+	/**
+	 * Creates a new move instance
+	 * 
+	 * @param move           the bitboard target representation as a long
+	 * @param origin         the origin square as an int
+	 * @param promotionPiece the promotion piece as an int
+	 */
 	public Move(long move, int origin, int promotionPiece) {
 		this.move = move;
 		this.origin = origin;
@@ -38,7 +45,33 @@ public class Move {
 	}
 
 	/**
+	 * Creates a new move instance
+	 * 
+	 * @param origin the origin square
+	 * @param target the target square
+	 * 
+	 * @since 1.2.7
+	 */
+	public Move(Square origin, Square target) {
+		this(1L << target.ordinal(), origin.ordinal(), -1);
+	}
+
+	/**
+	 * Creates a new move instance
+	 * 
+	 * @param origin the origin square
+	 * @param target the target square
+	 * @param promotionPiece the promotion piece
+	 * 
+	 * @since 1.2.7
+	 */
+	public Move(Square origin, Square target, Piece promotionPiece) {
+		this(1L << target.ordinal(), origin.ordinal(), promotionPiece.ordinal());
+	}
+
+	/**
 	 * Origin square
+	 * 
 	 * @return the origin square
 	 */
 	public int getOrigin() {
@@ -47,6 +80,7 @@ public class Move {
 
 	/**
 	 * Origin square
+	 * 
 	 * @return the origin square
 	 *
 	 * @since 1.2.3
@@ -57,6 +91,7 @@ public class Move {
 
 	/**
 	 * Bitboard representing the move. It's equivalent to {@code 1L << targetSquare}
+	 * 
 	 * @return the bitboard move representation
 	 */
 	public long getMove() {
@@ -65,6 +100,7 @@ public class Move {
 
 	/**
 	 * Wrapped bitboard representing the move.
+	 * 
 	 * @return the bitboard move representation
 	 *
 	 * @since 1.2.3
@@ -75,6 +111,7 @@ public class Move {
 
 	/**
 	 * Target square
+	 * 
 	 * @return the target square
 	 */
 	public int getTarget() {
@@ -83,6 +120,7 @@ public class Move {
 
 	/**
 	 * Target square
+	 * 
 	 * @return the target square
 	 *
 	 * @since 1.2.3
@@ -93,6 +131,7 @@ public class Move {
 
 	/**
 	 * Promotion piece or -1 if there is no promotion.
+	 * 
 	 * @return the promotion piece or -1 if there is no promotion
 	 */
 	public int getPromotionPiece() {
@@ -101,12 +140,13 @@ public class Move {
 
 	/**
 	 * Promotion piece or {@code Piece.EMPTY} if there is no promotion.
+	 * 
 	 * @return the promotion piece or {@code Piece.EMPTY} if there is no promotion
 	 *
 	 * @since 1.2.3
 	 */
 	public Piece promotionPiece() {
-		if(promotionPiece < 0)
+		if (promotionPiece < 0)
 			return Piece.EMPTY;
 		else {
 			return Piece.values()[promotionPiece];
@@ -115,6 +155,7 @@ public class Move {
 
 	/**
 	 * Origin square setter.
+	 * 
 	 * @param origin
 	 */
 	public void setOrigin(int origin) {
@@ -123,6 +164,7 @@ public class Move {
 
 	/**
 	 * Origin square setter.
+	 * 
 	 * @param origin
 	 *
 	 * @since 1.2.3
@@ -133,6 +175,7 @@ public class Move {
 
 	/**
 	 * Target square setter.
+	 * 
 	 * @param target
 	 */
 	public void setTarget(int target) {
@@ -141,6 +184,7 @@ public class Move {
 
 	/**
 	 * Target square setter.
+	 * 
 	 * @param target
 	 *
 	 * @since 1.2.3
@@ -151,6 +195,7 @@ public class Move {
 
 	/**
 	 * Promotion piece setter.
+	 * 
 	 * @param promotionPiece
 	 */
 	public void setPromotionPiece(int promotionPiece) {
@@ -159,6 +204,7 @@ public class Move {
 
 	/**
 	 * Promotion piece setter.
+	 * 
 	 * @param promotionPiece
 	 *
 	 * @since 1.2.3
