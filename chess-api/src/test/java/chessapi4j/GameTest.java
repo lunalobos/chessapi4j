@@ -17,18 +17,20 @@ package chessapi4j;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 
-class SearchTest {
+public class GameTest {
 
-	@Test
-	void test() {
-		Search search = SearchFactory.searchImpl();
-		Position p = new Position();
-		Optional<Move> move = search.seekBestMove(p, () -> EvaluatorFactory.getImpl(), 5, 3);
-		assertTrue(move.isPresent());
-	}
+    @Test
+    void eco() {
+        var is = this.getClass().getClassLoader().getResourceAsStream("example.pgn");
+        var games = PGNHandler.parseGames(is);
+
+        var coincidenceCount = games.stream().filter(game -> {
+            return game.getEcoDescriptor().getEco().equals(game.getTagValue("ECO").orElse(""));
+        }).count();
+        System.out.println("coincidentes: " + coincidenceCount);
+        assertTrue(((double) coincidenceCount) / ((double) games.size()) > 0.74);
+    }
 
 }

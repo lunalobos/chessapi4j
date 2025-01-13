@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Miguel Angel Luna Lobos
+ * Copyright 2025 Miguel Angel Luna Lobos
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+
+import static chessapi4j.Square.*;
 
 /**
  * Position representation
@@ -51,18 +53,18 @@ public final class Position implements Serializable {
 	public Position() {
 		enPassant = -1;
 		bits = new long[12];
-		bits[0] = 0b0000000000000000000000000000000000000000000000001111111100000000L;
-		bits[1] = 0b0000000000000000000000000000000000000000000000000000000001000010L;
-		bits[2] = 0b0000000000000000000000000000000000000000000000000000000000100100L;
-		bits[3] = 0b0000000000000000000000000000000000000000000000000000000010000001L;
-		bits[4] = 0b0000000000000000000000000000000000000000000000000000000000001000L;
-		bits[5] = 0b0000000000000000000000000000000000000000000000000000000000010000L;
-		bits[6] = 0b0000000011111111000000000000000000000000000000000000000000000000L;
-		bits[7] = 0b0100001000000000000000000000000000000000000000000000000000000000L;
-		bits[8] = 0b0010010000000000000000000000000000000000000000000000000000000000L;
-		bits[9] = 0b1000000100000000000000000000000000000000000000000000000000000000L;
-		bits[10] = 0b0000100000000000000000000000000000000000000000000000000000000000L;
-		bits[11] = 0b0001000000000000000000000000000000000000000000000000000000000000L;
+		bits[Piece.WP.ordinal() - 1] = new Bitboard(A2, B2, C2, D2, E2, F2, G2, H2).getValue();
+		bits[Piece.WN.ordinal() - 1] = new Bitboard(B1, G1).getValue();
+		bits[Piece.WB.ordinal() - 1] = new Bitboard(C1, F1).getValue();
+		bits[Piece.WR.ordinal() - 1] = new Bitboard(A1, H1).getValue();
+		bits[Piece.WQ.ordinal() - 1] = new Bitboard(D1).getValue();
+		bits[Piece.WK.ordinal() - 1] = new Bitboard(E1).getValue();
+		bits[Piece.BP.ordinal() - 1] = new Bitboard(A7, B7, C7, D7, E7, F7, G7, H7).getValue();
+		bits[Piece.BN.ordinal() - 1] = new Bitboard(B8, G8).getValue();
+		bits[Piece.BB.ordinal() - 1] = new Bitboard(C8, F8).getValue();
+		bits[Piece.BR.ordinal() - 1] = new Bitboard(A8, H8).getValue();
+		bits[Piece.BQ.ordinal() - 1] = new Bitboard(D8).getValue();
+		bits[Piece.BK.ordinal() - 1] = new Bitboard(E8).getValue();
 		whiteMoveNumeric = 1L;
 		shortCastleWhiteNumeric = 1L;
 		longCastleWhiteNumeric = 1L;
@@ -73,22 +75,25 @@ public final class Position implements Serializable {
 
 	protected Position(long[] bits, int enPassant, long whiteMoveNumeric, long shortCastleWhiteNumeric,
 			long shortCastleBlackNumeric, long longCastleWhiteNumeric, long longCastleBlackNumeric, int movesCounter,
-			int halfMovesCounter) {
+			int halfMovesCounter, boolean checkmate, boolean stalemate, boolean fiftyMoves, boolean repetitions,
+			boolean lackOfMaterial) {
 		this.enPassant = enPassant;
 
 		this.movesCounter = movesCounter;
 		this.halfMovesCounter = halfMovesCounter;
-		this.checkmate = false;
-		this.stalemate = false;
-		this.fiftyMoves = false;
-		this.repetitions = false;
-		this.lackOfMaterial = false;
+
 		this.bits = bits;
 		this.whiteMoveNumeric = whiteMoveNumeric;
 		this.shortCastleWhiteNumeric = shortCastleWhiteNumeric;
 		this.longCastleWhiteNumeric = longCastleWhiteNumeric;
 		this.shortCastleBlackNumeric = shortCastleBlackNumeric;
 		this.longCastleBlackNumeric = longCastleBlackNumeric;
+
+		this.checkmate = checkmate;
+		this.stalemate = stalemate;
+		this.fiftyMoves = fiftyMoves;
+		this.repetitions = repetitions;
+		this.lackOfMaterial = lackOfMaterial;
 	}
 
 	/**
@@ -478,7 +483,8 @@ public final class Position implements Serializable {
 	public final Position makeClone() {
 		return new Position(bits.clone(), getEnPassant(), whiteMoveNumeric, shortCastleWhiteNumeric,
 				shortCastleBlackNumeric, longCastleWhiteNumeric, longCastleBlackNumeric, getMovesCounter(),
-				getHalfMovesCounter());
+				getHalfMovesCounter(), isCheckmate(), isStalemate(), isFiftyMoves(), isRepetitions(),
+				isLackOfMaterial());
 	}
 
 	/**
@@ -988,5 +994,31 @@ public final class Position implements Serializable {
 
 	public boolean isDraw() {
 		return isStalemate() || isFiftyMoves() || isLackOfMaterial() || isRepetitions();
+	}
+
+	/**
+	 * Sets the {@code Bitboard} object that represent the positions of the given
+	 * {@code Piece}.
+	 * 
+	 * @param piece    the piece
+	 * @param bitboard the new bitboard
+	 *
+	 * @since 1.2.7
+	 */
+	public void setBitboard(Piece piece, Bitboard bitboard) {
+		bits[piece.ordinal() - 1] = bitboard.getValue();
+	}
+
+	/**
+	 * Sets the {@code Bitboard} object that represent the positions of the given
+	 * {@code Piece}.
+	 * 
+	 * @param piece   the piece
+	 * @param squares the where the piece is
+	 *
+	 * @since 1.2.7
+	 */
+	public void setBitboard(Piece piece, Square... squares) {
+		bits[piece.ordinal() - 1] = new Bitboard(squares).getValue();
 	}
 }

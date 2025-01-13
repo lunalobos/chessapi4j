@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Miguel Angel Luna Lobos
+ * Copyright 2025 Miguel Angel Luna Lobos
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package chessapi4j;
 
+import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -91,8 +92,8 @@ public class Rules {
 	}
 
 	/**
-	 * Checks if the FEN corresponds to a legal position. This function does not 
-	 * verify if the position is possible to reach through valid moves; it only 
+	 * Checks if the FEN corresponds to a legal position. This function does not
+	 * verify if the position is possible to reach through valid moves; it only
 	 * ensures that the basic rules are followed.
 	 * 
 	 * <p>
@@ -237,6 +238,35 @@ public class Rules {
 
 		return has8Rows && validRows && validSideToMove && validCastleAbility && validEnPassant
 				&& validHalfMoveClock && validFullMoveCounter && kingsPresence;
+	}
+
+	private static boolean isCheckmate(Position position) {
+		var enemiesDeque = new ArrayDeque<Integer>();
+		var bits = position.getBits();
+		final var black = bits[6] | bits[7] | bits[8] | bits[9] | bits[10] | bits[11];
+		final var white = bits[0] | bits[1] | bits[2] | bits[3] | bits[4] | bits[5];
+		long friends;
+		long enemies;
+		var isWhiteMove = position.isWhiteMove();
+		if (isWhiteMove) {
+			friends = white;
+			enemies = black;
+		} else {
+			friends = black;
+			enemies = white;
+		}
+		var kingSquare = Long.numberOfTrailingZeros(
+				bits[isWhiteMove ? Piece.WK.ordinal() - 1 : Piece.BK.ordinal() - 1]);
+		var enemiesCopy = enemies;
+		while(enemiesCopy != 0L){
+			var bitboard = Long.lowestOneBit(enemies);
+			enemiesCopy &= ~bitboard;
+			var square = Square.values()[Long.numberOfTrailingZeros(bitboard)];
+			var piece = position.getPiece(square);
+
+		}
+		// TODO continue implementing in other versions
+		return false;
 	}
 
 }

@@ -15,20 +15,18 @@
  */
 package chessapi4j;
 
-import static org.junit.jupiter.api.Assertions.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-import java.util.Optional;
-
-import org.junit.jupiter.api.Test;
-
-class SearchTest {
-
-	@Test
-	void test() {
-		Search search = SearchFactory.searchImpl();
-		Position p = new Position();
-		Optional<Move> move = search.seekBestMove(p, () -> EvaluatorFactory.getImpl(), 5, 3);
-		assertTrue(move.isPresent());
-	}
-
+/**
+ * A simple data class with the ECO code and name of the opening.
+ * 
+ * @author lunalobos
+ * @since 1.2.7
+ */
+@Data
+@AllArgsConstructor
+public class EcoDescriptor {
+    private String eco;
+    private String name;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Miguel Angel Luna Lobos
+ * Copyright 2025 Miguel Angel Luna Lobos
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -165,7 +165,7 @@ public final class Generator {
 //	private static final long[] CORONATION_REF = new long[] { 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L,
 //			0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
 //			0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L };
-	private static final VisibleMetrics VISIBLE_METRICS = new VisibleMetrics();
+	protected static final VisibleMetrics VISIBLE_METRICS = new VisibleMetrics();
 
 	protected Generator() {
 
@@ -191,10 +191,10 @@ public final class Generator {
 		position.setBQ(new long[] { position.bq() & lcBitsMasked, position.bq() }[whiteMove]);
 	}
 
-	private void applyHalfMoveRule(Position p, long move, long enemys, Position position) {
+	private void applyHalfMoveRule(Position p, long move, long enemies, Position position) {
 		final int aux = (int) (6L & (position.wm() << 1 | position.wm() << 2));
 
-		final long enemyOperation = enemys & move;
+		final long enemyOperation = enemies & move;
 
 		final long pawnOperation = move & p.getBits()[Piece.BP.ordinal() - aux - 1];
 
@@ -206,7 +206,7 @@ public final class Generator {
 	private void bishopMoves(long br, int square, int pieceType, int kingSquare, long enemies, long friends,
 			Position position, long checkMask, long inCheckMask, List<Position> children) {
 
-		final long pseudoLegalMoves = visibleSquaresFast(BISHOP_DIRECTIONS, square, friends, enemies);
+		final long pseudoLegalMoves = VISIBLE_METRICS.visibleSquaresFast(BISHOP_DIRECTIONS, square, friends, enemies);
 		final long[] pin = new long[] { -1L, pseudoLegalMoves & checkMask & defenseDirection(kingSquare, square) };
 		final long isPin = pin[(int) ((br & checkMask) >>> squaresMap(br & checkMask))];
 		long legalMoves = pseudoLegalMoves & isPin & inCheckMask;
@@ -221,9 +221,9 @@ public final class Generator {
 
 	}
 
-	private long createCheckMask(int kingSquare, long enemys, long friends, Position position, long nextWhiteMove,
+	private long createCheckMask(int kingSquare, long enemies, long friends, Position position, long nextWhiteMove,
 			long[] bits) {
-		final long empty = ~(enemys | friends);
+		final long empty = ~(enemies | friends);
 		final int[] enemyRookChoice = new int[] { Piece.WR.ordinal(), Piece.BR.ordinal() };
 		final int[] enemyQueenChoice = new int[] { Piece.WQ.ordinal(), Piece.BQ.ordinal() };
 		final int[] enemyBishopChoice = new int[] { Piece.WB.ordinal(), Piece.BB.ordinal() };
@@ -232,32 +232,32 @@ public final class Generator {
 		final int enemyBishop = enemyBishopChoice[(int) position.wm()];
 		long checkMask = 0L;
 		for (int j = 0; j < 4; j++) {
-			final long visibleEmptyOrFriendsRD = visibleSquares(position.getBits(), new int[] { ROOK_DIRECTIONS[j] },
+			final long visibleEmptyOrFriendsRD = VISIBLE_METRICS.visibleSquares(position.getBits(), new int[] { ROOK_DIRECTIONS[j] },
 					kingSquare, nextWhiteMove);
 			final long friendsRD = visibleEmptyOrFriendsRD & ~empty;
 			final long[] testBitsRD = bits.clone();
 			for (int i = 0; i < 12; i++) {
 				testBitsRD[i] = testBitsRD[i] & ~friendsRD;
 			}
-			final long visibleEmptyOrEnemyRD = visibleSquares(testBitsRD, new int[] { ROOK_DIRECTIONS[j] }, kingSquare,
+			final long visibleEmptyOrEnemyRD = VISIBLE_METRICS.visibleSquares(testBitsRD, new int[] { ROOK_DIRECTIONS[j] }, kingSquare,
 					position.wm());
-			final long enemysThreadsRD = visibleEmptyOrEnemyRD & (bits[enemyRook - 1] | bits[enemyQueen - 1]);
+			final long enemiesThreadsRD = visibleEmptyOrEnemyRD & (bits[enemyRook - 1] | bits[enemyQueen - 1]);
 			final long[] choice = new long[] { 0L, friendsRD | visibleEmptyOrEnemyRD };
-			checkMask = checkMask | choice[(int) (enemysThreadsRD >>> squaresMap(enemysThreadsRD))];
+			checkMask = checkMask | choice[(int) (enemiesThreadsRD >>> squaresMap(enemiesThreadsRD))];
 		}
 		for (int j = 0; j < 4; j++) {
-			final long visibleEmptyOrFriendsBD = visibleSquares(position.getBits(), new int[] { BISHOP_DIRECTIONS[j] },
+			final long visibleEmptyOrFriendsBD = VISIBLE_METRICS.visibleSquares(position.getBits(), new int[] { BISHOP_DIRECTIONS[j] },
 					kingSquare, nextWhiteMove);
 			final long friendsBD = visibleEmptyOrFriendsBD & ~empty;
 			final long[] testBitsBD = bits.clone();
 			for (int i = 0; i < 12; i++) {
 				testBitsBD[i] = testBitsBD[i] & ~friendsBD;
 			}
-			final long visibleEmptyOrEnemyBD = visibleSquares(testBitsBD, new int[] { BISHOP_DIRECTIONS[j] },
+			final long visibleEmptyOrEnemyBD = VISIBLE_METRICS.visibleSquares(testBitsBD, new int[] { BISHOP_DIRECTIONS[j] },
 					kingSquare, position.wm());
-			final long enemysThreadsBD = visibleEmptyOrEnemyBD & (bits[enemyBishop - 1] | bits[enemyQueen - 1]);
+			final long enemiesThreadsBD = visibleEmptyOrEnemyBD & (bits[enemyBishop - 1] | bits[enemyQueen - 1]);
 			final long[] choice = new long[] { 0L, friendsBD | visibleEmptyOrEnemyBD };
-			checkMask = checkMask | choice[(int) (enemysThreadsBD >>> squaresMap(enemysThreadsBD))];
+			checkMask = checkMask | choice[(int) (enemiesThreadsBD >>> squaresMap(enemiesThreadsBD))];
 		}
 
 		return checkMask;
@@ -419,12 +419,12 @@ public final class Generator {
 		}
 	}
 
-	private void generateKingPositions(long moves, int pieceType, int originSquare, long enemys, Position position,
+	private void generateKingPositions(long moves, int pieceType, int originSquare, long enemies, Position position,
 			List<Position> children) {
 		while (moves != 0L) {
 			final long move = moves & -moves;
 			final Position newPosition = position.makeClone();
-			makeMove(newPosition, move, pieceType, originSquare, enemys, position);
+			makeMove(newPosition, move, pieceType, originSquare, enemies, position);
 			final Position testPosition = newPosition.makeClone();
 			testPosition.setWM(position.wm());
 			if (isInCheck(testPosition) != 1L) {
@@ -452,12 +452,12 @@ public final class Generator {
 		return legalMoves;
 	}
 
-	private void generatePositions(long moves, int pieceType, int square, int[] pawnsDirections, long enemys,
+	private void generatePositions(long moves, int pieceType, int square, int[] pawnsDirections, long enemies,
 			Position position, List<Position> children) {
 		while (moves != 0L) {
 			final long move = moves & -moves;
 			final Position newPosition = position.makeClone();
-			makeMove(newPosition, move, pieceType, square, enemys, position);
+			makeMove(newPosition, move, pieceType, square, enemies, position);
 			children.add(newPosition);
 			moves = moves & ~move;
 		}
@@ -518,7 +518,7 @@ public final class Generator {
 
 		if (enemyBishopsAndQuens != 0L) {
 			for (int i = 0; i < 4; i++) {
-				final long visible = visibleSquares(bits, new int[] { i }, kingSquare, whiteMoveNumeric);
+				final long visible = VISIBLE_METRICS.visibleSquares(bits, new int[] { i }, kingSquare, whiteMoveNumeric);
 				isInCheck = isInCheck
 						| ((enemyBishopsAndQuens & visible) >>> squaresMap(enemyBishopsAndQuens & visible));
 			}
@@ -527,7 +527,7 @@ public final class Generator {
 		final long enemyRooksAndQuens = bits[enemies[3] - 1] | bits[enemies[4] - 1];
 		if (enemyRooksAndQuens != 0L) {
 			for (int i = 4; i < 8; i++) {
-				final long visible = visibleSquares(bits, new int[] { i }, kingSquare, whiteMoveNumeric);
+				final long visible = VISIBLE_METRICS.visibleSquares(bits, new int[] { i }, kingSquare, whiteMoveNumeric);
 				isInCheck = isInCheck | ((enemyRooksAndQuens & visible) >>> squaresMap(enemyRooksAndQuens & visible));
 			}
 		}
@@ -570,14 +570,14 @@ public final class Generator {
 		final int kingSquare = squaresMap(bits[kingPiece - 1]);
 		long isInCheck = 0L;
 		final int aux = (int) (6L & (whiteMoveNumeric << 1 | whiteMoveNumeric << 2));
-		final int[] enemys = { Piece.WP.ordinal() + aux, Piece.WN.ordinal() + aux, Piece.WB.ordinal() + aux,
+		final int[] enemies = { Piece.WP.ordinal() + aux, Piece.WN.ordinal() + aux, Piece.WB.ordinal() + aux,
 				Piece.WR.ordinal() + aux, Piece.WQ.ordinal() + aux, Piece.WK.ordinal() + aux };
 		// pawns directions
 
 		for (int pawnDirection : pawnsDirections) {
 
 			final long enemyPawnDangerLocation = 1L << pawnDirection;
-			final long operation = ((bits[enemys[0] - 1] & enemyPawnDangerLocation) >>> pawnDirection);
+			final long operation = ((bits[enemies[0] - 1] & enemyPawnDangerLocation) >>> pawnDirection);
 			isInCheck = isInCheck | operation;
 
 			inCheckMask = inCheckMask | new long[] { 0L, enemyPawnDangerLocation }[(int) operation];
@@ -590,7 +590,7 @@ public final class Generator {
 		for (int square : KING_MATRIX[kingSquare]) {
 			kingDirectionsBits = kingDirectionsBits | (1L << square);
 		}
-		final long operation = kingDirectionsBits & bits[enemys[5] - 1];
+		final long operation = kingDirectionsBits & bits[enemies[5] - 1];
 		final long operation3 = (operation >>> squaresMap(operation));
 		isInCheck = isInCheck | operation3;
 		checkCount += (int) operation3;
@@ -600,16 +600,16 @@ public final class Generator {
 		for (int square : KNIGHT_MATRIX[kingSquare]) {
 			knightDirectionsBits = 1L << square;
 
-			final long operation2 = ((knightDirectionsBits & bits[enemys[1] - 1]) >>> square);
+			final long operation2 = ((knightDirectionsBits & bits[enemies[1] - 1]) >>> square);
 			isInCheck = isInCheck | operation2;
 			inCheckMask = inCheckMask | new long[] { 0L, knightDirectionsBits }[(int) operation2];
 			checkCount += (int) operation2;
 		}
 		// bishops directions
-		final long enemyBishopsAndQuens = bits[enemys[2] - 1] | bits[enemys[4] - 1];
+		final long enemyBishopsAndQuens = bits[enemies[2] - 1] | bits[enemies[4] - 1];
 
 		for (int i = 0; i < 4; i++) {
-			final long visible = visibleSquares(bits, new int[] { i }, kingSquare, whiteMoveNumeric);
+			final long visible = VISIBLE_METRICS.visibleSquares(bits, new int[] { i }, kingSquare, whiteMoveNumeric);
 
 			final long operation2 = ((enemyBishopsAndQuens & visible) >>> squaresMap(enemyBishopsAndQuens & visible));
 			isInCheck = isInCheck | operation2;
@@ -617,9 +617,9 @@ public final class Generator {
 			checkCount += (int) operation2;
 		}
 		// rooks directions
-		final long enemyRooksAndQuens = bits[enemys[3] - 1] | bits[enemys[4] - 1];
+		final long enemyRooksAndQuens = bits[enemies[3] - 1] | bits[enemies[4] - 1];
 		for (int i = 4; i < 8; i++) {
-			final long visible = visibleSquares(bits, new int[] { i }, kingSquare, whiteMoveNumeric);
+			final long visible = VISIBLE_METRICS.visibleSquares(bits, new int[] { i }, kingSquare, whiteMoveNumeric);
 
 			final long operation2 = ((enemyRooksAndQuens & visible) >>> squaresMap(enemyRooksAndQuens & visible));
 			isInCheck = isInCheck | operation2;
@@ -869,7 +869,7 @@ public final class Generator {
 			advanceMoves = advanceMoves | ((1L & ~isPromotion(squareToOccupy)
 					& ~isEnPassant(square, squareToOccupy, position.wm())) << squareToOccupy);
 		}
-		final long visible = visibleSquaresFast(new int[] { 4, 5, 6, 7 }, square, friends, enemies);
+		final long visible = VISIBLE_METRICS.visibleSquaresFast(new int[] { 4, 5, 6, 7 }, square, friends, enemies);
 		advanceMoves = advanceMoves & ~(friends | enemies | ~visible);
 		advanceCoronationMoves = advanceCoronationMoves & ~(friends | enemies | ~visible);
 		advanceEnPassantMoves = advanceEnPassantMoves & ~(friends | enemies | ~visible);
@@ -897,7 +897,7 @@ public final class Generator {
 	private void queenMoves(long br, int square, int pieceType, int kingSquare, long friends, long enemies,
 			Position position, long checkMask, long inCheckMask, List<Position> children) {
 		final long defense = defenseDirection(kingSquare, square);
-		final long pseudoLegalMoves = visibleSquaresFast(QUEEN_DIRECTIONS, square, friends, enemies);
+		final long pseudoLegalMoves = VISIBLE_METRICS.visibleSquaresFast(QUEEN_DIRECTIONS, square, friends, enemies);
 		final long[] pin = new long[] { -1L, pseudoLegalMoves & checkMask & defense };
 		final long pinMask = pin[(int) ((br & checkMask) >>> squaresMap(br & checkMask))];
 		long legalMoves = pseudoLegalMoves & pinMask & inCheckMask;
@@ -914,7 +914,7 @@ public final class Generator {
 	private void rookMoves(long br, int square, int pieceType, int[] pawnsDirections, int kingSquare, long enemies,
 			long friends, Position position, long checkMask, long inCheckMask, List<Position> children) {
 		final long defense = defenseDirection(kingSquare, square);
-		final long pseudoLegalMoves = visibleSquaresFast(ROOK_DIRECTIONS, square, friends, enemies);
+		final long pseudoLegalMoves = VISIBLE_METRICS.visibleSquaresFast(ROOK_DIRECTIONS, square, friends, enemies);
 		final long[] pin = new long[] { -1L, pseudoLegalMoves & checkMask & defense };
 		final long pinMask = pin[(int) ((br & checkMask) >>> squaresMap(br))];
 		long legalMoves = pseudoLegalMoves & pinMask & inCheckMask;
@@ -940,33 +940,6 @@ public final class Generator {
 		return 8 * (-2 * (int) whiteMoveNumeric + 1) + enPassant;
 	}
 
-	protected static long visibleSquares(long[] bits, int[] directionsIndexs, int square, long whiteMoveNumeric) {
-		long moves = 0L;
-		final long black = bits[6] | bits[7] | bits[8] | bits[9] | bits[10] | bits[11];
-		final long white = bits[0] | bits[1] | bits[2] | bits[3] | bits[4] | bits[5];
-		long friends;
-		long enemies;
-		if (whiteMoveNumeric == 1) {
-			friends = white;
-			enemies = black;
-		} else {
-			friends = black;
-			enemies = white;
-		}
-		for (int index : directionsIndexs) {
-			moves = moves
-					| VISIBLE_METRICS.getVisible(square, index, QUEEN_MEGAMATRIX[square][index], friends, enemies);
-		}
-		return moves;
-	}
-
-	private static long visibleSquaresFast(int[] directionsIndexs, int square, long friends, long enemies) {
-		long moves = 0L;
-		for (int index : directionsIndexs) {
-			moves = moves
-					| VISIBLE_METRICS.getVisible(square, index, QUEEN_MEGAMATRIX[square][index], friends, enemies);
-		}
-		return moves;
-	}
+	
 
 }

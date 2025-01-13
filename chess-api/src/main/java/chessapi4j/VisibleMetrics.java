@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Miguel Angel Luna Lobos
+ * Copyright 2025 Miguel Angel Luna Lobos
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,6 +75,37 @@ class VisibleMetrics {
 		}
 
 	}
+
+	protected long visibleSquares(long[] bits, int[] directionsIndexs, int square, long whiteMoveNumeric) {
+		long moves = 0L;
+		final long black = bits[6] | bits[7] | bits[8] | bits[9] | bits[10] | bits[11];
+		final long white = bits[0] | bits[1] | bits[2] | bits[3] | bits[4] | bits[5];
+		long friends;
+		long enemies;
+		if (whiteMoveNumeric == 1) {
+			friends = white;
+			enemies = black;
+		} else {
+			friends = black;
+			enemies = white;
+		}
+		for (int index : directionsIndexs) {
+			moves = moves
+					| getVisible(square, index, Util.QUEEN_MEGAMATRIX[square][index], friends, enemies);
+		}
+		return moves;
+	}
+
+	protected long visibleSquaresFast(int[] directionsIndexs, int square, long friends, long enemies) {
+		long moves = 0L;
+		for (int index : directionsIndexs) {
+			moves = moves
+					| getVisible(square, index, Util.QUEEN_MEGAMATRIX[square][index], friends, enemies);
+		}
+		return moves;
+	}
+
+	
 
 
 }

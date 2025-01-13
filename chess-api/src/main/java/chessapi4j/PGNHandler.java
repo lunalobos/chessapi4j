@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Miguel Angel Luna Lobos
+ * Copyright 2025 Miguel Angel Luna Lobos
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -217,6 +217,9 @@ public class PGNHandler {
 		Piece piece = Piece.values()[position.getSquares()[move.getOrigin()]];
 		sbSAN.append(PIECES[piece.ordinal()]);
 
+		// Determinates if the piece is a pawn.
+		var isPawn = piece == Piece.WP || piece == Piece.BP;
+
 		// Determine if there are one or more pieces of the same type that can move to
 		// the same destination.
 
@@ -236,32 +239,34 @@ public class PGNHandler {
 		boolean sameRow = !moves.stream().filter(m -> Util.getRow(m.getOrigin()) == Util.getRow(move.getOrigin()))
 				.collect(Collectors.toCollection(LinkedList::new)).isEmpty();
 
-		// If they are in the same row but not in the same column, prepend the column
-		// letter to the destination square.
-		if (sameRow && !sameColumn)
+		// If they are in the same row but not in the same column, append the column
+		// letter.
+		if (sameRow && !sameColumn && !isPawn)
 			sbSAN.append(Util.getColLetter(move.getOrigin()));
 
-		// If they are in the same column but not in the same row, prepend the row
-		// number to the destination square.
+		// If they are in the same column but not in the same row, append the row
+		// number.
 		if (!sameRow && sameColumn)
 			sbSAN.append(Util.getRow(move.getOrigin()) + 1);
 
-		// If they are in the same column and row, prepend the origin square to the
-		// destination square.
+		// If they are in the same column and row, append the origin square.
 		if (sameRow && sameColumn)
 			sbSAN.append(Util.getColLetter(move.getOrigin()) + (Util.getRow(move.getOrigin()) + 1));
 
-		// If they are not in the same row nor the same column, prepend the column
-		// letter to the destination square.
-		if (!sameRow && !sameColumn && !moves.isEmpty())
+		// If they are not in the same row nor the same column, append the column
+		// letter.
+		if (!sameRow && !sameColumn && !moves.isEmpty() && !isPawn)
 			sbSAN.append(Util.getColLetter(move.getOrigin()));
 
 		// Determining if a piece is captured
 		boolean capture = position.getSquares()[move.getTarget()] != Piece.EMPTY.ordinal();
-		if (capture)
+		if (capture) {
+			if (isPawn)
+				sbSAN.append(Util.getColLetter(move.getOrigin()));
 			sbSAN.append("x");
+		}
 
-		// Append destiny square
+		// Append target square
 		sbSAN.append(Util.getColLetter(move.getTarget()) + (Util.getRow(move.getTarget()) + 1));
 
 		// Determine if it is a promotion. If so, append "=" + promotedPiece to the
@@ -323,9 +328,8 @@ public class PGNHandler {
 	 * @throws IllegalArgumentException if the given expression is not in the
 	 *                                  standard algebraic notation format.
 	 */
-	public static Optional<String> toUCI(Position position, String sanMove) {
-		StringBuilder sbUCI = new StringBuilder();
-		Matcher matcher = MOVE_PATTERN.matcher(sanMove);
+	public static Optional<Move> toUCI(Position position, String sanMove) {
+		Matcher matcher = MOVE_PATTERN.matcher(sanMove.trim());
 		boolean finded = matcher.find();
 		if (!finded)
 			throw new IllegalArgumentException(
@@ -336,28 +340,28 @@ public class PGNHandler {
 		if (castleFinded) {
 			boolean longCastle = matcher.group("castle").equals("O-O-O");
 			if (!longCastle) {
-				sbUCI.append(position.isWhiteMove() ? "e1g1" : "e8g8");
+				return Optional
+						.of(position.isWhiteMove() ? new Move(Square.E1, Square.G1) : new Move(Square.E8, Square.G8));
 			} else {
-				sbUCI.append(position.isWhiteMove() ? "e1c1" : "e8c8");
+				return Optional
+						.of(position.isWhiteMove() ? new Move(Square.E1, Square.C1) : new Move(Square.E8, Square.C8));
 			}
-			return Optional.of(sbUCI.toString());
 		}
 
 		// Process the regular move in SAN format
 		String origin = (matcher.group("originCol") == null ? "" : matcher.group("originCol"))
 				+ (matcher.group("originRow") == null ? "" : matcher.group("originRow"));
-		
+
 		final String target = matcher.group("targetCol") + matcher.group("targetRow");
-		
+
 		final String promotionPiece = matcher.group("promotion") != null ? matcher.group("promotion").toLowerCase()
 				: "";
-		
+
 		if (origin.length() == 2) {
-			// Append origin, target, and promotion piece if present
-			sbUCI.append(origin);
-			sbUCI.append(target);
-			sbUCI.append(promotionPiece);
-			return Optional.of(sbUCI.toString());
+
+			return Optional.of(new Move(Util.getSquare(origin), Util.getSquare(target), Piece.valueOf(
+					position.isWhiteMove() ? ("W" + promotionPiece.toUpperCase())
+							: ("B" + promotionPiece.toUpperCase()))));
 		}
 
 		final Piece piece = Piece.valueOf((position.isWhiteMove() ? "W" : "B")
@@ -371,11 +375,11 @@ public class PGNHandler {
 					int xDestiny = Util.getColIndex("" + chars[0]);
 					int yDestiny = Integer.parseInt("" + chars[1]) - 1;
 					int destiny = Util.getSquareIndex(xDestiny, yDestiny);
-					
+
 					return m.getTarget() == destiny;
 				}).filter(m -> {
 					Piece movePiece = Piece.values()[position.getSquares()[m.getOrigin()]];
-					
+
 					return movePiece == piece;
 				}).filter(m -> Piece.values()[position.getSquares()[m.getOrigin()]] == piece).filter(m -> {
 					int row = -1;
@@ -391,11 +395,11 @@ public class PGNHandler {
 					}
 					if (col != -1) {
 						int column = Util.getCol(m.getOrigin());
-						
+
 						return column == col;
 					} else if (row != -1) {
 						int r = Util.getRow(m.getOrigin());
-						
+
 						return r == row;
 					} else
 						return true;
@@ -403,13 +407,13 @@ public class PGNHandler {
 					if (m.getPromotionPiece() != -1) {
 						String promoted = Piece.values()[m.getPromotionPiece()].toString().substring(1, 2)
 								.toLowerCase();
-						
+
 						return promoted.equals(promotionPiece);
 					} else {
-						
+
 						return true;
-					}	
-				}).map(m -> m.toString()).findFirst();
+					}
+				}).findFirst();
 	}
 
 	/**
@@ -451,10 +455,11 @@ public class PGNHandler {
 			// toUCI is used to convert the captured move to the Universal Chess Interface
 			// (UCI) notation
 			final Position pos = position;
-			String move = toUCI(position, matcher.group("move"))
+			var move = toUCI(position, matcher.group("move"))
 					.orElseThrow(
-							() -> new IllegalArgumentException("group: \n%s\nfen: %s".formatted(matcher.group(), pos.toFen())));
-			
+							() -> new IllegalArgumentException(
+									"group: \n%s\nfen: %s".formatted(matcher.group(), pos.toFen())));
+
 			// captured Numeric Annotation Glyphs (NAGs) and Recursive Annotation Variations
 			// (RAVs) are also extracted
 			String nags = matcher.group("nag");
@@ -464,12 +469,9 @@ public class PGNHandler {
 
 			// PGNMove objects are created based on the captured moves using the
 			// MoveFactory.instance method
-			try {
-				m = new PGNMove(MoveFactory.instance(move, position.isWhiteMove()), position);
-			} catch (MovementException e) {
-				throw new IllegalArgumentException(e.getMessage());
-			}
-
+			
+			m = new PGNMove(move, position);
+			
 			// captured RAVs are recursively processed by calling the captureMoves method
 			List<PGNMove> ravMoves = null;
 			if (rav != null)
