@@ -267,7 +267,7 @@ If you need to implement PGN file handling functionality, these classes are suit
 
 ```
 
-From an instance of the game class you can obtain de ECO code.
+From an instance of the game class you can obtain the ECO code.
 ```java
     var eco = game.getEcoDescriptor().getEco(); // ECO code
     var opening = game.getEcoDescriptor().getName(); // opening name
