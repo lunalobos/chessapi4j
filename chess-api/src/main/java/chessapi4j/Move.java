@@ -18,7 +18,7 @@ package chessapi4j;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+//bean
 /**
  * Move representation. To string method returns a long algebraic move notation
  * representation modified for the UCI protocol.

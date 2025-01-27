@@ -19,14 +19,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-
+//bean
 /**
  * Class for move detection between two positions. It can be useful for performance reasons.
  *
  * @author lunalobos
  *
  */
-
 public final class MoveDetector {
 	private Position parent, child;
 

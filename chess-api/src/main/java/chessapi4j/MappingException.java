@@ -16,19 +16,17 @@
 package chessapi4j;
 
 /**
- * Factory for {@code Evaluator} implementations.
- *
  * @author lunalobos
- * @since 1.2.0
+ * @since 1.2.8
  */
-public class EvaluatorFactory {
-	private static final Evaluator defaultEvaluator = new EvaluatorImp();
-	/**
-	 * An example implementation.
-	 * @return an implementation
-	 */
-	public static Evaluator getImpl() {
-		return defaultEvaluator;
-	}
+class MappingException extends Exception {
 
+    public static MappingException index(int index, int capacity) {
+        return new MappingException("Index %d is out of range for this hashmap with capacity %d.".formatted(index, capacity));
+    }
+
+    private MappingException(String message) {
+        super(message);
+    }
 }
+

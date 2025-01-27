@@ -31,6 +31,7 @@ import java.util.stream.Stream;
 import lombok.Data;
 import lombok.ToString;
 
+//singleton bean
 /**
  * Montecarlo search implementation
  *
@@ -39,13 +40,17 @@ import lombok.ToString;
  */
 @Data
 class MontecarloSearch implements Search {
-
+	private static final Logger logger = LoggerFactory.getLogger(MontecarloSearch.class);
 	private int depth;
 	private Supplier<Evaluator> $evaluationFactory;
 	private Position initialPosition;
 	private int sampleSize;
 	private double $totalScore;
 	private List<MoveData> candidates;
+
+	public MontecarloSearch() {
+		logger.instanciation();
+	}
 
 	@Override
 	public Optional<Move> seekBestMove(Position p, Supplier<Evaluator> evaluatorFactory, int depth) {
@@ -70,9 +75,8 @@ class MontecarloSearch implements Search {
 		while (moveMatcher.find()) {
 			try {
 				searchMovesList.add(MoveFactory.instance(moveMatcher.group(), p.isWhiteMove()));
-
 			} catch (MovementException e) {
-
+				logger.error("MovementException: %s", e.getMessage());
 			}
 		}
 

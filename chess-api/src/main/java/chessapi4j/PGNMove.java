@@ -17,7 +17,7 @@ package chessapi4j;
 
 import java.util.List;
 import java.util.Objects;
-
+//bean
 /**
  * Represents a move with Portable Game Notation (PGN) properties. This class extends the
  * Move class and adds PGN specific properties. The position previous to the move is

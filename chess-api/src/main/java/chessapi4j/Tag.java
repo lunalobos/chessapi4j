@@ -16,7 +16,7 @@
 package chessapi4j;
 
 import java.util.Objects;
-
+//bean
 /**
  * This class provides a simple structure to represent a tag with a name and a
  * corresponding value, along with methods for manipulation and comparison.

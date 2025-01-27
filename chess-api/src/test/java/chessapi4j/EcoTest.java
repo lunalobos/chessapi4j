@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 public class EcoTest {
     @Test
     void get(){
-        var eco = new Eco();
+        var eco = Game.eco;
 
         eco.get("d4").ifPresentOrElse(value -> assertEquals("A40", value.getEco()), () -> fail());
         eco.get("e4").ifPresentOrElse(value -> assertEquals("B00", value.getEco()), () -> fail());

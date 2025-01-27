@@ -29,7 +29,6 @@ public class GameTest {
         var coincidenceCount = games.stream().filter(game -> {
             return game.getEcoDescriptor().getEco().equals(game.getTagValue("ECO").orElse(""));
         }).count();
-        System.out.println("coincidentes: " + coincidenceCount);
         assertTrue(((double) coincidenceCount) / ((double) games.size()) > 0.74);
     }
 

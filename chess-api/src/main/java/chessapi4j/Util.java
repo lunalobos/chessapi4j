@@ -19,11 +19,9 @@ package chessapi4j;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 /**
- * Utility class to avoid boilerplate code. Not all of these class methods are
- * safe, be careful.
+ * Utility class. Not all of these class methods are safe, be careful.
  *
  * @author lunalobos
  * @since 1.0.0
@@ -186,8 +184,6 @@ public class Util {
 	 */
 	public static final int[] ROOK_DIRECTIONS = new int[] { 4, 5, 6, 7 };
 
-	
-	
 	/**
 	 * Retrieves visible squares bitboard representation.
 	 *
@@ -199,12 +195,13 @@ public class Util {
 	 * @since 1.2.3
 	 */
 	public static long visibleSquares(Position position, MoveDirection directionAndSense, Square square) {
-		return Generator.VISIBLE_METRICS.visibleSquares(position.getBits(), new int[] { directionAndSense.ordinal() }, square.ordinal(),
+		return GeneratorFactory.visibleMetrics.visibleSquares(position.getBits(),
+				new int[] { directionAndSense.ordinal() }, square.ordinal(),
 				position.wm());
 	}
 
 	/**
-	 * Retrieves visible squares in all directions bitboard representation.
+	 * Retrieves visible squares in all directions in a long as bitboard representation.
 	 *
 	 * @param position
 	 * @param square
@@ -213,11 +210,27 @@ public class Util {
 	 * @since 1.2.3
 	 */
 	public static long visibleSquares(Position position, Square square) {
+		var piece = position.getPiece(square);
+		var side = piece.side();
+		long friends;
+		long enemies;
+		if (side == Side.WHITE) {
+			friends = Bitboard.or(position.getBitboard(Piece.WP), position.getBitboard(Piece.WN),
+					position.getBitboard(Piece.WB), position.getBitboard(Piece.WR), position.getBitboard(Piece.WQ),
+					position.getBitboard(Piece.WK)).getValue();
+			enemies = Bitboard.or(position.getBitboard(Piece.BP), position.getBitboard(Piece.BN),
+					position.getBitboard(Piece.BB), position.getBitboard(Piece.BR), position.getBitboard(Piece.BQ),
+					position.getBitboard(Piece.BK)).getValue();
+		} else {
+			friends = Bitboard.or(position.getBitboard(Piece.BP), position.getBitboard(Piece.BN),
+					position.getBitboard(Piece.BB), position.getBitboard(Piece.BR), position.getBitboard(Piece.BQ),
+					position.getBitboard(Piece.BK)).getValue();
+			enemies = Bitboard.or(position.getBitboard(Piece.WP), position.getBitboard(Piece.WN),
+					position.getBitboard(Piece.WB), position.getBitboard(Piece.WR), position.getBitboard(Piece.WQ),
+					position.getBitboard(Piece.WK)).getValue();
 
-		return IntStream.of(Util.QUEEN_DIRECTIONS)
-				.mapToLong(index -> Util.visibleSquares(position, MoveDirection.values()[index],
-						Square.values()[Long.numberOfTrailingZeros(position.getBits()[Piece.WQ.ordinal() - 1])]))
-				.reduce((a, b) -> a | b).orElse(0L);
+		}
+		return GeneratorFactory.visibleMetrics.visibleSquaresQueen(square.ordinal(), friends, enemies);
 	}
 
 	/*
@@ -225,7 +238,8 @@ public class Util {
 	 */
 	protected static long visibleSquares(Position position, int[] directionsIndexs, int square) {
 
-		return Generator.VISIBLE_METRICS.visibleSquares(position.getBits(), directionsIndexs, square, position.wm());
+		return GeneratorFactory.visibleMetrics.visibleSquares(position.getBits(), directionsIndexs, square,
+				position.wm());
 	}
 
 	/**
@@ -340,7 +354,7 @@ public class Util {
 	 * @since 1.2.3
 	 */
 	public static boolean isPromotion(Square targetSquare) {
-		return Generator.isPromotion(targetSquare.ordinal()) == 1L;
+		return PawnGenerator.isPromotion(targetSquare.ordinal()) == 1L;
 	}
 
 	/**
@@ -361,7 +375,6 @@ public class Util {
 		int row = Integer.parseInt(new String(new char[] { chars[1] })) - 1;
 		return getSquareIndex(collum, row);
 	}
-
 
 	/**
 	 * Retrieves the square object for the given algebraic notation square.
@@ -410,7 +423,7 @@ public class Util {
 	 * @return true if the position is in check false otherwise
 	 */
 	public static boolean isInCheck(Position position) {
-		return GeneratorFactory.pseudoInternalSingleton.isInCheck(position) == 1;
+		return GeneratorFactory.generatorUtil.isInCheck(position) == 1;
 	}
 
 	/**

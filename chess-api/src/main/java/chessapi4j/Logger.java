@@ -16,19 +16,23 @@
 package chessapi4j;
 
 /**
- * Factory for {@code Evaluator} implementations.
- *
  * @author lunalobos
- * @since 1.2.0
+ * @since 1.2.8
  */
-public class EvaluatorFactory {
-	private static final Evaluator defaultEvaluator = new EvaluatorImp();
-	/**
-	 * An example implementation.
-	 * @return an implementation
-	 */
-	public static Evaluator getImpl() {
-		return defaultEvaluator;
-	}
-
+interface Logger {
+    void instanciation();
+    void trace(String message);
+    void trace(String message, Object... args);
+    void debug(String message);
+    void debug(String message, Object... args);
+    void info(String message);
+    void info(String message, Object... args);
+    void warn(String message);
+    void warn(String message, Object... args);
+    void error(String message);
+    void error(String message, Object... args);
+    void fatal(String message);
+    void fatal(String message, Object... args);
+    void disable();
+    void setFilterLevel(String filterLevel);
 }

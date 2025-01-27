@@ -68,7 +68,7 @@ public class AdvanceUtil {
 	 * @return {@code 1} if the position is in check, {@code 0} otherwise.
 	 */
 	public static int isInCheck(Position position) {
-		return (int) GeneratorFactory.pseudoInternalSingleton.isInCheck(position);
+		return (int) GeneratorFactory.generatorUtil.isInCheck(position);
 	}
 
 	static {

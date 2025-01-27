@@ -17,7 +17,7 @@ package chessapi4j;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
+//bean
 /**
  * A simple data class with the ECO code and name of the opening.
  * 

@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static chessapi4j.Square.*;
-
+//bean
 /**
- * Position representation
+ * Position representation.
  *
  * @author lunalobos
  * @since 1.0.0
