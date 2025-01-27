@@ -30,7 +30,6 @@ import java.util.function.Supplier;
  * @author lunalobos
  * @since 1.2.0
  */
-
 public interface Search {
 
 	/**

@@ -15,20 +15,34 @@
  */
 package chessapi4j;
 
+import java.util.Iterator;
+
+//bean
 /**
- * Factory for {@code Evaluator} implementations.
- *
  * @author lunalobos
- * @since 1.2.0
+ * @since 1.2.8
  */
-public class EvaluatorFactory {
-	private static final Evaluator defaultEvaluator = new EvaluatorImp();
-	/**
-	 * An example implementation.
-	 * @return an implementation
-	 */
-	public static Evaluator getImpl() {
-		return defaultEvaluator;
+class BitIterator implements Iterator<Integer> {
+
+	private final int bits;
+	private int pointer = 0;
+	private final int bitsLength;
+
+	public BitIterator(int bits) {
+		this.bits = bits;
+		bitsLength = 32 - Integer.numberOfLeadingZeros(bits);
+	}
+
+	@Override
+	public boolean hasNext() {
+		return pointer < bitsLength;
+	}
+
+	@Override
+	public Integer next() {
+		var currentPointer = pointer;
+		pointer++;
+		return (bits & (1 << currentPointer)) >>> currentPointer;
 	}
 
 }

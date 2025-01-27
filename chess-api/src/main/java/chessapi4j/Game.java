@@ -26,6 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
+//bean
 /**
  * The Game class represents a chess game. The class Provides a structured
  * representation of a chess game and has methods to access, modify, and
@@ -35,7 +36,9 @@ import java.util.stream.Collectors;
  * @since 1.1.0
  */
 public class Game implements Iterable<Position> {
-	private static final Eco eco = new Eco();
+	// dependency injection chain
+	private static final CsvParser csvParser = new CsvParser();
+	protected static final Eco eco = new Eco(csvParser);
 
 	private Tag event, site, date, round, white, black, result;
 	private Set<Tag> suplementalTags;

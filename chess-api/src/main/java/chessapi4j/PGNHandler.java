@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
  * @since 1.1.0
  */
 public class PGNHandler {
+	private static final Logger logger = LoggerFactory.getLogger(PGNHandler.class);
 	private static final String[] PIECES = new String[] { "", "", "N", "B", "R", "Q", "K", "", "N", "B", "R", "Q",
 			"K" };
 	private static final String NAG_REGEX = "[$][1-9][0-9]*";
@@ -312,6 +313,7 @@ public class PGNHandler {
 		try {
 			move = MoveFactory.instance(uciMove, position.isWhiteMove());
 		} catch (MovementException e1) {
+			logger.error("Not valid uci move string: %s", uciMove);
 			throw new IllegalArgumentException("Not valid uci move string.");
 		}
 		return toSAN(position, move);
@@ -388,7 +390,7 @@ public class PGNHandler {
 						if (origin.length() == 1)
 							row = Integer.parseInt(origin) - 1;
 					} catch (Exception e) {
-
+						
 					}
 					if (row == -1 && origin.length() == 1) {
 						col = Util.getColIndex(origin);

@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//singleton bean
 //working correctly
 /**
  * Internal class used to parse a CSV file.
@@ -32,12 +33,14 @@ import java.util.stream.Collectors;
  * 
  * @since 1.2.7
  */
-public class CsvParser {
-
+class CsvParser {
+    private static final Logger logger = LoggerFactory.getLogger(CsvParser.class);
     private char separator = ',';
     private char stringSeparator = '"';
 
-    public CsvParser() {}
+    public CsvParser() {
+        logger.instanciation();
+    }
 
     public CsvParser(char separator, char stringSeparator) {
         this.separator = separator;

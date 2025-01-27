@@ -1,4 +1,4 @@
-[![Static Badge](https://img.shields.io/badge/javadoc-1.2.7-brightgreen?style=plastic)](https://lunalobos.github.io/chessapi4j/apidocs/chessapi4j/package-summary.html)
+[![Static Badge](https://img.shields.io/badge/javadoc-1.2.8-brightgreen?style=plastic)](https://lunalobos.github.io/chessapi4j/apidocs/chessapi4j/package-summary.html)
 
 ![chessapi4j](https://chessapi4j.my.canva.site/media/7547b1586c5d91c735c3b3a67838eb13.png)
 
@@ -77,7 +77,7 @@ Now, you can import the artifact into your project. Add the following to your de
 <dependency>
    <groupId>chessapi4j</groupId>
    <artifactId>chessapi4j</artifactId>
-   <version>1.2.7-RELEASE</version>
+   <version>1.2.8-RELEASE</version>
 </dependency>
 
 ```

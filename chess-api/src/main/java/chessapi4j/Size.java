@@ -15,20 +15,27 @@
  */
 package chessapi4j;
 
+//bean
 /**
- * Factory for {@code Evaluator} implementations.
- *
  * @author lunalobos
- * @since 1.2.0
+ * @since 1.2.8
  */
-public class EvaluatorFactory {
-	private static final Evaluator defaultEvaluator = new EvaluatorImp();
-	/**
-	 * An example implementation.
-	 * @return an implementation
-	 */
-	public static Evaluator getImpl() {
-		return defaultEvaluator;
-	}
+class Size {
 
+    private int bits;
+    private int capacity;
+
+    public Size(int bits) {
+        this.bits = bits;
+        this.capacity = 1 << bits;
+    }
+
+    public int getBits() {
+        return bits;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
 }
+

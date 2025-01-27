@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
  * @since 1.0.0
  */
 public class MoveFactory {
+	private static final Logger logger = LoggerFactory.getLogger(MoveFactory.class);
 	/**
 	 * New instance.
 	 *
@@ -116,7 +117,7 @@ public class MoveFactory {
 
 					return instance(origin, target, promotion);
 				} catch (Exception e) {
-					System.out.println(String.format("Error with promotion. Move: %s, WhiteMove: %b, Piece: %s", move,
+					logger.error(String.format("Error with promotion. Move: %s, WhiteMove: %b, Piece: %s", move,
 							whiteMove, Piece.valueOf((whiteMove ? "W" : "B") + promotionPiece.toUpperCase())));
 
 				}

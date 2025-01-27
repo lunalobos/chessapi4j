@@ -15,20 +15,24 @@
  */
 package chessapi4j;
 
-/**
- * Factory for {@code Evaluator} implementations.
- *
- * @author lunalobos
- * @since 1.2.0
- */
-public class EvaluatorFactory {
-	private static final Evaluator defaultEvaluator = new EvaluatorImp();
-	/**
-	 * An example implementation.
-	 * @return an implementation
-	 */
-	public static Evaluator getImpl() {
-		return defaultEvaluator;
-	}
+import java.util.HashMap;
+import java.util.Map;
 
+/**
+ * @author lunalobos
+ * @since 1.2.8
+ */
+class LoggerFactory {
+    private static final Map<String, LoggerImpl> LOGGERS = new HashMap<>();
+    private static final String DEFAULT_FILTER_LEVEL = "INFO";
+
+    public static Logger getLogger(Class<?> clazz) {
+        var logger = LOGGERS.get(clazz.getName());
+        if (logger == null) {
+            logger = new LoggerImpl(clazz);
+            LOGGERS.put(clazz.getName(), logger);
+        }
+        logger.setFilterLevel(DEFAULT_FILTER_LEVEL);
+        return logger;
+    }
 }

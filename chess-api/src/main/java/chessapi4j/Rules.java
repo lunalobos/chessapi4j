@@ -69,7 +69,7 @@ public class Rules {
 	public static void setStatus(Position position) {
 		position.setLackOfMaterial(AdvanceUtil.lackOfMaterial(position) == 1);
 		position.setFiftyMoves(position.getHalfMovesCounter() == 50);
-		boolean inCheck = GeneratorFactory.pseudoInternalSingleton.isInCheck(position) == 1;
+		boolean inCheck = GeneratorFactory.generatorUtil.isInCheck(position) == 1;
 		boolean noMoves = movesCounter(position) == 0;
 		position.setCheckmate(noMoves && inCheck);
 		position.setStalemate(noMoves && !inCheck);
@@ -84,8 +84,6 @@ public class Rules {
 	 * @return {@code true} if the move is legal, {@code false} otherwise
 	 */
 	public static boolean legal(Position position, Move move) {
-		// System.out.println(GeneratorFactory.instance().generateMoves(position,
-		// GeneratorFactory.instance().generateChildren(position)));
 		return GeneratorFactory.instance()
 				.generateMoves(position, GeneratorFactory.instance().generateChildren(position)).stream()
 				.anyMatch(m -> m.equals(move));
@@ -130,7 +128,7 @@ public class Rules {
 
 		// side to move in check
 		position.changeColorToMove();
-		var validCheck = !(GeneratorFactory.pseudoInternalSingleton.isInCheck(position) == 1);
+		var validCheck = !(GeneratorFactory.generatorUtil.isInCheck(position) == 1);
 
 		// pawns in 8th rank
 		var wpBitboards = bitboards[Piece.WP.ordinal() - 1];
@@ -265,7 +263,7 @@ public class Rules {
 			var piece = position.getPiece(square);
 
 		}
-		// TODO continue implementing in other versions
+		// TODO continue implementing in version 1.2.9
 		return false;
 	}
 

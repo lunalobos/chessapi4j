@@ -25,6 +25,7 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+// singleton bean
 // passing tests
 /**
  * This internal class handles the search of the ECO description. Thansk to
@@ -37,25 +38,28 @@ import lombok.Data;
  * 
  */
 class Eco {
-
+    private static final Logger logger = LoggerFactory.getLogger(Eco.class);
     private Map<String, EcoDescriptor> movesMap;
     private Map<Position, EcoDescriptor> positionMap;
+    private CsvParser csvParser;
 
-    protected Eco() {
+    protected Eco(CsvParser csvParser) {
+        this.csvParser = csvParser;
         movesMap = loadMoves();
         movesMap.remove("moves");// removing the header
         positionMap = loadPositionMap();
+        logger.instanciation();
     }
 
     private Map<String, EcoDescriptor> loadMoves() {
         try (var is = Eco.class.getClassLoader().getResourceAsStream("openings_sheet.csv")) {
-            var csvParser = new CsvParser();
             var rows = csvParser.parseInputStream(is);
             return rows.stream().map(list -> new EcoRow(list.get(0), list.get(1), list.get(2)))
                     .peek(er -> er.setMoves(er.getMoves().trim())) // this was so annoying to understand
                     .collect(HashMap::new, (map, er) -> map.put(er.getMoves(), er.getDescriptor()),
                             (m1, m2) -> m1.putAll(m2));
         } catch (IOException e) {
+            logger.fatal("IOException: %s", e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -76,6 +80,7 @@ class Eco {
                 try {
                     position = makeMove(position, moves.pop());
                 } catch (IllegalArgumentException e) {
+                    logger.fatal("IllegalArgumentException: %s", e.getMessage());
                     throw new IllegalArgumentException("entry: %s, position: %s".formatted(entry, position), e);
                 }
             }

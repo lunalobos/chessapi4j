@@ -27,7 +27,6 @@ import java.util.Optional;
  * @author lunalobos
  * @since 1.0.0
  */
-
 public class PositionFactory {
 
 	/**

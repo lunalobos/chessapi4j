@@ -23,53 +23,67 @@ public enum Piece {
 	/**
 	 * Special value for representing empty squares
 	 */
-	EMPTY,
+	EMPTY(null),
 	/**
 	 * White pawn
 	 */
-	WP,
+	WP(Side.WHITE),
 	/**
 	 * White knight
 	 */
-	WN,
+	WN(Side.WHITE),
 	/**
 	 * White bishop
 	 */
-	WB,
+	WB(Side.WHITE),
 	/**
 	 * White rook
 	 */
-	WR,
+	WR(Side.WHITE),
 	/**
 	 * White queen
 	 */
-	WQ,
+	WQ(Side.WHITE),
 	/**
 	 * White king
 	 */
-	WK,
+	WK(Side.WHITE),
 	/**
 	 * Black pawn
 	 */
-	BP,
+	BP(Side.BLACK),
 	/**
 	 * Black knight
 	 */
-	BN,
+	BN(Side.BLACK),
 	/**
 	 * Black bishop
 	 */
-	BB,
+	BB(Side.BLACK),
 	/**
 	 * Black rook
 	 */
-	BR,
+	BR(Side.BLACK),
 	/**
 	 * Black queen
 	 */
-	BQ,
+	BQ(Side.BLACK),
 	/**
 	 * Black king
 	 */
-	BK;
+	BK(Side.BLACK);
+	private Side side;
+
+	private Piece(Side side) {
+		this.side = side;
+	}
+
+	/**
+	 * Returns the side of the piece
+	 * @return the side
+	 * @since 1.2.8
+	 */
+	public Side side() {
+		return side;
+	}
 }

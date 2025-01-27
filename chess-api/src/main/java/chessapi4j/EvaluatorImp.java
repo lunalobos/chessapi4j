@@ -19,7 +19,7 @@ import java.util.Objects;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.stream.IntStream;
-
+//singleton bean
 /**
  * An evaluator that calculates a numerical evaluation score for a
  * given chess position based on piece values and their positions on the board.
@@ -29,6 +29,7 @@ import java.util.stream.IntStream;
  * @since 1.0.0
  */
 class EvaluatorImp implements Evaluator {
+	private static final Logger logger = LoggerFactory.getLogger(EvaluatorImp.class);
 	private static final long[] KING_MATRIX_MASK = new long[] {
 			0b0000000000000000000000000000000000000000000000000000001100000010L,
 			0b0000000000000000000000000000000000000000000000000000011100000101L,
@@ -446,6 +447,9 @@ class EvaluatorImp implements Evaluator {
 			0b0000000010001000010100000000000000000000000000000000000000000000L,
 			0b0000000000010000101000000000000000000000000000000000000000000000L,
 			0b0000000000100000010000000000000000000000000000000000000000000000L };
+	protected EvaluatorImp() {
+		logger.instanciation();
+	}
 
 	private static int eval(Position position) {
 		Position inverseMovePosition = position.makeClone();

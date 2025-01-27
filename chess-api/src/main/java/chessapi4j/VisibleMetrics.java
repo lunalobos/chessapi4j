@@ -15,85 +15,85 @@
  */
 package chessapi4j;
 
-/*
- *
+//singleton bean
+/**
  * @author lunalobos
  */
 class VisibleMetrics {
+	private static final Logger logger = LoggerFactory.getLogger(VisibleMetrics.class);
+	protected static final int[] BISHOP_DIRECTIONS = new int[] { 0, 1, 2, 3 };
+	protected static final int[] ROOK_DIRECTIONS = new int[] { 4, 5, 6, 7 };
 
-	private static final long[] OPTIONS = new long[] { 0L, 1L, 0b11L, 0b111L, 0b1111L, 0b11111L, 0b111111L,
-			0b1111111L };
-
-	private static final long[][][] VISIBLE_OPTIONS = new long[64][8][];
-
-	private static final int[] TRAILING_ZEROS = new int[256];
-
-	static {
-		fillMap();
+	private VisibleMetricsUtil visibleMetricsUtil;
+	private VisibleMagic magic;
+	public VisibleMetrics(VisibleMetricsUtil visibleMetricsUtil, VisibleMagic magic) {
+		this.visibleMetricsUtil = visibleMetricsUtil;
+		this.magic = magic;
+		logger.instanciation();
 	}
 
-	public final long getVisible(int square, int index, int[] direction, long friends, long enemies) {
-
-		// space transformation: board -> direction
-		int fimage = 0;
-		int eimage = 0;
-		int counter = 0;
-		for (int sq : direction) {
-			fimage |= (int) (((friends & (1L << sq)) >>> sq) << counter);
-			eimage |= (int) (((enemies & (1L << sq)) >>> sq) << (counter + 1));
-			counter++;
-		}
-
-		// image for direction space with bit population always <= 7
-		final int image = (fimage | eimage) & 0b1111111;
-
-		// trailing zeros count and visible bitboard selection
-		return VISIBLE_OPTIONS[square][index][TRAILING_ZEROS[image]];
+	protected final long computeVisible(int square, int[] directionsIndexs, int[][] directions, long friends,
+			long enemies) {
+		return visibleMetricsUtil.computeVisible(square, directionsIndexs, directions, friends, enemies);
 	}
 
-	private static final void fillMap() {
-		TRAILING_ZEROS[0] = 7;
-		for (int i = 1; i < 0b10000000; i++) {
-			TRAILING_ZEROS[i] = Integer.numberOfTrailingZeros(i);
-		}
-		for (int square = 0; square < 64; square++) {
-			for (int directionIndex = 0; directionIndex < 8; directionIndex++) {
-				int[] direction = Util.QUEEN_MEGAMATRIX[square][directionIndex];
-				long[] options = new long[8];
-				for (int optionIndex = 0; optionIndex < 8; optionIndex++) {
-					long image = OPTIONS[optionIndex];
-					long visible = 0L;
-					int counter = 0;
-					for (int sq : direction) {
-						visible |= ((image & (1L << counter)) >>> counter) << sq;
-						counter++;
-					}
-					options[optionIndex] = visible;
-				}
-				VISIBLE_OPTIONS[square][directionIndex] = options;
-			}
-		}
-
+	protected final long getVisible(int square, int index, int[] direction, long friends, long enemies) {
+		return visibleMetricsUtil.getVisible(square, index, direction, friends, enemies);
 	}
 
 	protected long visibleSquares(long[] bits, int[] directionsIndexs, int square, long whiteMoveNumeric) {
-		long moves = 0L;
+		return visibleMetricsUtil.visibleSquares(bits, directionsIndexs, square, whiteMoveNumeric);
+	}
+
+	protected long visibleBishop(long[] bits, int square, long whiteMoveNumeric) {
+
 		final long black = bits[6] | bits[7] | bits[8] | bits[9] | bits[10] | bits[11];
 		final long white = bits[0] | bits[1] | bits[2] | bits[3] | bits[4] | bits[5];
 		long friends;
 		long enemies;
-		if (whiteMoveNumeric == 1) {
+		if (whiteMoveNumeric == 1L) {
 			friends = white;
 			enemies = black;
 		} else {
 			friends = black;
 			enemies = white;
 		}
-		for (int index : directionsIndexs) {
-			moves = moves
-					| getVisible(square, index, Util.QUEEN_MEGAMATRIX[square][index], friends, enemies);
+
+		return visibleSquaresBishop(square, friends, enemies);
+	}
+
+	protected long visibleRook(long[] bits, int square, long whiteMoveNumeric) {
+
+		final long black = bits[6] | bits[7] | bits[8] | bits[9] | bits[10] | bits[11];
+		final long white = bits[0] | bits[1] | bits[2] | bits[3] | bits[4] | bits[5];
+		long friends;
+		long enemies;
+		if (whiteMoveNumeric == 1L) {
+			friends = white;
+			enemies = black;
+		} else {
+			friends = black;
+			enemies = white;
 		}
-		return moves;
+
+		return visibleSquaresRook(square, friends, enemies);
+	}
+
+	protected long visibleQueen(long[] bits, int square, long whiteMoveNumeric) {
+
+		final long black = bits[6] | bits[7] | bits[8] | bits[9] | bits[10] | bits[11];
+		final long white = bits[0] | bits[1] | bits[2] | bits[3] | bits[4] | bits[5];
+		long friends;
+		long enemies;
+		if (whiteMoveNumeric == 1L) {
+			friends = white;
+			enemies = black;
+		} else {
+			friends = black;
+			enemies = white;
+		}
+
+		return visibleSquaresQueen(square, friends, enemies);
 	}
 
 	protected long visibleSquaresFast(int[] directionsIndexs, int square, long friends, long enemies) {
@@ -105,7 +105,18 @@ class VisibleMetrics {
 		return moves;
 	}
 
-	
+	protected long visibleSquaresBishop(int square, long friends, long enemies) {
+		//return visibleSquaresFast(BISHOP_DIRECTIONS, square, friends, enemies);
+		return magic.visibleBishop(square, friends, enemies);
+	}
 
+	protected long visibleSquaresRook(int square, long friends, long enemies) {
+		//return visibleSquaresFast(ROOK_DIRECTIONS, square, friends, enemies);
+		return magic.visibleRook(square, friends, enemies);
+	}
+
+	protected long visibleSquaresQueen(int square, long friends, long enemies) {
+		return visibleSquaresBishop(square, friends, enemies) | visibleSquaresRook(square, friends, enemies);
+	}
 
 }
