@@ -310,7 +310,7 @@ public final class Generator {
 	 * Generates the list of legal positions that arise from this particular
 	 * position.
 	 * 
-	 * @param position
+	 * @param position the position from which the children are generated
 	 * @return the list of legal positions that arise from this particular position
 	 */
 	public final List<Position> generateChildren(Position position) {
@@ -352,8 +352,8 @@ public final class Generator {
 	 * Generates a list with the Move objects for the given children in the same
 	 * order.
 	 * 
-	 * @param parent
-	 * @param children
+	 * @param parent the position from which the children are generated
+	 * @param children the list of children
 	 * @return a list with the Move objects for the given children in the same order
 	 */
 	public final List<Move> generateMoves(Position parent, List<Position> children) {

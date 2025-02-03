@@ -312,7 +312,7 @@ public class Util {
 	 * @param square
 	 * @return the column character for the given square
 	 *
-	 * @throws {@code ArrayIndexOutOfBoundsException} if square is not a valid
+	 * @throws ArrayIndexOutOfBoundsException if square is not a valid
 	 * square number
 	 */
 	public static String getColLetter(int square) {

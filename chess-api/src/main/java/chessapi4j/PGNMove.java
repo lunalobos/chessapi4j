@@ -41,6 +41,7 @@ public class PGNMove extends Move {
 	 * @param origin          the origin square of the move
 	 * @param target          the target square of the move
 	 * @param coronationPiece the piece type for coronation (if applicable)
+	 * @param position        the position previous to the move
 	 */
 	public PGNMove(int origin, int target, int coronationPiece, Position position) {
 		super(1L << target, origin, coronationPiece);
@@ -51,6 +52,7 @@ public class PGNMove extends Move {
 	 * Constructs a PGNMove object based on a Move object.
 	 *
 	 * @param move: the Move object to construct from
+	 * @param position: the position previous to the move
 	 */
 	public PGNMove(Move move, Position position) {
 		this(move.getOrigin(), move.getTarget(), move.getPromotionPiece(), position);
@@ -156,7 +158,7 @@ public class PGNMove extends Move {
 	/**
 	 * Sets the position for the move. Using this method is not recommended.
 	 * A position should be provided when creating the PGNMove object.
-	 * @param position
+	 * @param position the position previous to the move
 	 */
 	public void setPosition(Position position) {
 		this.position = position;
@@ -164,7 +166,7 @@ public class PGNMove extends Move {
 
 	/**
 	 * Returns the position previous to the move.
-	 * @return
+	 * @return the position previous to the move
 	 */
 	public Position getPosition() {
 		return position;

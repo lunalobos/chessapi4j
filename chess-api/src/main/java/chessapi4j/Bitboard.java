@@ -29,7 +29,7 @@ public class Bitboard {
 	 * retrieves a new {@code Bitboard} object that wraps the result of this
 	 * operation.
 	 *
-	 * @param bitboards
+	 * @param bitboards the bitboards to apply bitwise the operation
 	 * @return a new {@code Bitboard} object that wraps the result of the "and"
 	 *         operation
 	 */
@@ -46,7 +46,7 @@ public class Bitboard {
 	 * retrieves a new {@code Bitboard} object that wraps the result of this
 	 * operation.
 	 *
-	 * @param bitboards
+	 * @param bitboards the bitboards to apply bitwise the operation
 	 * @return a new {@code Bitboard} object that wraps the result of the "or"
 	 *         operation
 	 */
@@ -63,7 +63,7 @@ public class Bitboard {
 	 * retrieves a new {@code Bitboard} object that wraps the result of this
 	 * operation.
 	 *
-	 * @param bitboards
+	 * @param bitboards the bitboards to apply bitwise the operation
 	 * @return a new {@code Bitboard} object that wraps the result of the "xor"
 	 *         operation
 	 */
@@ -151,7 +151,7 @@ public class Bitboard {
 	/**
 	 * Value wrapped by this object.
 	 *
-	 * @return
+	 * @return the long wrapped value
 	 */
 	public long getValue() {
 		return value;

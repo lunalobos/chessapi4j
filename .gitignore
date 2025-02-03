@@ -1,2 +1,6 @@
 /.project
 /.classpath
+/chess-api/target/
+/chess-api/.classpath
+/chess-api/.project
+/chess-api/.settings/
