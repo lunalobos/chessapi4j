@@ -171,7 +171,7 @@ The PGNMove class extends Move and is provided for cases where classical algebra
     var moveStandardNotation = pgnMove.toString(); // Nf3
 ```
 
-### :chess_pawn: Move Generation
+### Move Generation
 
 The library includes a move generator. It provides two utility methods for move generation. On one hand, "generateChildren" generates all positions derived from the position given as an argument. On the other hand, if we have already generated the child positions, the "generateMoves" method returns the list of Move objects in the same order as the list of child positions given as an argument. The methods of Generator are instance methods. To use an instance of this class, it is necessary to use the GeneratorFactory factory class.
 
