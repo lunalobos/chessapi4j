@@ -295,8 +295,6 @@ I have not yet created rules for contributing. For now, each case will be analyz
 
 ChessAPI4j is licensed under the Apache License, Version 2.0 ("License"). You may use, modify, and distribute this software according to the terms and conditions outlined in the License.
 
-I hope I can publish this artifact to the Maven repository soon.
-
 ## :mailbox_closed: Author
 
 This library is developed and maintained by me (https://github.com/lunalobos). Feel free to contact me at my email lunalobosmiguel@gmail.com.
