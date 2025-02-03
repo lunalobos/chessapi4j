@@ -30,8 +30,8 @@ public class MoveFactory {
 	/**
 	 * New instance.
 	 *
-	 * @param origin
-	 * @param target
+	 * @param origin the origin square
+	 * @param target the target square
 	 * @return a move representation instance
 	 */
 	public static Move instance(int origin, int target) {
@@ -41,9 +41,9 @@ public class MoveFactory {
 	/**
 	 * New coronation instance.
 	 *
-	 * @param origin
-	 * @param target
-	 * @param coronationPiece
+	 * @param origin the origin square
+	 * @param target the target square
+	 * @param coronationPiece the coronation piece
 	 * @return a move representation instance
 	 */
 	public static Move instance(int origin, int target, int coronationPiece) {
@@ -53,8 +53,8 @@ public class MoveFactory {
 	/**
 	 * New instance.
 	 *
-	 * @param origin
-	 * @param target
+	 * @param origin the origin square
+	 * @param target the target square
 	 * @return a move representation instance
 	 *
 	 * @since 1.2.3
@@ -66,9 +66,9 @@ public class MoveFactory {
 	/**
 	 * New coronation instance.
 	 *
-	 * @param origin
-	 * @param target
-	 * @param coronationPiece
+	 * @param origin the origin square
+	 * @param target the target square
+	 * @param coronationPiece the coronation piece
 	 * @return a move representation instance
 	 *
 	 * @since 1.2.3
@@ -81,7 +81,7 @@ public class MoveFactory {
 	/**
 	 * New instance.
 	 *
-	 * @param move
+	 * @param move the move representation
 	 *
 	 * @since 1.2.3
 	 */
@@ -93,9 +93,10 @@ public class MoveFactory {
 	 * Takes a move string (UCI notation) and a boolean indicating the player who
 	 * moves and return the move representation.
 	 *
-	 * @param move
-	 * @param whiteMove
+	 * @param move the move string in UCI notation
+	 * @param whiteMove the player who moves
 	 * @return a move representation instance
+	 * @throws MovementException if the move is illegal or the string is invalid
 	 */
 	public static Move instance(String move, boolean whiteMove) throws MovementException {
 		String regex = "(?<colOrigin>[a-h])(?<rowOrigin>[1-8])(?<colTarget>[a-h])(?<rowTarget>[1-8])(?<promotion>[nbrq])?";

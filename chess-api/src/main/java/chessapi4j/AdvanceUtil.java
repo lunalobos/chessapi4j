@@ -64,7 +64,7 @@ public class AdvanceUtil {
 	/**
 	 * Returns {@code 1} if the position is in check, {@code 0} otherwise.
 	 *
-	 * @param position
+	 * @param position the position to look at
 	 * @return {@code 1} if the position is in check, {@code 0} otherwise.
 	 */
 	public static int isInCheck(Position position) {
@@ -84,7 +84,7 @@ public class AdvanceUtil {
 	 * Returns {@code 1} if the position is in a draw due to insufficient material,
 	 * {@code 0} otherwise.
 	 *
-	 * @param position
+	 * @param position the position to look at
 	 * @return {@code 1} if the position is in a draw due to insufficient material,
 	 *         {@code 0} otherwise.
 	 */
@@ -100,7 +100,7 @@ public class AdvanceUtil {
 	 * Returns {@code 1} if the position can be a draw due to the 50-move rule,
 	 * {@code 0} otherwise.
 	 *
-	 * @param position
+	 * @param position the position to look at
 	 * @return {@code 1} if the position can be a draw due to the 50-move rule,
 	 *         {@code 0} otherwise.
 	 */

@@ -1,6 +1,11 @@
+![Java](https://img.shields.io/badge/Java-11%2B-green)
 [![Static Badge](https://img.shields.io/badge/javadoc-1.2.8-brightgreen?style=plastic)](https://lunalobos.github.io/chessapi4j/apidocs/chessapi4j/package-summary.html)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.lunalobos/chessapi4j)](https://central.sonatype.com/artifact/io.github.lunalobos/chessapi4j)
+![License](https://img.shields.io/github/license/lunalobos/chessapi4j)
+
 
 ![chessapi4j](https://chessapi4j.my.canva.site/media/7547b1586c5d91c735c3b3a67838eb13.png)
+
 
 # Overview
 
@@ -22,19 +27,11 @@ ChessAPI4j is a Java library that allows representing and performing operations 
 10. [License](#license)
 11. [Author](#author)
 
-## Getting Started with ChessAPI4j
+## :rocket: Getting Started with ChessAPI4j
 
-To use the library you need Java 21 or higher and Maven 3.8 or higher. Start by cloning this repository and then using Maven to install it.
+To use the library you need Java 11 or higher and Maven 3.8 or higher. Start by cloning this repository and then using Maven to install it.
 
-### Step 1: Clone the repository
-
-```console
-
-$ git clone git@github.com:lunalobos/chessapi4j.git
-
-```
-
-### Step 2: Verify your Maven and Java versions
+### Step 1: Verify your Maven and Java versions
 
 I recommend use [Semeru jDK](https://developer.ibm.com/languages/java/semeru-runtimes/downloads/) and downloading Maven from [here](https://maven.apache.org/download.cgi).
 
@@ -57,32 +54,21 @@ JCL      - 7d844187b25 based on jdk-21.0.4+7)
 
 ```
 
-### Step 3: Build and install the artifact
+### Step 2: Add the dependency to your project
 
-Navigate to the cloned repository and install the artifact using Maven.
-
-```console
-
-$ cd chessapi4j/chess-api
-$ mvn clean install
-
-```
-
-### Step 4: Add the dependency to your project
-
-Now, you can import the artifact into your project. Add the following to your dependencies:
+Add the following to your dependencies:
 
 ```xml
 
 <dependency>
-   <groupId>chessapi4j</groupId>
-   <artifactId>chessapi4j</artifactId>
-   <version>1.2.8-RELEASE</version>
+    <groupId>io.github.lunalobos</groupId>
+    <artifactId>chessapi4j</artifactId>
+    <version>1.2.8-RELEASE</version>
 </dependency>
 
 ```
 
-## Reference Documentation
+## :books: Reference Documentation
 
 The following links correspond to the historical documentation of several relevant concepts. I recommend at least skimming their content if you are not familiar with the FEN, UCI, and PGN standards.
 
@@ -92,7 +78,7 @@ The following links correspond to the historical documentation of several releva
 
 You can see a copy of these files [here](https://github.com/lunalobos/chessapi4j/tree/master/ref).
 
-## Position Representation
+## :chess_pawn: Position Representation
 
 The Position class allows representing a position in a very comprehensive way. Its empty constructor generates the initial position, and it also has a constructor that takes the FEN representation as an argument.
 
@@ -150,7 +136,7 @@ if (isLegalPosition) {
 
 ```
 
-## Move representation and move generation
+## :chess_pawn: Move representation and move generation
 
 ### Move class
 
@@ -185,7 +171,7 @@ The PGNMove class extends Move and is provided for cases where classical algebra
     var moveStandardNotation = pgnMove.toString(); // Nf3
 ```
 
-### Move Generation
+### :chess_pawn: Move Generation
 
 The library includes a move generator. It provides two utility methods for move generation. On one hand, "generateChildren" generates all positions derived from the position given as an argument. On the other hand, if we have already generated the child positions, the "generateMoves" method returns the list of Move objects in the same order as the list of child positions given as an argument. The methods of Generator are instance methods. To use an instance of this class, it is necessary to use the GeneratorFactory factory class.
 
@@ -207,7 +193,7 @@ Let's see this feature in action:
 
 ```
 
-## PGN handling
+## :chess_pawn: PGN handling
 
 A basic representation of a game in PGN format is provided with the Game class, as well as several subclasses to represent the characteristics of a game saved with this notation. The PGNHandler class allows manipulation of PGN databases.
 
@@ -216,8 +202,6 @@ If you need to implement PGN file handling functionality, these classes are suit
 **PGNMove**: Inherits from Move, adding properties for annotations, comments, and variations. toString() method returns the SAN notation format.
 
 **Game**: Represents a game and contains the data that every game saved in PGN format possesses. Among its properties are the main tags (event, site, date, round, white, black, result) and supplementary tags (all represented with the Tag class), as well as a list of moves represented with the PGNMove class. This class can be used to model a real-time game and then export it to PGN format using the toString method.
-
-
 
 ```java
 
@@ -268,6 +252,7 @@ If you need to implement PGN file handling functionality, these classes are suit
 ```
 
 From an instance of the game class you can obtain the ECO code.
+
 ```java
     var eco = game.getEcoDescriptor().getEco(); // ECO code
     var opening = game.getEcoDescriptor().getName(); // opening name
@@ -284,35 +269,34 @@ From an instance of the game class you can obtain the ECO code.
 
 ```
 
-## Other Features
+## :chess_pawn: Other Features
 
 ### Utility Classes
 
 The Util and AdvanceUtil classes provide useful methods for working with custom heuristic functions. Initially, I thought about making these classes not visible since they are not entirely safe, but I thought someone might find them useful.
 
-
 ### Heuristic Evaluation and Search
 
 This library offers interfaces and implementations for various search and evaluation algorithms. While an implementation is provided, these feature is still experimental.
 
-## Unit Testing
+## :white_check_mark: Unit Testing
 
 I have created a series of unit tests that ensure the characteristics specified by the library. In particular, the Generator class has been thoroughly tested, and I have tried to optimize it as much as possible to improve its speed. PGNHandler also has been tested.
 
-## Javadoc
+## :books: Javadoc
 
 ChessAPI4j provides basic [javadoc](https://lunalobos.github.io/chessapi4j/apidocs/chessapi4j/package-summary.html), which will clear up many of the doubts you may have.
 
-## Contributing
+## :raising_hand: Contributing
 
 I have not yet created rules for contributing. For now, each case will be analyzed individually without any fixed criteria. If you find bugs, please open an issue or write to my email.
 
-## License
+## :page_with_curl: License
 
 ChessAPI4j is licensed under the Apache License, Version 2.0 ("License"). You may use, modify, and distribute this software according to the terms and conditions outlined in the License.
 
 I hope I can publish this artifact to the Maven repository soon.
 
-## Author
+## :mailbox_closed: Author
 
 This library is developed and maintained by me (https://github.com/lunalobos). Feel free to contact me at my email lunalobosmiguel@gmail.com.

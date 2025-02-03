@@ -27,11 +27,20 @@ public class MovementException extends Exception {
 	 */
 	private static final long serialVersionUID = -4964697290998435420L;
 
+	/**
+	 * Creates a new instance of {@link MovementException} with a message that
+	 * indicates that the move string is invalid.
+	 * @param invalidString the invalid move string
+	 * @return
+	 */
 	public static MovementException invalidString(String invalidString){
 		return new MovementException("Invalid move string: %s".formatted(invalidString));
 	}
 	
-
+	/**
+	 * Creates a new instance of {@link MovementException}.
+	 * @param msg the exception message
+	 */
 	public MovementException(String msg) {
 		super(msg);
 	}
@@ -40,8 +49,8 @@ public class MovementException extends Exception {
 	 * Creates a new instance of {@link MovementException} with a message that
 	 * indicates that the move is illegal for the position.
 	 * 
-	 * @param move
-	 * @param position
+	 * @param move the move that is illegal
+	 * @param position the position where the move is illegal
 	 * 
 	 * @since 1.2.5
 	 */

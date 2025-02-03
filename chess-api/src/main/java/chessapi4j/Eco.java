@@ -31,7 +31,7 @@ import lombok.Data;
  * This internal class handles the search of the ECO description. Thansk to
  * the csv file created by Destaq. An original version is provided at
  * https://github.com/Destaq/chess-graph/blob/master/elo_reading/openings_sheet.csv
- * <p>The file in resources has been sanitized.
+ * The file in resources has been sanitized.
  * 
  * @author lunalobos
  * @since 1.2.7

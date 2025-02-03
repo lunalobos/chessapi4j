@@ -282,7 +282,7 @@ public class Game implements Iterable<Position> {
 	 *
 	 * @param move to add to the game
 	 * @return the last position of the game
-	 * @throws MovementException
+	 * @throws MovementException if the move is illegal
 	 *
 	 * @since 1.2.3
 	 */

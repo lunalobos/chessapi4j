@@ -64,7 +64,7 @@ public class Rules {
 	 * lackOfMaterial
 	 * of the given position object
 	 *
-	 * @param position
+	 * @param position the position to check
 	 */
 	public static void setStatus(Position position) {
 		position.setLackOfMaterial(AdvanceUtil.lackOfMaterial(position) == 1);
@@ -78,8 +78,8 @@ public class Rules {
 	/**
 	 * Allows determinate if an specific move is legal for a given position.
 	 *
-	 * @param position
-	 * @param move
+	 * @param position the position to check
+	 * @param move     the move to check
 	 *
 	 * @return {@code true} if the move is legal, {@code false} otherwise
 	 */

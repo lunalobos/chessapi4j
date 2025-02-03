@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static chessapi4j.Square.*;
+
 //bean
 /**
  * Position representation.
@@ -103,7 +104,7 @@ public final class Position implements Serializable {
 	 * The FEN string must be valid.
 	 * </p>
 	 * 
-	 * @param fen
+	 * @param fen the FEN string
 	 */
 	public Position(String fen) {
 		fromFen(fen);
@@ -139,7 +140,8 @@ public final class Position implements Serializable {
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
 	 *
-	 * @param bitRepresentation, pieceOrdinal
+	 * @param bitRepresentation the bitboard to set
+	 * @param piece             the piece ordinal to set
 	 */
 	public final void changePieceBit(long bitRepresentation, int piece) {
 		getBits()[piece - 1] = bitRepresentation;
@@ -334,28 +336,37 @@ public final class Position implements Serializable {
 	 * square according to {@code Piece} ordinal values.
 	 * <p>
 	 * Each index represents a square, the value represents a piece
+	 * </p>
 	 * <p>
 	 *
 	 * {@code ---------Board---------}
+	 * </p>
 	 * <p>
 	 * {@code 56 57 58 59 60 61 62 63}
+	 * </p>
 	 * <p>
 	 * {@code 48 49 50 51 52 53 54 55}
+	 * </p>
 	 * <p>
 	 * {@code 40 41 42 43 44 45 46 47}
+	 * </p>
 	 * <p>
 	 * {@code 32 33 34 35 36 37 38 39}
+	 * </p>
 	 * <p>
 	 * {@code 24 25 26 27 28 29 30 31}
+	 * </p>
 	 * <p>
 	 * {@code 16 17 18 19 20 21 22 23}
+	 * </p>
 	 * <p>
 	 * {@code 08 09 10 11 12 13 14 15}
+	 * </p>
 	 * <p>
 	 * {@code 00 01 02 03 04 05 06 07}
-	 * <p>
+	 * </p>
 	 *
-	 * @returns the squares array
+	 * @return the squares array
 	 */
 	public final int[] getSquares() {
 		int[] squares = new int[64];
@@ -394,6 +405,8 @@ public final class Position implements Serializable {
 
 	/**
 	 * If this method returns true means this position is checkmate.
+	 * 
+	 * @return true if this position is checkmate, false otherwise
 	 */
 	public final boolean isCheckmate() {
 		return checkmate;
@@ -402,6 +415,9 @@ public final class Position implements Serializable {
 	/**
 	 * If this method returns true means this position can be draw according to
 	 * Fifty Moves's rule.
+	 * 
+	 * @return true if this position can be draw according to Fifty Moves's rule,
+	 *         false otherwise
 	 */
 	public final boolean isFiftyMoves() {
 		return fiftyMoves;
@@ -410,6 +426,9 @@ public final class Position implements Serializable {
 	/**
 	 * If this method returns true means this position is a draw because of lack of
 	 * material.
+	 * 
+	 * @return true if this position is a draw because of lack of material, false
+	 *         otherwise
 	 */
 	public final boolean isLackOfMaterial() {
 		return lackOfMaterial;
@@ -417,6 +436,8 @@ public final class Position implements Serializable {
 
 	/**
 	 * If this method returns true means black is able to castle queen side.
+	 * 
+	 * @return true if black is able to castle queen side, false otherwise
 	 */
 	public final boolean isLongCastleBlack() {
 		return bq() == 1L;
@@ -424,6 +445,8 @@ public final class Position implements Serializable {
 
 	/**
 	 * If this method returns true means white is able to castle queen side.
+	 * 
+	 * @return true if white is able to castle queen side, false otherwise
 	 */
 	public final boolean isLongCastleWhite() {
 		return wq() == 1L;
@@ -432,6 +455,9 @@ public final class Position implements Serializable {
 	/**
 	 * If this method returns true means this position is a draw because of
 	 * repetitions.
+	 * 
+	 * @return true if this position is a draw because of repetitions, false
+	 *         otherwise
 	 */
 	public final boolean isRepetitions() {
 		return repetitions;
@@ -439,6 +465,8 @@ public final class Position implements Serializable {
 
 	/**
 	 * If this method returns true means black is able to castle king side.
+	 * 
+	 * @return true if black is able to castle king side, false otherwise
 	 */
 	public final boolean isShortCastleBlack() {
 		return bk() == 1L;
@@ -446,6 +474,8 @@ public final class Position implements Serializable {
 
 	/**
 	 * If this method returns true means white is able to castle king side.
+	 * 
+	 * @return true if white is able to castle king side, false otherwise
 	 */
 	public final boolean isShortCastleWhite() {
 		return wk() == 1L;
@@ -454,6 +484,8 @@ public final class Position implements Serializable {
 	/**
 	 * If this method returns true means this position is a draw because of
 	 * stalemate.
+	 * 
+	 * @return true if this position is a draw because of stalemate, false otherwise
 	 */
 	public final boolean isStalemate() {
 		return stalemate;
@@ -462,6 +494,8 @@ public final class Position implements Serializable {
 	/**
 	 * If this method returns true means it is white turn to move, otherwise it is
 	 * black turn.
+	 * 
+	 * @return true if it is white turn to move, false otherwise
 	 */
 	public final boolean isWhiteMove() {
 		return wm() == 1L;
@@ -479,6 +513,8 @@ public final class Position implements Serializable {
 
 	/**
 	 * Returns a deep clone of this object.
+	 * 
+	 * @return a deep clone of this object
 	 */
 	public final Position makeClone() {
 		return new Position(bits.clone(), getEnPassant(), whiteMoveNumeric, shortCastleWhiteNumeric,
@@ -492,7 +528,7 @@ public final class Position implements Serializable {
 	 * <p>
 	 * Setting a different length array will lead to unpredictable behavior.
 	 *
-	 * @param bits
+	 * @param bits array of bitboards
 	 */
 	public final void setBits(long[] bits) {
 		this.bits = bits;
@@ -528,7 +564,7 @@ public final class Position implements Serializable {
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
 	 *
-	 * @param checkmate
+	 * @param checkmate true if checkmate, false otherwise
 	 */
 	public final void setCheckmate(boolean checkmate) {
 		this.checkmate = checkmate;
@@ -539,7 +575,7 @@ public final class Position implements Serializable {
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
 	 *
-	 * @param enPassant
+	 * @param enPassant the en passant square
 	 */
 	public final void setEnPassant(int enPassant) {
 		this.enPassant = enPassant;
@@ -550,7 +586,7 @@ public final class Position implements Serializable {
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
 	 *
-	 * @param fiftyMoves
+	 * @param fiftyMoves true if fifty moves, false otherwise
 	 */
 	public final void setFiftyMoves(boolean fiftyMoves) {
 		this.fiftyMoves = fiftyMoves;
@@ -561,7 +597,7 @@ public final class Position implements Serializable {
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
 	 *
-	 * @param halfMovesCounter
+	 * @param halfMovesCounter the half moves counter
 	 */
 	public final void setHalfMovesCounter(int halfMovesCounter) {
 		this.halfMovesCounter = halfMovesCounter;
@@ -572,7 +608,7 @@ public final class Position implements Serializable {
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
 	 *
-	 * @param lackOfMaterial
+	 * @param lackOfMaterial true if lack of material, false otherwise
 	 */
 	public final void setLackOfMaterial(boolean lackOfMaterial) {
 		this.lackOfMaterial = lackOfMaterial;
@@ -583,7 +619,7 @@ public final class Position implements Serializable {
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
 	 *
-	 * @param longCastleBlack
+	 * @param longCastleBlack true if long castle black, false otherwise
 	 */
 	public final void setLongCastleBlack(boolean longCastleBlack) {
 		longCastleBlackNumeric = longCastleBlack ? 1L : 0L;
@@ -594,7 +630,7 @@ public final class Position implements Serializable {
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
 	 *
-	 * @param longCastleWhite
+	 * @param longCastleWhite true if long castle white, false otherwise
 	 */
 	public final void setLongCastleWhite(boolean longCastleWhite) {
 		longCastleWhiteNumeric = longCastleWhite ? 1L : 0L;
@@ -603,7 +639,7 @@ public final class Position implements Serializable {
 	/**
 	 * Sets moves counter value.
 	 *
-	 * @param movesCounter
+	 * @param movesCounter the moves counter
 	 */
 	public final void setMovesCounter(int movesCounter) {
 		this.movesCounter = movesCounter;
@@ -614,7 +650,7 @@ public final class Position implements Serializable {
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
 	 *
-	 * @param repetitions
+	 * @param repetitions true if repetitions, false otherwise
 	 */
 	public final void setRepetitions(boolean repetitions) {
 		this.repetitions = repetitions;
@@ -625,7 +661,7 @@ public final class Position implements Serializable {
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
 	 *
-	 * @param shortCastleBlack
+	 * @param shortCastleBlack true if short castle black, false otherwise
 	 */
 	public final void setShortCastleBlack(boolean shortCastleBlack) {
 		shortCastleBlackNumeric = shortCastleBlack ? 1L : 0L;
@@ -636,16 +672,18 @@ public final class Position implements Serializable {
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
 	 *
-	 * @param shortCastleWhite
+	 * @param shortCastleWhite true if short castle white, false otherwise
 	 */
 	public final void setShortCastleWhite(boolean shortCastleWhite) {
 		shortCastleWhiteNumeric = shortCastleWhite ? 1L : 0L;
 	}
 
 	/**
-	 * Sets the squares array. This will be reflected in the the bits array.
+	 * Sets the squares array. This will be reflected in the the bits array. Each
+	 * element of this array is a square and its value is a piece ordinal. The
+	 * square number corresponds to the element index.
 	 *
-	 * @param squares
+	 * @param squares the squares
 	 */
 	public final void setSquares(int[] squares) {
 		bits = new long[12];
@@ -661,7 +699,7 @@ public final class Position implements Serializable {
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
 	 *
-	 * @param stalemate
+	 * @param stalemate true if stalemate, false otherwise
 	 */
 	public final void setStalemate(boolean stalemate) {
 		this.stalemate = stalemate;
@@ -672,7 +710,7 @@ public final class Position implements Serializable {
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
 	 *
-	 * @param whiteMove
+	 * @param whiteMove true if white move, false otherwise
 	 */
 	public final void setWhiteMove(boolean whiteMove) {
 		setWM(whiteMove ? 1L : 0L);
@@ -696,7 +734,7 @@ public final class Position implements Serializable {
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
 	 *
-	 * @param wm
+	 * @param wm the white move rights as a long
 	 */
 	public final void setWM(long wm) {
 		this.whiteMoveNumeric = wm;
@@ -707,7 +745,7 @@ public final class Position implements Serializable {
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
 	 *
-	 * @param wq
+	 * @param wq the white long castle rights as a long
 	 */
 	public final void setWQ(long wq) {
 		this.longCastleWhiteNumeric = wq;
@@ -716,7 +754,7 @@ public final class Position implements Serializable {
 	/**
 	 * Method for string representation.
 	 *
-	 * @return
+	 * @return the string representation of the position
 	 */
 	private String stringRepresentation() {
 		int[] squares = getSquares();
@@ -777,9 +815,9 @@ public final class Position implements Serializable {
 	}
 
 	/**
-	 * Method for fen representation.
+	 * Method for FEN representation.
 	 *
-	 * @return
+	 * @return the FEN string
 	 */
 	public final String toFen() {
 		StringBuilder fenSB = new StringBuilder();
@@ -908,7 +946,7 @@ public final class Position implements Serializable {
 	/**
 	 * Returns the position resulting from the given move.
 	 *
-	 * @param move
+	 * @param move the move to apply
 	 * @return the position resulting from the given move
 	 */
 	public Optional<Position> childFromMove(Move move) {
@@ -927,7 +965,7 @@ public final class Position implements Serializable {
 	 * Retrieves the {@code Piece} object that represent the piece present in th
 	 * given {@code Square} object given as argument
 	 *
-	 * @param square
+	 * @param square the {@code Square} object
 	 * @return the {@code Piece} object that represent the piece present in the
 	 *         given square
 	 *
@@ -941,7 +979,7 @@ public final class Position implements Serializable {
 	 * Retrieves the {@code Bitboard} object that represent the positions of the
 	 * given {@code Piece}.
 	 *
-	 * @param piece
+	 * @param piece the piece to search
 	 * @return the {@code Bitboard} object that represent the positions of the piece
 	 *
 	 * @since 1.2.3
@@ -954,7 +992,7 @@ public final class Position implements Serializable {
 	 * Retrieves a {@code List} with all the squares where is a piece like the given
 	 * as argument.
 	 *
-	 * @param piece
+	 * @param piece the piece to search
 	 * @return a {@code List} with all the squares where is a piece like the given
 	 *         as argument
 	 *

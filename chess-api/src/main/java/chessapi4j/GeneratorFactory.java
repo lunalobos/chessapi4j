@@ -39,7 +39,7 @@ public class GeneratorFactory {
 	/**
 	 * Generator main implementation
 	 *
-	 * @return
+	 * @return a new {@code Generator} instance
 	 */
 	public static Generator instance() {
 		return generator;

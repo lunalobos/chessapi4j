@@ -156,7 +156,7 @@ public class Move {
 	/**
 	 * Origin square setter.
 	 * 
-	 * @param origin
+	 * @param origin the origin square
 	 */
 	public void setOrigin(int origin) {
 		this.origin = origin;
@@ -165,7 +165,7 @@ public class Move {
 	/**
 	 * Origin square setter.
 	 * 
-	 * @param origin
+	 * @param origin the origin square
 	 *
 	 * @since 1.2.3
 	 */
@@ -176,7 +176,7 @@ public class Move {
 	/**
 	 * Target square setter.
 	 * 
-	 * @param target
+	 * @param target the target square
 	 */
 	public void setTarget(int target) {
 		move = 1L << target;
@@ -185,7 +185,7 @@ public class Move {
 	/**
 	 * Target square setter.
 	 * 
-	 * @param target
+	 * @param target the target square
 	 *
 	 * @since 1.2.3
 	 */
@@ -196,7 +196,7 @@ public class Move {
 	/**
 	 * Promotion piece setter.
 	 * 
-	 * @param promotionPiece
+	 * @param promotionPiece the promotion piece
 	 */
 	public void setPromotionPiece(int promotionPiece) {
 		this.promotionPiece = promotionPiece;
@@ -205,7 +205,7 @@ public class Move {
 	/**
 	 * Promotion piece setter.
 	 * 
-	 * @param promotionPiece
+	 * @param promotionPiece the promotion piece
 	 *
 	 * @since 1.2.3
 	 */
