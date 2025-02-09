@@ -3,10 +3,11 @@ name: Release on Tag Push
 on:
   push:
     tags:
-      - v1.**
+      - 'v1.**'
 
 jobs:
-  create-release:
+  build:
+    name: Create Release
     runs-on: ubuntu-latest
 
     steps:
