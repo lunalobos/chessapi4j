@@ -78,33 +78,35 @@ final class KingGenerator {
 	}
 
     private void makeCastle(Position position, long move, int pieceType, int originSquare) {
-		final long[] bits = position.getBits();
+		//final long[] bits = position.getBits();
 
-		for (int index : GeneratorUtil.INDEXES) {
-			bits[index] = bits[index] & (~move);
-		}
-		bits[pieceType - 1] = (bits[pieceType - 1] & (~(1L << originSquare))) | move;
+		//for (int index : GeneratorUtil.INDEXES) {
+		//	bits[index] = bits[index] & (~move);
+		//}
+		//bits[pieceType - 1] = (bits[pieceType - 1] & (~(1L << originSquare))) | move;
 
-		long rookMove = 0L;
-		rookMove = rookMove | (((1L << 6) & (move)) >> 1);
-		rookMove = rookMove | (((1L << 2) & (move)) << 1);
-		rookMove = rookMove | (((1L << 62) & (move)) >> 1);
-		rookMove = rookMove | (((1L << 58) & (move)) << 1);
+		//long rookMove = 0L;
+		//rookMove = rookMove | (((1L << 6) & (move)) >> 1);
+		//rookMove = rookMove | (((1L << 2) & (move)) << 1);
+		//rookMove = rookMove | (((1L << 62) & (move)) >> 1);
+		//rookMove = rookMove | (((1L << 58) & (move)) << 1);
 
-		long rookOrigin = 0L;
-		rookOrigin = rookOrigin | (((1L << 6) & (move)) << 1);
-		rookOrigin = rookOrigin | (((1L << 2) & (move)) >> 2);
-		rookOrigin = rookOrigin | (((1L << 62) & (move)) << 1);
-		rookOrigin = rookOrigin | (((1L << 58) & (move)) >> 2);
+		//long rookOrigin = 0L;
+		//rookOrigin = rookOrigin | (((1L << 6) & (move)) << 1);
+		//rookOrigin = rookOrigin | (((1L << 2) & (move)) >> 2);
+		//rookOrigin = rookOrigin | (((1L << 62) & (move)) << 1);
+		//rookOrigin = rookOrigin | (((1L << 58) & (move)) >> 2);
 
-		int rookType = pieceType - 2;
-		for (long bit : bits) {
-			bit = bit & (~rookMove);
-		}
-		bits[rookType - 1] = (bits[rookType - 1] & (~rookOrigin)) | rookMove;
-		position.setBits(bits);
+		//int rookType = pieceType - 2;
+		//for (long bit : bits) {
+		//	bit = bit & (~rookMove);
+		//}
+		//bits[rookType - 1] = (bits[rookType - 1] & (~rookOrigin)) | rookMove;
+		//position.setBits(bits);
 
-		position.changeColorToMove();
+		//position.changeColorToMove();
+		
+		position.makeCastle(move, pieceType, originSquare);
 		generatorUtil.applyCastleRules(position);
 		position.setHalfMovesCounter(position.getHalfMovesCounter() + 1);
 		position.increaseMovesCounter();

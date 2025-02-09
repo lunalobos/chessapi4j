@@ -20,13 +20,13 @@ package chessapi4j;
  * @author lunalobos
  * @since 1.2.8
  */
-class Hasher {
-    private static final Logger logger = LoggerFactory.getLogger(Hasher.class);
+class MagicHasher {
+    private static final Logger logger = LoggerFactory.getLogger(MagicHasher.class);
     private int indexBits;
     private long[] maskMatrix;
   
 
-    public Hasher(int indexBits, int[][][] queenMatrix, int[] directions) {
+    public MagicHasher(int indexBits, int[][][] queenMatrix, int[] directions) {
         this.indexBits = indexBits;
         maskMatrix = createMaskMatrix(queenMatrix, directions);
         logger.instanciation();

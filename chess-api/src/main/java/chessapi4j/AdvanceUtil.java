@@ -108,6 +108,15 @@ public class AdvanceUtil {
 		return HALF_MOVES[position.getHalfMovesCounter()];
 	}
 
+	protected static int findPieceType(long[] bitboards, int square){
+		var pieceType = 0;
+		for (int i = 0; i < 12; i++) {
+			var isPiece = (bitboards[i] & (1L << square)) >>> square;
+			pieceType += isPiece * (i + 1);
+		}
+		return pieceType;
+	}
+
 }
 
 interface IntFunction extends Function<Integer, Integer> {

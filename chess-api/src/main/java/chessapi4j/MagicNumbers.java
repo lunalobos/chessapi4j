@@ -30,14 +30,14 @@ class MagicNumbers {
     private static final Logger logger = LoggerFactory.getLogger(MagicNumbers.class);
     private Combinator combinator;
     private VisibleMetricsUtil visibleMetricsUtil;
-    private Hasher hasher;
+    private MagicHasher hasher;
     private long[] magicNumbersArray;
     private Long[][] perfectHashMaps;
     private FastFailLongMap map;
     private int[] directionIndexes;
     private Random random;
 
-    public MagicNumbers(Combinator combinator, VisibleMetricsUtil visibleMetricsUtil, Hasher hasher, int capacity,
+    public MagicNumbers(Combinator combinator, VisibleMetricsUtil visibleMetricsUtil, MagicHasher hasher, int capacity,
             int[] directionIndexes, Random random) {
         this.combinator = combinator;
         this.visibleMetricsUtil = visibleMetricsUtil;

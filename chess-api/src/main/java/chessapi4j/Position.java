@@ -135,6 +135,7 @@ public final class Position implements Serializable {
 		whiteMoveNumeric = ~whiteMoveNumeric & 1L;
 	}
 
+	//zobrist hash most change
 	/**
 	 * Sets a particular bitboard according to the pieceOrdinal parameter.
 	 * <p>
@@ -282,6 +283,7 @@ public final class Position implements Serializable {
 
 	}
 
+	
 	/**
 	 * Returns the bitboards array in {@code Piece} ordinal order excluding EMPTY.
 	 * <p>
@@ -382,18 +384,18 @@ public final class Position implements Serializable {
 
 	@Override
 	public int hashCode() {
-		final int prime = 103963;
-		int hash = 1;
-		for (long bitBoard : getBits()) {
-			hash = hash * prime + (int) (bitBoard ^ (bitBoard >>> 32));
-		}
-		hash = hash * prime + (int) whiteMoveNumeric;
-		hash = hash * prime + (int) shortCastleWhiteNumeric;
-		hash = hash * prime + (int) longCastleWhiteNumeric;
-		hash = hash * prime + (int) shortCastleBlackNumeric;
-		hash = hash * prime + (int) longCastleBlackNumeric;
-		hash = hash * prime + getEnPassant();
-		return hash;
+		//final int prime = 103963;
+		//int hash = 1;
+		//for (long bitBoard : getBits()) {
+		//	hash = hash * prime + (int) (bitBoard ^ (bitBoard >>> 32));
+		//}
+		//hash = hash * prime + (int) whiteMoveNumeric;
+		//hash = hash * prime + (int) shortCastleWhiteNumeric;
+		//hash = hash * prime + (int) longCastleWhiteNumeric;
+		//hash = hash * prime + (int) shortCastleBlackNumeric;
+		//hash = hash * prime + (int) longCastleBlackNumeric;
+		//hash = hash * prime + getEnPassant();
+		return zobristHash().hashCode();
 	}
 
 	/**
@@ -523,6 +525,7 @@ public final class Position implements Serializable {
 				isLackOfMaterial());
 	}
 
+	//zobrist hash most change
 	/**
 	 * Sets the array of bitboards, length has to be always 12.
 	 * <p>
@@ -532,9 +535,70 @@ public final class Position implements Serializable {
 	 */
 	public final void setBits(long[] bits) {
 		this.bits = bits;
-
 	}
 
+	//zobrist hash most change
+	protected void makeMove(int from, long move, int pieceType){
+		for (var index = 0; index < 12; index++) {
+            bits[index] = bits[index] & (~move);
+        }
+        bits[pieceType - 1] = (bits[pieceType - 1] & (~(1L << from))) | move;
+		changeColorToMove();
+	}
+
+	//zobrist hash most change
+	protected void makeCastle(long move, int pieceType, int originSquare){
+
+		for (int index : GeneratorUtil.INDEXES) {
+			bits[index] = bits[index] & (~move);
+		}
+		bits[pieceType - 1] = (bits[pieceType - 1] & (~(1L << originSquare))) | move;
+
+		long rookMove = 0L;
+		rookMove = rookMove | (((1L << 6) & (move)) >> 1);
+		rookMove = rookMove | (((1L << 2) & (move)) << 1);
+		rookMove = rookMove | (((1L << 62) & (move)) >> 1);
+		rookMove = rookMove | (((1L << 58) & (move)) << 1);
+
+		long rookOrigin = 0L;
+		rookOrigin = rookOrigin | (((1L << 6) & (move)) << 1);
+		rookOrigin = rookOrigin | (((1L << 2) & (move)) >> 2);
+		rookOrigin = rookOrigin | (((1L << 62) & (move)) << 1);
+		rookOrigin = rookOrigin | (((1L << 58) & (move)) >> 2);
+
+		int rookType = pieceType - 2;
+		for (long bitboard : bits) {
+			bitboard = bitboard & (~rookMove);
+		}
+		bits[rookType - 1] = (bits[rookType - 1] & (~rookOrigin)) | rookMove;
+		
+		changeColorToMove();
+	}
+
+	//zobrist hash most change
+	protected void makeCoronation(long move, int pieceType, int pieceToCrown, int originSquare){
+		
+		for (var index = 0; index < 12; index++) {
+			bits[index] = bits[index] & (~move);
+		}
+		bits[pieceType - 1] = (bits[pieceType - 1] & (~(1L << originSquare)));
+		bits[pieceToCrown - 1] = bits[pieceToCrown - 1] | move;
+		
+		changeColorToMove();
+	}
+
+	//zobrist hash most change
+	protected void makeEnPassantCapture(long capture, long move, int pieceType, int originSquare){
+		
+		for (var index = 0; index < 12; index++) {
+			bits[index] = bits[index] & (~capture);
+		}
+		bits[pieceType - 1] = (bits[pieceType - 1] & (~(1L << originSquare))) | move;
+
+		changeColorToMove();
+	}
+
+	//zobrist hash most change
 	/**
 	 * Sets black short castle rights as a long.
 	 * <p>
@@ -547,6 +611,7 @@ public final class Position implements Serializable {
 		this.shortCastleBlackNumeric = bk;
 	}
 
+	//zobrist hash most change
 	/**
 	 * Sets black long castle rights as a long.
 	 * <p>
@@ -559,6 +624,7 @@ public final class Position implements Serializable {
 		this.longCastleBlackNumeric = bq;
 	}
 
+	
 	/**
 	 * Sets checkmate boolean value.
 	 * <p>
@@ -570,6 +636,7 @@ public final class Position implements Serializable {
 		this.checkmate = checkmate;
 	}
 
+	//zobrist hash most change
 	/**
 	 * Sets en passant value.
 	 * <p>
@@ -581,6 +648,7 @@ public final class Position implements Serializable {
 		this.enPassant = enPassant;
 	}
 
+	
 	/**
 	 * Sets fifty moves boolean value.
 	 * <p>
@@ -592,6 +660,7 @@ public final class Position implements Serializable {
 		this.fiftyMoves = fiftyMoves;
 	}
 
+	
 	/**
 	 * Sets half moves counter value.
 	 * <p>
@@ -602,6 +671,7 @@ public final class Position implements Serializable {
 	public final void setHalfMovesCounter(int halfMovesCounter) {
 		this.halfMovesCounter = halfMovesCounter;
 	}
+
 
 	/**
 	 * Sets lack of material boolean value.
@@ -614,6 +684,7 @@ public final class Position implements Serializable {
 		this.lackOfMaterial = lackOfMaterial;
 	}
 
+	//zobrist hash most change
 	/**
 	 * Sets long castle black boolean value.
 	 * <p>
@@ -625,6 +696,7 @@ public final class Position implements Serializable {
 		longCastleBlackNumeric = longCastleBlack ? 1L : 0L;
 	}
 
+	//zobrist hash most change
 	/**
 	 * Sets long castle white boolean value.
 	 * <p>
@@ -636,6 +708,7 @@ public final class Position implements Serializable {
 		longCastleWhiteNumeric = longCastleWhite ? 1L : 0L;
 	}
 
+
 	/**
 	 * Sets moves counter value.
 	 *
@@ -644,6 +717,7 @@ public final class Position implements Serializable {
 	public final void setMovesCounter(int movesCounter) {
 		this.movesCounter = movesCounter;
 	}
+
 
 	/**
 	 * Sets repetitions boolean value.
@@ -656,6 +730,7 @@ public final class Position implements Serializable {
 		this.repetitions = repetitions;
 	}
 
+	//zobrist hash most change
 	/**
 	 * Sets short castle black boolean value.
 	 * <p>
@@ -667,6 +742,7 @@ public final class Position implements Serializable {
 		shortCastleBlackNumeric = shortCastleBlack ? 1L : 0L;
 	}
 
+	//zobrist hash most change
 	/**
 	 * Sets short castle white boolean value.
 	 * <p>
@@ -678,6 +754,7 @@ public final class Position implements Serializable {
 		shortCastleWhiteNumeric = shortCastleWhite ? 1L : 0L;
 	}
 
+	//zobrist hash most change
 	/**
 	 * Sets the squares array. This will be reflected in the the bits array. Each
 	 * element of this array is a square and its value is a piece ordinal. The
@@ -694,6 +771,7 @@ public final class Position implements Serializable {
 		}
 	}
 
+
 	/**
 	 * Sets stalemate boolean value.
 	 * <p>
@@ -705,6 +783,7 @@ public final class Position implements Serializable {
 		this.stalemate = stalemate;
 	}
 
+	//zobrist hash most change
 	/**
 	 * Sets whiteMove boolean value.
 	 * <p>
@@ -716,6 +795,7 @@ public final class Position implements Serializable {
 		setWM(whiteMove ? 1L : 0L);
 	}
 
+	//zobrist hash most change
 	/**
 	 * Sets the white king side castle rights as a long.
 	 * <p>
@@ -728,6 +808,7 @@ public final class Position implements Serializable {
 		this.shortCastleWhiteNumeric = wk;
 	}
 
+	//zobrist hash most change
 	/**
 	 * Sets white move rights as a long, meaning 1 for white to move and 0 for black
 	 * to move.
@@ -740,6 +821,7 @@ public final class Position implements Serializable {
 		this.whiteMoveNumeric = wm;
 	}
 
+	//zobrist hash most change
 	/**
 	 * Sets white long castle rights as a long.
 	 * <p>
@@ -943,6 +1025,7 @@ public final class Position implements Serializable {
 		return longCastleWhiteNumeric;
 	}
 
+	
 	/**
 	 * Returns the position resulting from the given move.
 	 *
@@ -962,7 +1045,7 @@ public final class Position implements Serializable {
 	}
 
 	/**
-	 * Retrieves the {@code Piece} object that represent the piece present in th
+	 * Retrieves the {@code Piece} object that represent the piece present in the
 	 * given {@code Square} object given as argument
 	 *
 	 * @param square the {@code Square} object
@@ -1034,6 +1117,7 @@ public final class Position implements Serializable {
 		return isStalemate() || isFiftyMoves() || isLackOfMaterial() || isRepetitions();
 	}
 
+	//zobrist hash most change
 	/**
 	 * Sets the {@code Bitboard} object that represent the positions of the given
 	 * {@code Piece}.
@@ -1045,11 +1129,12 @@ public final class Position implements Serializable {
 	 */
 	public void setBitboard(Piece piece, Bitboard bitboard) {
 		bits[piece.ordinal() - 1] = bitboard.getValue();
+		
 	}
 
+	//zobrist hash most change
 	/**
-	 * Sets the {@code Bitboard} object that represent the positions of the given
-	 * {@code Piece}.
+	 * For each square in the given array, sets the piece type in that square.
 	 * 
 	 * @param piece   the piece
 	 * @param squares the where the piece is
@@ -1058,5 +1143,17 @@ public final class Position implements Serializable {
 	 */
 	public void setBitboard(Piece piece, Square... squares) {
 		bits[piece.ordinal() - 1] = new Bitboard(squares).getValue();
+		
 	}
+
+	/**
+	 * Returns the zobrist hash of the position.
+	 * @return the zobrist hash
+	 * @since 1.2.9
+	 */
+	public Long zobristHash() {
+		return ZobristHasherFactory.instance().computeZobristHash(this);
+	}
+
+	
 }

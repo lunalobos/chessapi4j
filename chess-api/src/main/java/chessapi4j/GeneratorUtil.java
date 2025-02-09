@@ -190,17 +190,19 @@ class GeneratorUtil {
     }
 
     protected void makeMove(Position child, long move, int pieceType, int originSquare, long enemies, Position parent) {
-        final long[] bits = child.getBits();
-        for (int index : INDEXES) {
-            bits[index] = bits[index] & (~move);
-        }
-        bits[pieceType - 1] = (bits[pieceType - 1] & (~(1L << originSquare))) | move;
-        child.setBits(bits);
-        child.changeColorToMove();
+
+        //final long[] bits = child.getBits();
+        //for (int index : INDEXES) {
+        //    bits[index] = bits[index] & (~move);
+        //}
+        //bits[pieceType - 1] = (bits[pieceType - 1] & (~(1L << originSquare))) | move;
+        //child.setBits(bits);
+        //child.changeColorToMove();
+        child.makeMove(originSquare, move, pieceType);
         applyCastleRules(child);
-        applyHalfMoveRule(child, move, enemies, parent);
         child.increaseMovesCounter();
         child.setEnPassant(-1);
+        applyHalfMoveRule(child, move, enemies, parent);
     }
 
     private void applyHalfMoveRule(Position p, long move, long enemies, Position position) {

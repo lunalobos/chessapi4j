@@ -59,8 +59,9 @@ class Eco {
                     .collect(HashMap::new, (map, er) -> map.put(er.getMoves(), er.getDescriptor()),
                             (m1, m2) -> m1.putAll(m2));
         } catch (IOException e) {
-            logger.fatal("IOException: %s", e.getMessage());
-            throw new RuntimeException(e);
+            var fatalException = new ResourceAccessException("openings_sheet.csv", e);
+            logger.fatal(fatalException.getMessage());
+            throw fatalException;
         }
     }
 

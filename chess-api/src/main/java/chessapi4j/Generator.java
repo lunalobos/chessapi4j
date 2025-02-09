@@ -163,16 +163,6 @@ public final class Generator {
 	// 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 1L, 1L,
 	// 1L, 1L, 1L, 1L };
 
-	
-
-	protected static final long isPromotion(int finalSquare) {
-		// return CORONATION_REF[finalSquare];
-		return ((((finalSquare >>> 3) & 7L) >>> 2) & ((((finalSquare >>> 3) & 7L) >>> 1) & 1L)
-				& (((finalSquare >>> 3) & 7L) & 1L))
-				| (((((63 - finalSquare) >>> 3) & 7L) >>> 2) & (((((63 - finalSquare) >>> 3) & 7L) >>> 1) & 1L)
-						& ((((63 - finalSquare) >>> 3) & 7L) & 1L));
-	}
-
 	private static int squaresMap(long input) {
 		return Long.numberOfTrailingZeros(input);
 	}

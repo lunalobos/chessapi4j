@@ -15,7 +15,7 @@
  */
 package chessapi4j;
 
-import java.security.SecureRandom;
+import java.util.Random;
 
 //singleton bean
 /**
@@ -27,11 +27,14 @@ class VisibleMagic {
     private VisibleMetricsUtil visibleMetricsUtils;
     private MagicNumbers bishopMagicNumbers;
     private MagicNumbers rookMagicNumbers;
+    private Random random;
 
-    public VisibleMagic(VisibleMetricsUtil visibleMetricsUtils) {
+    public VisibleMagic(VisibleMetricsUtil visibleMetricsUtils, Random random) {
         this.visibleMetricsUtils = visibleMetricsUtils;
+        this.random = random;
         magic();
         logger.instanciation();
+        
     }
 
     private void magic() {
@@ -43,10 +46,8 @@ class VisibleMagic {
 
         var combinator = new Combinator();
 
-        var rookHasher = new Hasher(rookSize.getBits(), Util.QUEEN_MEGAMATRIX, Util.ROOK_DIRECTIONS);
-        var bishopHasher = new Hasher(bishopSize.getBits(), Util.QUEEN_MEGAMATRIX, Util.BISHOP_DIRECTIONS);
-
-        var random = new SecureRandom();
+        var rookHasher = new MagicHasher(rookSize.getBits(), Util.QUEEN_MEGAMATRIX, Util.ROOK_DIRECTIONS);
+        var bishopHasher = new MagicHasher(bishopSize.getBits(), Util.QUEEN_MEGAMATRIX, Util.BISHOP_DIRECTIONS);
 
         rookMagicNumbers = new MagicNumbers(combinator, visibleMetricsUtils, rookHasher, rookSize.getCapacity(),
                 Util.ROOK_DIRECTIONS, random);

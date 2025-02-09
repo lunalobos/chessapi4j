@@ -338,7 +338,7 @@ public class Util {
 	 * @return true if it is a promotion square
 	 */
 	public static boolean isPromotion(int targetSquare) {
-		return Generator.isPromotion(targetSquare) == 1L;
+		return PawnGenerator.isPromotion(targetSquare) == 1L;
 	}
 
 	/**

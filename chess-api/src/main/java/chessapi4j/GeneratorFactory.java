@@ -15,6 +15,9 @@
  */
 package chessapi4j;
 
+
+import java.util.Random;
+
 /**
  * Factory class for {@code Generator} instances.
  * 
@@ -23,8 +26,9 @@ package chessapi4j;
  */
 public class GeneratorFactory {
 	// dependency injection chain
+	protected static final Random random = new Random();
 	private static final VisibleMetricsUtil visibleMetricsUtil = new VisibleMetricsUtil();
-	protected static final VisibleMagic visibleMagic = new VisibleMagic(visibleMetricsUtil);
+	protected static final VisibleMagic visibleMagic = new VisibleMagic(visibleMetricsUtil, random);
 	protected static final VisibleMetrics visibleMetrics = new VisibleMetrics(visibleMetricsUtil, visibleMagic);
 	protected static final GeneratorUtil generatorUtil = new GeneratorUtil(visibleMetrics);
 	private static final PawnGenerator pawnGenerator = new PawnGenerator(visibleMetrics, generatorUtil);

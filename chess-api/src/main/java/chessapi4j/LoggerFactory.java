@@ -24,7 +24,7 @@ import java.util.Map;
  */
 class LoggerFactory {
     private static final Map<String, LoggerImpl> LOGGERS = new HashMap<>();
-    private static final String DEFAULT_FILTER_LEVEL = "INFO";
+    private static final String DEFAULT_FILTER_LEVEL = "DEBUG";
 
     public static Logger getLogger(Class<?> clazz) {
         var logger = LOGGERS.get(clazz.getName());

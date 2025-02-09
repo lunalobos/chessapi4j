@@ -24,7 +24,7 @@ import java.util.List;
  */
 final class PawnGenerator {
 	private static final Logger logger = LoggerFactory.getLogger(PawnGenerator.class);
-    private static final int[] INDEXES = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
+    //private static final int[] INDEXES = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
     private static final int[] EP_CHOICE = new int[] { 8, -8 };
 
     protected static final long isPromotion(int finalSquare) {
@@ -122,14 +122,15 @@ final class PawnGenerator {
 	}
 
     private void makeCoronation(Position position, long move, int pieceType, int pieceToCrown, int originSquare) {
-		final long[] bits = position.getBits();
-		for (int index : INDEXES) {
-			bits[index] = bits[index] & (~move);
-		}
-		bits[pieceType - 1] = (bits[pieceType - 1] & (~(1L << originSquare)));
-		bits[pieceToCrown - 1] = bits[pieceToCrown - 1] | move;
-		position.setBits(bits);
-		position.changeColorToMove();
+		//final long[] bits = position.getBits();
+		//for (int index : INDEXES) {
+		//	bits[index] = bits[index] & (~move);
+		//}
+		//bits[pieceType - 1] = (bits[pieceType - 1] & (~(1L << originSquare)));
+		//bits[pieceToCrown - 1] = bits[pieceToCrown - 1] | move;
+		//position.setBits(bits);
+		//position.changeColorToMove();
+		position.makeCoronation(move, pieceType, pieceToCrown, originSquare);
 		generatorUtil.applyCastleRules(position);
 		position.setHalfMovesCounter(0);
 		position.increaseMovesCounter();
@@ -164,13 +165,15 @@ final class PawnGenerator {
 	}
 
     private void makeEnPassantCapture(Position position, long capture, long move, int pieceType, int originSquare) {
-		final long[] bits = position.getBits();
-		for (int index : INDEXES) {
-			bits[index] = bits[index] & (~capture);
-		}
-		bits[pieceType - 1] = (bits[pieceType - 1] & (~(1L << originSquare))) | move;
-		position.setBits(bits);
-		position.changeColorToMove();
+		//final long[] bits = position.getBits();
+		//for (int index : INDEXES) {
+		//	bits[index] = bits[index] & (~capture);
+		//}
+		//bits[pieceType - 1] = (bits[pieceType - 1] & (~(1L << originSquare))) | move;
+		//position.setBits(bits);
+		//position.changeColorToMove();
+
+		position.makeEnPassantCapture(capture, move, pieceType, originSquare);
 		position.setHalfMovesCounter(0);
 		position.increaseMovesCounter();
 		position.setEnPassant(-1);
