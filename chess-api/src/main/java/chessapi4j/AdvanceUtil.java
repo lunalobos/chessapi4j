@@ -27,7 +27,9 @@ import java.util.stream.IntStream;
  * @author lunalobos
  *
  * @since 1.2.0
+ * @deprecated this class has become obsolete because all its methods use arguments from a deprecated class.
  */
+@Deprecated
 public class AdvanceUtil {
 
 	private static final Integer[] PIECE_MASK = new Integer[] { 1 << Piece.EMPTY.ordinal(), 1 << Piece.WP.ordinal(),
@@ -67,6 +69,7 @@ public class AdvanceUtil {
 	 * @param position the position to look at
 	 * @return {@code 1} if the position is in check, {@code 0} otherwise.
 	 */
+	@Deprecated
 	public static int isInCheck(Position position) {
 		return (int) GeneratorFactory.generatorUtil.isInCheck(position);
 	}
@@ -88,6 +91,7 @@ public class AdvanceUtil {
 	 * @return {@code 1} if the position is in a draw due to insufficient material,
 	 *         {@code 0} otherwise.
 	 */
+	@Deprecated
 	public static int lackOfMaterial(Position position) {
 		int material = IntStream.range(1, Piece.values().length)
 				.map(i -> BIT_COUNT_FUNCTIONS[Long.bitCount(position.getBits()[i - 1])].apply(PIECE_MASK[i]))
@@ -104,18 +108,12 @@ public class AdvanceUtil {
 	 * @return {@code 1} if the position can be a draw due to the 50-move rule,
 	 *         {@code 0} otherwise.
 	 */
+	@Deprecated
 	public static int fiftyMoves(Position position) {
 		return HALF_MOVES[position.getHalfMovesCounter()];
 	}
 
-	protected static int findPieceType(long[] bitboards, int square){
-		var pieceType = 0;
-		for (int i = 0; i < 12; i++) {
-			var isPiece = (bitboards[i] & (1L << square)) >>> square;
-			pieceType += isPiece * (i + 1);
-		}
-		return pieceType;
-	}
+	
 
 }
 

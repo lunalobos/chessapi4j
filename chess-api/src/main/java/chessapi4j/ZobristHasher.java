@@ -47,6 +47,7 @@ class ZobristHasher {
         logger.instanciation();
     }
 
+    
     public long computeZobristHash(Position position) {
         var zobristHash = 0L;
         var bits = new long[12];
@@ -71,6 +72,34 @@ class ZobristHasher {
             zobristHash ^= zobristCastle[3];
         if (position.getEnPassant() != -1)
             zobristHash ^= zobristEnPassant[position.getEnPassant()];
+        return zobristHash;
+    }
+
+    public long computeZobristHash(long[] bitBoards, boolean whiteMove, boolean shortCastleWhite, boolean longCastleWhite,
+            boolean shortCastleBlack, boolean longCastleBlack, int enPassant) {
+        var zobristHash = 0L;
+        var bits = new long[12];
+        System.arraycopy(bitBoards, 0, bits, 0, 12);
+        for (int piece = 0; piece < 12; piece++) {
+            long bitboard = bits[piece];
+            while (bitboard != 0) {
+                int square = Long.numberOfTrailingZeros(bitboard);
+                zobristHash ^= zobristTable[piece][square];
+                bitboard &= bitboard - 1;
+            }
+        }
+        if (whiteMove)
+            zobristHash ^= zobristTurn;
+        if (shortCastleWhite)
+            zobristHash ^= zobristCastle[0];
+        if (longCastleWhite)
+            zobristHash ^= zobristCastle[1];
+        if (shortCastleBlack)
+            zobristHash ^= zobristCastle[2];
+        if (longCastleBlack)
+            zobristHash ^= zobristCastle[3];
+        if (enPassant != -1)
+            zobristHash ^= zobristEnPassant[enPassant];
         return zobristHash;
     }
 

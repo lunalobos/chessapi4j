@@ -51,5 +51,15 @@ final class BishopGenerator {
 
 	}
 
+	public long bishopMoves(long br, int square, int kingSquare, long enemies, long friends,
+			long checkMask, long inCheckMask) {
+
+		final long pseudoLegalMoves = visibleMetrics.visibleSquaresBishop(square, friends, enemies);
+		final long[] pin = new long[] { -1L, pseudoLegalMoves & checkMask & generatorUtil.defenseDirection(kingSquare, square) };
+		final long isPin = pin[(int) ((br & checkMask) >>> generatorUtil.squaresMap(br & checkMask))];
+		return pseudoLegalMoves & isPin & inCheckMask;
+
+	}
+
 
 }

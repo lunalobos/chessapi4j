@@ -33,7 +33,7 @@ final class RookGenerator {
         logger.instanciation();
     }
 
-    public void rookMoves(long br, int square, int pieceType, int[] pawnsDirections, int kingSquare, long enemies,
+    public void rookMoves(long br, int square, int pieceType, int kingSquare, long enemies,
             long friends, Position position, long checkMask, long inCheckMask, List<Position> children) {
         final long defense = generatorUtil.defenseDirection(kingSquare, square);
         final long pseudoLegalMoves = visibleMetrics.visibleSquaresRook(square, friends, enemies);
@@ -51,6 +51,16 @@ final class RookGenerator {
             children.add(newPosition);
             legalMoves = legalMoves & ~move;
         }
+
+    }
+
+    public long rookMoves(long br, int square, int pieceType, int kingSquare, long enemies,
+            long friends, long checkMask, long inCheckMask) {
+        final long defense = generatorUtil.defenseDirection(kingSquare, square);
+        final long pseudoLegalMoves = visibleMetrics.visibleSquaresRook(square, friends, enemies);
+        final long[] pin = new long[] { -1L, pseudoLegalMoves & checkMask & defense };
+        final long pinMask = pin[(int) ((br & checkMask) >>> generatorUtil.squaresMap(br))];
+        return pseudoLegalMoves & pinMask & inCheckMask;
 
     }
 

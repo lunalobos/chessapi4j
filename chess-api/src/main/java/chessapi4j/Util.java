@@ -19,6 +19,11 @@ package chessapi4j;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 /**
  * Utility class. Not all of these class methods are safe, be careful.
@@ -194,6 +199,7 @@ public class Util {
 	 *
 	 * @since 1.2.3
 	 */
+	@Deprecated
 	public static long visibleSquares(Position position, MoveDirection directionAndSense, Square square) {
 		return GeneratorFactory.visibleMetrics.visibleSquares(position.getBits(),
 				new int[] { directionAndSense.ordinal() }, square.ordinal(),
@@ -201,7 +207,8 @@ public class Util {
 	}
 
 	/**
-	 * Retrieves visible squares in all directions in a long as bitboard representation.
+	 * Retrieves visible squares in all directions in a long as bitboard
+	 * representation.
 	 *
 	 * @param position
 	 * @param square
@@ -209,6 +216,7 @@ public class Util {
 	 *
 	 * @since 1.2.3
 	 */
+	@Deprecated
 	public static long visibleSquares(Position position, Square square) {
 		var piece = position.getPiece(square);
 		var side = piece.side();
@@ -236,6 +244,7 @@ public class Util {
 	/*
 	 * Retrieves visible squares bitboard representation.
 	 */
+	@Deprecated
 	protected static long visibleSquares(Position position, int[] directionsIndexs, int square) {
 
 		return GeneratorFactory.visibleMetrics.visibleSquares(position.getBits(), directionsIndexs, square,
@@ -313,7 +322,7 @@ public class Util {
 	 * @return the column character for the given square
 	 *
 	 * @throws ArrayIndexOutOfBoundsException if square is not a valid
-	 * square number
+	 *                                        square number
 	 */
 	public static String getColLetter(int square) {
 		int colNum = getCol(square);
@@ -422,6 +431,7 @@ public class Util {
 	 * @param position the position to check for a check
 	 * @return true if the position is in check false otherwise
 	 */
+	@Deprecated
 	public static boolean isInCheck(Position position) {
 		return GeneratorFactory.generatorUtil.isInCheck(position) == 1;
 	}
@@ -432,6 +442,7 @@ public class Util {
 	 * @param position the position to look at
 	 * @return the number of pieces for the given position
 	 */
+	@Deprecated
 	public static int countPieces(Position position) {
 		long[] bits = position.getBits();
 		int sum = 0;
@@ -440,4 +451,20 @@ public class Util {
 		}
 		return sum;
 	}
+
+	protected static <T> Stream<IndexedValue<T>> arraytoStream(T[] array) {
+		return IntStream.range(0, array.length).mapToObj(i -> new IndexedValue<>(i, array[i]));
+	}
+
+	protected static Stream<IndexedValue<Long>> arraytoLongStream(long[] array) {
+		return IntStream.range(0, array.length).mapToObj(i -> new IndexedValue<>(i, array[i]));
+	}
+}
+
+@Data
+@AllArgsConstructor
+class IndexedValue<T> {
+	private int index;
+	private T value;
+	
 }

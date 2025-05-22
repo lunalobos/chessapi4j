@@ -29,6 +29,7 @@ import java.util.Optional;
  */
 public class PositionFactory {
 
+	
 	/**
 	 * Custom new instance. Argument is a fen string with the next moves separated
 	 * by spaces. Returns the position after play all the moves. The form of the
@@ -37,7 +38,9 @@ public class PositionFactory {
 	 *
 	 * @param fenPlusMoves
 	 * @return a new instance
+	 *  
 	 */
+	@Deprecated
 	public static Position fromMoves(String fenPlusMoves) throws MovementException {
 		Scanner input = new Scanner(fenPlusMoves);
 		List<String> list = new LinkedList<>();
@@ -66,6 +69,7 @@ public class PositionFactory {
 
 	}
 
+
 	/**
 	 * Custom new instance. Arguments are the initial position and a list of the
 	 * next moves. Returns the position after play all moves.
@@ -73,6 +77,7 @@ public class PositionFactory {
 	 * @param p, moves
 	 * @return a new instance
 	 */
+	@Deprecated
 	public static Position fromMoves(Position p, List<Move> moves) throws MovementException {
 		Position fp = p.makeClone();
 		for (Move move : moves) {
@@ -91,6 +96,7 @@ public class PositionFactory {
 	 * @return an optional containing the position if the fen is valid
 	 * @since 1.2.4
 	 */
+	@Deprecated
 	public Optional<Position> secureInstance(String fen){
 		return Rules.isValidFen(fen) ? Optional.of(new Position(fen)) : Optional.empty();
 	}	

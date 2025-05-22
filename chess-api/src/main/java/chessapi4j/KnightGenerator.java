@@ -24,18 +24,19 @@ import java.util.List;
  */
 final class KnightGenerator {
 	private static final Logger logger = LoggerFactory.getLogger(KnightGenerator.class);
-    private GeneratorUtil generatorUtil;
+	private GeneratorUtil generatorUtil;
+	private MatrixUtil matrixUtil;
 
-    public KnightGenerator(GeneratorUtil generatorUtil) {
-        this.generatorUtil = generatorUtil;
+	public KnightGenerator(GeneratorUtil generatorUtil, MatrixUtil matrixUtil) {
+		this.generatorUtil = generatorUtil;
+		this.matrixUtil = matrixUtil;
 		logger.instanciation();
-    }
+	}
 
-    public void knightMoves(long br, int square, int pieceType, long enemies, long friends, Position pos,
+	public void knightMoves(long br, int square, int pieceType, long enemies, long friends, Position pos,
 			long checkMask, long inCheckMask, List<Position> children) {
-		final int[] knightDirections = GeneratorUtil.KNIGHT_MATRIX[square];
-		final long emptySquares = ~(enemies | friends);
-		final long emptyOrEnemy = emptySquares | enemies;
+		final int[] knightDirections = matrixUtil.knightMatrix[square];
+		final long emptyOrEnemy = ~friends;
 		long moves = 0L;
 		for (int move : knightDirections) {
 			moves = moves | (1L << move);
@@ -51,6 +52,19 @@ final class KnightGenerator {
 			children.add(newPosition);
 			legalMoves = legalMoves & ~move;
 		}
+	}
+
+	public long knightMoves(long br, int square, int pieceType, long enemies, long friends, long checkMask,
+			long inCheckMask) {
+		final int[] knightDirections = matrixUtil.knightMatrix[square];
+		final long emptyOrEnemy = ~friends;
+		long moves = 0L;
+		for (int move : knightDirections) {
+			moves = moves | (1L << move);
+		}
+		final long[] pin = new long[] { -1L, 0L };
+		final long pinMask = pin[(int) ((br & checkMask) >>> generatorUtil.squaresMap(br & checkMask))];
+		return moves & emptyOrEnemy & pinMask & inCheckMask;
 	}
 
 }

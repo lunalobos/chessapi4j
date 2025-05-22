@@ -209,6 +209,7 @@ public class PGNHandler {
 	 * @throws IllegalArgumentException if the move is illegal or cannot be
 	 *                                  converted to SAN format.
 	 */
+	@Deprecated
 	public static String toSAN(Position position, Move move) {
 		if (!Rules.legal(position, move))
 			throw new IllegalArgumentException(String.format("Illegal move %s for position\n%s", move, position));
@@ -308,6 +309,7 @@ public class PGNHandler {
 	 * @throws IllegalArgumentException if the move is illegal or cannot be
 	 *                                  converted to SAN format.
 	 */
+	@Deprecated
 	public static String toSAN(Position position, String uciMove) {
 		Move move;
 		try {
@@ -330,6 +332,7 @@ public class PGNHandler {
 	 * @throws IllegalArgumentException if the given expression is not in the
 	 *                                  standard algebraic notation format.
 	 */
+	@Deprecated
 	public static Optional<Move> toUCI(Position position, String sanMove) {
 		Matcher matcher = MOVE_PATTERN.matcher(sanMove.trim());
 		boolean finded = matcher.find();
@@ -448,6 +451,7 @@ public class PGNHandler {
 	 * @throws IllegalArgumentException if an invalid move or illegal move is
 	 *                                  encountered.
 	 */
+	@Deprecated
 	protected static List<PGNMove> captureMoves(Position startpos, String line) {
 		// A RegEx is used to match and capture the moves from the PGN string
 		Matcher matcher = MOVE_PATTERN.matcher(line);
@@ -517,7 +521,7 @@ public class PGNHandler {
 	 *
 	 * @throws IllegalArgumentException if the path is invalid or inaccessible
 	 */
-
+	
 	public static List<Game> parseGames(Path path) {
 		List<Game> games = new LinkedList<>();
 		try (BufferedReader reader = Files.newBufferedReader(path)) {
@@ -576,6 +580,7 @@ public class PGNHandler {
 	 * @return a list of Game objects parsed from the string
 	 * @throws IllegalArgumentException if the string is invalid or inaccessible
 	 */
+	@Deprecated
 	public static List<Game> parseGames(String pgnBase) {
 		List<Game> games = new LinkedList<>();
 		Matcher matcher = GAME_PATTERN.matcher(pgnBase);

@@ -31,6 +31,7 @@ import static chessapi4j.Square.*;
  * @author lunalobos
  * @since 1.0.0
  */
+@Deprecated
 public final class Position implements Serializable {
 	private static final long serialVersionUID = -3129022190813874561L;
 
@@ -51,6 +52,7 @@ public final class Position implements Serializable {
 	/**
 	 * Creates a new position with the started position.
 	 */
+	@Deprecated
 	public Position() {
 		enPassant = -1;
 		bits = new long[12];
@@ -74,6 +76,7 @@ public final class Position implements Serializable {
 		setMovesCounter(1);
 	}
 
+	@Deprecated
 	protected Position(long[] bits, int enPassant, long whiteMoveNumeric, long shortCastleWhiteNumeric,
 			long shortCastleBlackNumeric, long longCastleWhiteNumeric, long longCastleBlackNumeric, int movesCounter,
 			int halfMovesCounter, boolean checkmate, boolean stalemate, boolean fiftyMoves, boolean repetitions,
@@ -106,6 +109,7 @@ public final class Position implements Serializable {
 	 * 
 	 * @param fen the FEN string
 	 */
+	@Deprecated
 	public Position(String fen) {
 		fromFen(fen);
 	}
@@ -150,10 +154,13 @@ public final class Position implements Serializable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof Position))
+		if(obj == null) {
 			return false;
-		if (obj == this)
+		} else if (obj == this){
 			return true;
+		} else if (!(obj instanceof Position)){
+			return false;
+		}		
 		Position o = (Position) obj;
 		long op = 0L;
 		for (int i = 0; i < 12; i++) {
@@ -519,7 +526,9 @@ public final class Position implements Serializable {
 	 * @return a deep clone of this object
 	 */
 	public final Position makeClone() {
-		return new Position(bits.clone(), getEnPassant(), whiteMoveNumeric, shortCastleWhiteNumeric,
+		var newBitboards = new long[12];
+		System.arraycopy(bits, 0, newBitboards, 0, bits.length);
+		return new Position(newBitboards, getEnPassant(), whiteMoveNumeric, shortCastleWhiteNumeric,
 				shortCastleBlackNumeric, longCastleWhiteNumeric, longCastleBlackNumeric, getMovesCounter(),
 				getHalfMovesCounter(), isCheckmate(), isStalemate(), isFiftyMoves(), isRepetitions(),
 				isLackOfMaterial());

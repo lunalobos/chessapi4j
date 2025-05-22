@@ -20,49 +20,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+// singleton bean
 /**
- * @author lunalobos
- */
-final class CheckInfo {
-	private long inCheck;
-	private long inCheckMask;
-	private int checkCount;
-
-	public CheckInfo(long inCheck, long inCheckMask, int checkCount) {
-		super();
-		this.inCheck = inCheck;
-		this.inCheckMask = inCheckMask;
-		this.checkCount = checkCount;
-	}
-
-	public long getInCheck() {
-		return inCheck;
-	}
-
-	public void setInCheck(long inCheck) {
-		this.inCheck = inCheck;
-	}
-
-	public long getInCheckMask() {
-		return inCheckMask;
-	}
-
-	public void setInCheckMask(long inCheckMask) {
-		this.inCheckMask = inCheckMask;
-	}
-
-	public int getCheckCount() {
-		return checkCount;
-	}
-
-	public void setCheckCount(int checkCount) {
-		this.checkCount = checkCount;
-	}
-
-}
-//singleton bean
-/**
- * This class is intended to generate all possible moves from an original position.
+ * This class is intended to generate all possible moves from an original
+ * position.
  *
  * @author lunalobos
  *
@@ -146,22 +107,13 @@ public final class Generator {
 			{ 49, 51 }, { 50, 52 }, { 51, 53 }, { 52, 54 }, { 53, 55 }, { 54 }, { 57 }, { 56, 58 }, { 57, 59 },
 			{ 58, 60 }, { 59, 61 }, { 60, 62 }, { 61, 63 }, { 62 }, {}, {}, {}, {}, {}, {}, {}, {} };
 	private static final int[][][] PAWN_MATRIX1 = new int[][][] { BLACK_PAWN_MATRIX_1, WHITE_PAWN_MATRIX_1 };
-	private static final int[][][] PAWN_MATRIX2 = new int[][][] { BLACK_PAWN_MATRIX_2, WHITE_PAWN_MATRIX_2 };
+	protected static final int[][][] PAWN_MATRIX2 = new int[][][] { BLACK_PAWN_MATRIX_2, WHITE_PAWN_MATRIX_2 };
 	private static final int[] PAWNS = new int[] { Piece.BP.ordinal(), Piece.WP.ordinal() };
 	protected static final int[] QUEEN_DIRECTIONS = new int[] { 0, 1, 2, 3, 4, 5, 6, 7 };
 	protected static final int[][][] QUEEN_MEGAMATRIX = Util.QUEEN_MEGAMATRIX;
 	private static final int[] QUEENS = new int[] { Piece.BQ.ordinal(), Piece.WQ.ordinal() };
 	protected static final int[] ROOK_DIRECTIONS = new int[] { 4, 5, 6, 7 };
 	private static final int[] ROOKS = new int[] { Piece.BR.ordinal(), Piece.WR.ordinal() };
-	// private static final long[] OPTIONS = new long[] { 0L, 1L, 0b11L, 0b111L,
-	// 0b1111L, 0b11111L, 0b111111L,
-	// 0b1111111L };
-	// private static final long[] CORONATION_REF = new long[] { 1L, 1L, 1L, 1L, 1L,
-	// 1L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L,
-	// 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-	// 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-	// 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 1L, 1L,
-	// 1L, 1L, 1L, 1L };
 
 	private static int squaresMap(long input) {
 		return Long.numberOfTrailingZeros(input);
@@ -175,7 +127,6 @@ public final class Generator {
 	private KingGenerator kingGenerator;
 	private VisibleMetrics visibleMetrics;
 	private GeneratorUtil generatorUtil;
-
 
 	protected Generator(PawnGenerator pawnGenerator, KnightGenerator knightGenerator, BishopGenerator bishopGenerator,
 			RookGenerator rookGenerator, QueenGenerator queenGenerator, KingGenerator kingGenerator,
@@ -236,6 +187,7 @@ public final class Generator {
 		return checkMask;
 	}
 
+	
 	private void fillChildrenList(List<Position> children, long[] bits, long friends, long enemies, Position position,
 			long checkMask, long inCheckMask, long nextWhiteMove, long inCheck, int pawnPiece, int kingSquare,
 			int knightPiece, int bishopPiece, int rookPiece, int queenPiece, int kingPiece, int[] pawnsDirections,
@@ -248,8 +200,7 @@ public final class Generator {
 		while (j != 0L) {
 			lb = j & -j;
 			pawnGenerator.pawnMoves(lb, squaresMap(lb), pawnsDirections, pawnPiece, matrix1, matrix2, kingSquare,
-					enemies, friends,
-					position, checkMask, inCheckMask, nextWhiteMove, children);
+					enemies, friends, position, checkMask, inCheckMask, nextWhiteMove, children);
 			j = j & ~lb;
 		}
 		// Knight Moves
@@ -265,17 +216,15 @@ public final class Generator {
 		while (j != 0L) {
 			lb = j & -j;
 			bishopGenerator.bishopMoves(lb, squaresMap(lb), bishopPiece, kingSquare, enemies, friends, position,
-					checkMask, inCheckMask,
-					children);
+					checkMask, inCheckMask, children);
 			j = j & ~lb;
 		}
 		// Rook Moves
 		j = bits[rookPiece - 1];
 		while (j != 0L) {
 			lb = j & -j;
-			rookGenerator.rookMoves(lb, squaresMap(lb), rookPiece, pawnsDirections, kingSquare, enemies, friends,
-					position, checkMask,
-					inCheckMask, children);
+			rookGenerator.rookMoves(lb, squaresMap(lb), rookPiece, kingSquare, enemies, friends,
+					position, checkMask, inCheckMask, children);
 			j = j & ~lb;
 		}
 		// Queen Moves
@@ -283,8 +232,7 @@ public final class Generator {
 		while (j != 0L) {
 			lb = j & -j;
 			queenGenerator.queenMoves(lb, squaresMap(lb), queenPiece, kingSquare, friends, enemies, position, checkMask,
-					inCheckMask,
-					children);
+					inCheckMask, children);
 			j = j & ~lb;
 		}
 		// King Moves
@@ -303,6 +251,7 @@ public final class Generator {
 	 * @param position the position from which the children are generated
 	 * @return the list of legal positions that arise from this particular position
 	 */
+	@Deprecated
 	public final List<Position> generateChildren(Position position) {
 		List<Position> children = new LinkedList<>();
 		final long[] bits = position.getBits();
@@ -342,10 +291,11 @@ public final class Generator {
 	 * Generates a list with the Move objects for the given children in the same
 	 * order.
 	 * 
-	 * @param parent the position from which the children are generated
+	 * @param parent   the position from which the children are generated
 	 * @param children the list of children
 	 * @return a list with the Move objects for the given children in the same order
 	 */
+	@Deprecated
 	public final List<Move> generateMoves(Position parent, List<Position> children) {
 		List<Move> legalMoves = new ArrayList<>(children.size());
 		for (Position child : children) {

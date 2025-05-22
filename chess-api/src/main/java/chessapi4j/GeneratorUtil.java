@@ -293,7 +293,8 @@ class GeneratorUtil {
 		final long piecesInterruption2 = ((1L << 59) & (enemies | friends)) >>> 59;
 		final long piecesInterruption3 = ((1L << 57) & (enemies | friends)) >>> 57;
 		final long castleEnable = position.bq();
-		final long[] testBits1 = position.getBits().clone();
+		final long[] testBits1 = new long[12];
+        System.arraycopy(position.getBits(), 0, testBits1, 0, 12);
 
 		for (int index : INDEXES) {
 			testBits1[index] = testBits1[index] & ~(1L << 59);
@@ -301,7 +302,8 @@ class GeneratorUtil {
 		}
 		testBits1[Piece.BK.ordinal() - 1] = 1L << 59;
 		final long check1 = inCheck(Piece.BK.ordinal(), testBits1, position.wm(), BLACK_PAWN_MATRIX_2[59]);
-		final long[] testBits2 = position.getBits().clone();
+		final long[] testBits2 = new long[12];
+        System.arraycopy(position.getBits(), 0, testBits2, 0, 12);
 
 		for (int index : INDEXES) {
 			testBits2[index] = testBits2[index] & ~(1L << 58);
@@ -314,20 +316,54 @@ class GeneratorUtil {
 				& ~check1 & ~check2 & ~inCheck;
 	}
 
+    protected long isLongCastleBlackEnable(int kingSquare, long enemies, long friends, long[] bitboards, long bq, long wm, long inCheck) {
+
+		final long kingLocation = ((1L << kingSquare) & (1L << 60)) >>> 60;
+		final long piecesInterruption1 = ((1L << 58) & (enemies | friends)) >>> 58;
+		final long piecesInterruption2 = ((1L << 59) & (enemies | friends)) >>> 59;
+		final long piecesInterruption3 = ((1L << 57) & (enemies | friends)) >>> 57;
+		final long castleEnable = bq;
+		final long[] testBits1 = new long[12];
+        System.arraycopy(bitboards, 0, testBits1, 0, 12);
+
+		for (int index : INDEXES) {
+			testBits1[index] = testBits1[index] & ~(1L << 59);
+			testBits1[index] = testBits1[index] & ~(1L << 60);
+		}
+		testBits1[Piece.BK.ordinal() - 1] = 1L << 59;
+		final long check1 = inCheck(Piece.BK.ordinal(), testBits1, wm, BLACK_PAWN_MATRIX_2[59]);
+		final long[] testBits2 = new long[12];
+        System.arraycopy(bitboards, 0, testBits2, 0, 12);
+
+		for (int index : INDEXES) {
+			testBits2[index] = testBits2[index] & ~(1L << 58);
+			testBits2[index] = testBits2[index] & ~(1L << 60);
+		}
+		testBits2[Piece.BK.ordinal() - 1] = 1L << 58;
+		final long check2 = inCheck(Piece.BK.ordinal(), testBits2, wm, BLACK_PAWN_MATRIX_2[58]);
+
+		return kingLocation & ~piecesInterruption1 & ~piecesInterruption2 & ~piecesInterruption3 & castleEnable
+				& ~check1 & ~check2 & ~inCheck;
+	}
+
 	protected long isLongCastleWhiteEnable(int kingSquare, long enemies, long friends, Position position, long inCheck) {
 		final long kingLocation = ((1L << kingSquare) & (1L << 4)) >>> 4;
 		final long piecesInterruption1 = ((1L << 2) & (enemies | friends)) >>> 2;
 		final long piecesInterruption2 = ((1L << 3) & (enemies | friends)) >>> 3;
 		final long piecesInterruption3 = ((1L << 1) & (enemies | friends)) >>> 1;
 		final long castleEnable = position.wq();
-		final long[] testBits1 = position.getBits().clone();
+		final long[] testBits1 = new long[12];
+        System.arraycopy(position.getBits(), 0, testBits1, 0, 12);
+
 		for (int index : INDEXES) {
 			testBits1[index] = testBits1[index] & ~(1L << 3);
 			testBits1[index] = testBits1[index] & ~(1L << 4);
 		}
 		testBits1[Piece.WK.ordinal() - 1] = 1L << 3;
 		final long check1 = inCheck(Piece.WK.ordinal(), testBits1, position.wm(), WHITE_PAWN_MATRIX_2[3]);
-		final long[] testBits2 = position.getBits().clone();
+		final long[] testBits2 = new long[12];
+        System.arraycopy(position.getBits(), 0, testBits2, 0, 12);
+
 		for (int index : INDEXES) {
 			testBits2[index] = testBits2[index] & ~(1L << 2);
 			testBits2[index] = testBits2[index] & ~(1L << 4);
@@ -338,12 +374,41 @@ class GeneratorUtil {
 				& ~check1 & ~check2 & ~inCheck;
 	}
 
+    protected long isLongCastleWhiteEnable(int kingSquare, long enemies, long friends, long[] bitboards, long wq, long wm,  long inCheck) {
+		final long kingLocation = ((1L << kingSquare) & (1L << 4)) >>> 4;
+		final long piecesInterruption1 = ((1L << 2) & (enemies | friends)) >>> 2;
+		final long piecesInterruption2 = ((1L << 3) & (enemies | friends)) >>> 3;
+		final long piecesInterruption3 = ((1L << 1) & (enemies | friends)) >>> 1;
+		final long castleEnable = wq;
+		final long[] testBits1 = new long[12];
+        System.arraycopy(bitboards, 0, testBits1, 0, 12);
+
+		for (int index : INDEXES) {
+			testBits1[index] = testBits1[index] & ~(1L << 3);
+			testBits1[index] = testBits1[index] & ~(1L << 4);
+		}
+		testBits1[Piece.WK.ordinal() - 1] = 1L << 3;
+		final long check1 = inCheck(Piece.WK.ordinal(), testBits1, wm, WHITE_PAWN_MATRIX_2[3]);
+		final long[] testBits2 = new long[12];
+        System.arraycopy(bitboards, 0, testBits2, 0, 12);
+
+		for (int index : INDEXES) {
+			testBits2[index] = testBits2[index] & ~(1L << 2);
+			testBits2[index] = testBits2[index] & ~(1L << 4);
+		}
+		testBits2[Piece.WK.ordinal() - 1] = 1L << 2;
+		final long check2 = inCheck(Piece.WK.ordinal(), testBits2, wm, WHITE_PAWN_MATRIX_2[2]);
+		return kingLocation & ~piecesInterruption1 & ~piecesInterruption2 & ~piecesInterruption3 & castleEnable
+				& ~check1 & ~check2 & ~inCheck;
+	}
+
 	protected long isShortCastleBlackEnable(int kingSquare, long enemies, long friends, Position position, long inCheck) {
 		final long kingLocation = ((1L << kingSquare) & (1L << 60)) >>> 60;
 		final long piecesInterruption1 = ((1L << 61) & (enemies | friends)) >>> 61;
 		final long piecesInterruption2 = ((1L << 62) & (enemies | friends)) >>> 62;
 		final long castleEnable = position.bk();
-		final long[] testBits1 = position.getBits().clone();
+		final long[] testBits1 = new long[12];
+        System.arraycopy(position.getBits(), 0, testBits1, 0, 12);
 
 		for (int index : INDEXES) {
 			testBits1[index] = testBits1[index] & ~(1L << 61);
@@ -351,7 +416,9 @@ class GeneratorUtil {
 		}
 		testBits1[Piece.BK.ordinal() - 1] = 1L << 61;
 		final long check1 = inCheck(Piece.BK.ordinal(), testBits1, position.wm(), BLACK_PAWN_MATRIX_2[61]);
-		final long[] testBits2 = position.getBits().clone();
+		final long[] testBits2 = new long[12];
+        System.arraycopy(position.getBits(), 0, testBits2, 0, 12);
+
 		for (int index : INDEXES) {
 			testBits2[index] = testBits2[index] & ~(1L << 62);
 			testBits2[index] = testBits2[index] & ~(1L << 60);
@@ -361,13 +428,40 @@ class GeneratorUtil {
 		return kingLocation & ~piecesInterruption1 & ~piecesInterruption2 & castleEnable & ~check1 & ~check2 & ~inCheck;
 	}
 
+    protected long isShortCastleBlackEnable(int kingSquare, long enemies, long friends, long[] bitboards, long bk, long wm, long inCheck) {
+		final long kingLocation = ((1L << kingSquare) & (1L << 60)) >>> 60;
+		final long piecesInterruption1 = ((1L << 61) & (enemies | friends)) >>> 61;
+		final long piecesInterruption2 = ((1L << 62) & (enemies | friends)) >>> 62;
+		final long castleEnable = bk;
+		final long[] testBits1 = new long[12];
+        System.arraycopy(bitboards, 0, testBits1, 0, 12);
+
+		for (int index : INDEXES) {
+			testBits1[index] = testBits1[index] & ~(1L << 61);
+			testBits1[index] = testBits1[index] & ~(1L << 60);
+		}
+		testBits1[Piece.BK.ordinal() - 1] = 1L << 61;
+		final long check1 = inCheck(Piece.BK.ordinal(), testBits1, wm, BLACK_PAWN_MATRIX_2[61]);
+		final long[] testBits2 = new long[12];
+        System.arraycopy(bitboards, 0, testBits2, 0, 12);
+
+		for (int index : INDEXES) {
+			testBits2[index] = testBits2[index] & ~(1L << 62);
+			testBits2[index] = testBits2[index] & ~(1L << 60);
+		}
+		testBits2[Piece.BK.ordinal() - 1] = 1L << 62;
+		final long check2 = inCheck(Piece.BK.ordinal(), testBits2, wm, BLACK_PAWN_MATRIX_2[62]);
+		return kingLocation & ~piecesInterruption1 & ~piecesInterruption2 & castleEnable & ~check1 & ~check2 & ~inCheck;
+	}
+
 	protected long isShortCastleWhiteEnable(int kingSquare, long enemies, long friends, Position position, long inCheck) {
 
 		final long kingLocation = ((1L << kingSquare) & (1L << 4)) >>> 4;
 		final long piecesInterruption1 = ((1L << 5) & (enemies | friends)) >>> 5;
 		final long piecesInterruption2 = ((1L << 6) & (enemies | friends)) >>> 6;
 		final long castleEnable = position.wk();
-		final long[] testBits1 = position.getBits().clone();
+		final long[] testBits1 = new long[12];
+        System.arraycopy(position.getBits(), 0, testBits1, 0, 12);
 
 		for (int index : INDEXES) {
 			testBits1[index] = testBits1[index] & ~(1L << 5);
@@ -375,7 +469,8 @@ class GeneratorUtil {
 		}
 		testBits1[Piece.WK.ordinal() - 1] = 1L << 5;
 		final long check1 = inCheck(Piece.WK.ordinal(), testBits1, position.wm(), WHITE_PAWN_MATRIX_2[5]);
-		final long[] testBits2 = position.getBits().clone();
+		final long[] testBits2 = new long[12];
+        System.arraycopy(position.getBits(), 0, testBits2, 0, 12);
 
 		for (int index : INDEXES) {
 			testBits2[index] = testBits2[index] & ~(1L << 6);
@@ -383,6 +478,33 @@ class GeneratorUtil {
 		}
 		testBits2[Piece.WK.ordinal() - 1] = 1L << 6;
 		final long check2 = inCheck(Piece.WK.ordinal(), testBits2, position.wm(), WHITE_PAWN_MATRIX_2[6]);
+		return kingLocation & ~piecesInterruption1 & ~piecesInterruption2 & castleEnable & ~check1 & ~check2 & ~inCheck;
+	}
+
+    protected long isShortCastleWhiteEnable(int kingSquare, long enemies, long friends, long[] bitboards, long wk, long wm, long inCheck) {
+
+		final long kingLocation = ((1L << kingSquare) & (1L << 4)) >>> 4;
+		final long piecesInterruption1 = ((1L << 5) & (enemies | friends)) >>> 5;
+		final long piecesInterruption2 = ((1L << 6) & (enemies | friends)) >>> 6;
+		final long castleEnable = wk;
+		final long[] testBits1 = new long[12];
+        System.arraycopy(bitboards, 0, testBits1, 0, 12);
+
+		for (int index : INDEXES) {
+			testBits1[index] = testBits1[index] & ~(1L << 5);
+			testBits1[index] = testBits1[index] & ~(1L << 4);
+		}
+		testBits1[Piece.WK.ordinal() - 1] = 1L << 5;
+		final long check1 = inCheck(Piece.WK.ordinal(), testBits1, wm, WHITE_PAWN_MATRIX_2[5]);
+		final long[] testBits2 = new long[12];
+        System.arraycopy(bitboards, 0, testBits2, 0, 12);
+
+		for (int index : INDEXES) {
+			testBits2[index] = testBits2[index] & ~(1L << 6);
+			testBits2[index] = testBits2[index] & ~(1L << 4);
+		}
+		testBits2[Piece.WK.ordinal() - 1] = 1L << 6;
+		final long check2 = inCheck(Piece.WK.ordinal(), testBits2, wm, WHITE_PAWN_MATRIX_2[6]);
 		return kingLocation & ~piecesInterruption1 & ~piecesInterruption2 & castleEnable & ~check1 & ~check2 & ~inCheck;
 	}
 

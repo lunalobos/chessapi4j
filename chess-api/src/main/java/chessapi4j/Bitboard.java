@@ -207,6 +207,25 @@ public class Bitboard {
 			return false;
 	}
 
+	/**
+	 * Returns the number of trailing zeros in the bitboard.
+	 * <p>
+	 * This is useful for quickly getting the index of the least significant bit
+	 * set to 1 in the bitboard.
+	 * <p>
+	 * For example, if the bitboard is 0b1100000, then the least significant bit
+	 * set to 1 is the 5th bit (index 5), so this method will return 5.
+	 * <p>
+	 * This method is equivalent to
+	 * {@link java.lang.Long#numberOfTrailingZeros(long)
+	 * Long.numberOfTrailingZeros(long)}.
+	 * 
+	 * @since 1.2.9
+	 */
+	public int trailingZeros() {
+		return Long.numberOfTrailingZeros(value);
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder(500);

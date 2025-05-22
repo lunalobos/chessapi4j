@@ -25,9 +25,11 @@ import java.util.List;
 final class KingGenerator {
 	private static final Logger logger = LoggerFactory.getLogger(KingGenerator.class);
     private GeneratorUtil generatorUtil;
+	private CheckMetrics checkMetrics;
 
-    public KingGenerator(GeneratorUtil generatorUtil) {
+    public KingGenerator(GeneratorUtil generatorUtil, CheckMetrics checkMetrics) {
         this.generatorUtil = generatorUtil;
+		this.checkMetrics = checkMetrics;
 		logger.instanciation();
     }
 
@@ -48,6 +50,22 @@ final class KingGenerator {
 		generateCastlePositions(castleMoves, pieceType, square, pos, children);
 	}
 
+	public long kingMoves(int square, int pieceType, long enemies, long friends, long inCheck, long[] bitboards, boolean whiteMove, long wk, long wq, long bk, long bq) {
+		final int[] kingDirections = GeneratorUtil.KING_MATRIX[square];
+		final long emptyOrEnemy = ~friends;
+		long moves = 0L;
+		for (int move : kingDirections) {
+			moves = moves | (1L << move);
+		}
+		long legalMoves = generateKingPositions(moves & emptyOrEnemy, pieceType, square, enemies, bitboards, whiteMove);
+		long castleMoves = 0L;
+		castleMoves = castleMoves | (generatorUtil.isShortCastleWhiteEnable(square, enemies, friends, bitboards, wk, whiteMove ? 1L : 0L, inCheck) << 6);
+		castleMoves = castleMoves | (generatorUtil.isLongCastleWhiteEnable(square, enemies, friends, bitboards, wq, whiteMove ? 1L : 0L, inCheck) << 2);
+		castleMoves = castleMoves | (generatorUtil.isShortCastleBlackEnable(square, enemies, friends, bitboards, bk, whiteMove ? 1L : 0L, inCheck) << 62);
+		castleMoves = castleMoves | (generatorUtil.isLongCastleBlackEnable(square, enemies, friends, bitboards, bq, whiteMove ? 1L : 0L, inCheck) << 58);
+		return castleMoves | legalMoves;
+	}
+
     private void generateKingPositions(long moves, int pieceType, int originSquare, long enemies, Position position,
 			List<Position> children) {
 		while (moves != 0L) {
@@ -66,6 +84,30 @@ final class KingGenerator {
 		}
 	}
 
+	private long generateKingPositions(long moves, int pieceType, int originSquare, long enemies, long[] bitboards, boolean whiteMove) {
+		var movesCopy = moves;
+		var legalMoves = 0L;
+		var bitboardsCopy = new long[bitboards.length];
+		System.arraycopy(bitboards, 0, bitboardsCopy, 0, bitboards.length);
+		while (movesCopy != 0L) {
+			final long move = movesCopy & -movesCopy;
+			makeMove(originSquare, move, pieceType, bitboardsCopy);
+			if (!checkMetrics.isInCheck(bitboards, whiteMove)) {
+				legalMoves |= move;
+			}
+			movesCopy = movesCopy & ~move;
+		}
+		return legalMoves;
+	}
+
+	private void makeMove(int from, long move, int pieceType, long[] bitboards){
+		for (var index = 0; index < 12; index++) {
+            bitboards[index] = bitboards[index] & (~move);
+        }
+        bitboards[pieceType - 1] = (bitboards[pieceType - 1] & (~(1L << from))) | move;
+		
+	}
+
     private void generateCastlePositions(long moves, int kingPiece, int square, Position position,
 			List<Position> children) {
 		while (moves != 0L) {
@@ -77,35 +119,7 @@ final class KingGenerator {
 		}
 	}
 
-    private void makeCastle(Position position, long move, int pieceType, int originSquare) {
-		//final long[] bits = position.getBits();
-
-		//for (int index : GeneratorUtil.INDEXES) {
-		//	bits[index] = bits[index] & (~move);
-		//}
-		//bits[pieceType - 1] = (bits[pieceType - 1] & (~(1L << originSquare))) | move;
-
-		//long rookMove = 0L;
-		//rookMove = rookMove | (((1L << 6) & (move)) >> 1);
-		//rookMove = rookMove | (((1L << 2) & (move)) << 1);
-		//rookMove = rookMove | (((1L << 62) & (move)) >> 1);
-		//rookMove = rookMove | (((1L << 58) & (move)) << 1);
-
-		//long rookOrigin = 0L;
-		//rookOrigin = rookOrigin | (((1L << 6) & (move)) << 1);
-		//rookOrigin = rookOrigin | (((1L << 2) & (move)) >> 2);
-		//rookOrigin = rookOrigin | (((1L << 62) & (move)) << 1);
-		//rookOrigin = rookOrigin | (((1L << 58) & (move)) >> 2);
-
-		//int rookType = pieceType - 2;
-		//for (long bit : bits) {
-		//	bit = bit & (~rookMove);
-		//}
-		//bits[rookType - 1] = (bits[rookType - 1] & (~rookOrigin)) | rookMove;
-		//position.setBits(bits);
-
-		//position.changeColorToMove();
-		
+    private void makeCastle(Position position, long move, int pieceType, int originSquare) {		
 		position.makeCastle(move, pieceType, originSquare);
 		generatorUtil.applyCastleRules(position);
 		position.setHalfMovesCounter(position.getHalfMovesCounter() + 1);

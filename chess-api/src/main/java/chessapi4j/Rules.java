@@ -15,10 +15,10 @@
  */
 package chessapi4j;
 
-import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+
 import java.util.regex.Pattern;
 
 /**
@@ -37,6 +37,7 @@ public class Rules {
 	private static final Pattern VALID_HALF_MOVE_CLOCK_PATTERN = Pattern.compile("^[012345679]+$");
 	private static final Pattern VALID_FULL_MOVE_COUNTER_PATTERN = Pattern.compile("^[1-9][0-9]*$");
 	private static final List<List<Integer>> LACK_OF_MATERIAL_MATRIX = new LinkedList<>();
+
 	// private static final List<Integer> MATERIAL_PIECES = new
 	// ArrayList<>(Arrays.asList(0, 1, 2, 3, 4, 6, 7, 8, 9, 10));
 	static {
@@ -65,7 +66,10 @@ public class Rules {
 	 * of the given position object
 	 *
 	 * @param position the position to check
+	 * @deprecated use {@link InmutablePosition} that already has these values
+	 *             computed
 	 */
+	@Deprecated
 	public static void setStatus(Position position) {
 		position.setLackOfMaterial(AdvanceUtil.lackOfMaterial(position) == 1);
 		position.setFiftyMoves(position.getHalfMovesCounter() == 50);
@@ -83,6 +87,7 @@ public class Rules {
 	 *
 	 * @return {@code true} if the move is legal, {@code false} otherwise
 	 */
+	@Deprecated
 	public static boolean legal(Position position, Move move) {
 		return GeneratorFactory.instance()
 				.generateMoves(position, GeneratorFactory.instance().generateChildren(position)).stream()
@@ -236,35 +241,6 @@ public class Rules {
 
 		return has8Rows && validRows && validSideToMove && validCastleAbility && validEnPassant
 				&& validHalfMoveClock && validFullMoveCounter && kingsPresence;
-	}
-
-	private static boolean isCheckmate(Position position) {
-		var enemiesDeque = new ArrayDeque<Integer>();
-		var bits = position.getBits();
-		final var black = bits[6] | bits[7] | bits[8] | bits[9] | bits[10] | bits[11];
-		final var white = bits[0] | bits[1] | bits[2] | bits[3] | bits[4] | bits[5];
-		long friends;
-		long enemies;
-		var isWhiteMove = position.isWhiteMove();
-		if (isWhiteMove) {
-			friends = white;
-			enemies = black;
-		} else {
-			friends = black;
-			enemies = white;
-		}
-		var kingSquare = Long.numberOfTrailingZeros(
-				bits[isWhiteMove ? Piece.WK.ordinal() - 1 : Piece.BK.ordinal() - 1]);
-		var enemiesCopy = enemies;
-		while(enemiesCopy != 0L){
-			var bitboard = Long.lowestOneBit(enemies);
-			enemiesCopy &= ~bitboard;
-			var square = Square.values()[Long.numberOfTrailingZeros(bitboard)];
-			var piece = position.getPiece(square);
-
-		}
-		// TODO continue implementing in version 1.2.9
-		return false;
 	}
 
 }

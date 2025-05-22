@@ -21,7 +21,7 @@ package chessapi4j;
  * @author lunalobos
  * @since 1.0.0
  */
-public class MovementException extends Exception {
+public class MovementException extends RuntimeException {
 	/**
 	 *
 	 */
@@ -54,6 +54,7 @@ public class MovementException extends Exception {
 	 * 
 	 * @since 1.2.5
 	 */
+	@Deprecated
 	public MovementException(Move move, Position position) {
 		this(String.format("Move %s is illegal for position %s".formatted(move, position)));
 	}

@@ -41,6 +41,7 @@ public interface Search {
 	 *
 	 * @return an optional with the best move if any
 	 */
+	@Deprecated
 	Optional<Move> seekBestMove(Position p, Supplier<Evaluator> evaluatorFactory, int depth);
 
 	/**
@@ -53,6 +54,7 @@ public interface Search {
 	 *                         parameter.
 	 * @return an optional with the best move if any
 	 */
+	@Deprecated
 	Optional<Move> seekBestMove(Position p, Supplier<Evaluator> evaluatorFactory, int depth, int sampleSize);
 
 	/**
@@ -66,6 +68,7 @@ public interface Search {
 	 * @param searchMoves	   moves to search
 	 * @return an optional with the best move if any
 	 */
+	@Deprecated
 	Optional<Move> seekBestMove(Position p, Supplier<Evaluator> evaluatorFactory, int depth, int sampleSize, String searchMoves);
 
 

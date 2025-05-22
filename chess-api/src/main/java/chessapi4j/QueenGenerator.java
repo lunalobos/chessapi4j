@@ -49,4 +49,13 @@ final class QueenGenerator {
         }
 
     }
+
+    public long queenMoves(long br, int square, int pieceType, int kingSquare, long friends, long enemies,
+            long checkMask, long inCheckMask) {
+        final long defense = generatorUtil.defenseDirection(kingSquare, square);
+        final long pseudoLegalMoves = visibleMetrics.visibleSquaresQueen(square, friends, enemies);
+        final long[] pin = new long[] { -1L, pseudoLegalMoves & checkMask & defense };
+        final long pinMask = pin[(int) ((br & checkMask) >>> generatorUtil.squaresMap(br & checkMask))];
+        return pseudoLegalMoves & pinMask & inCheckMask;
+    }
 }
