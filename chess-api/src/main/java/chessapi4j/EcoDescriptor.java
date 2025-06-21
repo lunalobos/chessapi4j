@@ -19,7 +19,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 //bean
 /**
- * A simple data class with the ECO code and name of the opening.
+ * A simple data class with the ECO code and the opening name.
  * 
  * @author lunalobos
  * @since 1.2.7

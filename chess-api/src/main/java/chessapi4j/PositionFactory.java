@@ -36,9 +36,8 @@ public class PositionFactory {
 	 * string is such as the used in the UCI protocol: positionFen + moves(token) + move1 + move2 +
 	 * ... + moveN
 	 *
-	 * @param fenPlusMoves
-	 * @return a new instance
-	 *  
+	 * @param fenPlusMoves a fen string with the next moves separated by spaces
+	 * @return a new {@code Position} instance
 	 */
 	@Deprecated
 	public static Position fromMoves(String fenPlusMoves) throws MovementException {
@@ -61,7 +60,7 @@ public class PositionFactory {
 			boolean whiteMove = position.isWhiteMove();
 			for (int i = 7; i < list.size(); i++) {
 				Move move = MoveFactory.instance(list.get(i), whiteMove);
-				whiteMove = whiteMove ? false : true;
+				whiteMove = !whiteMove;
 				moves.add(move);
 			}
 		}

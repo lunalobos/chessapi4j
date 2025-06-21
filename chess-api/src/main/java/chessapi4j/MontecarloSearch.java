@@ -49,7 +49,7 @@ class MontecarloSearch implements Search {
 	private List<MoveData> candidates;
 
 	public MontecarloSearch() {
-		logger.instanciation();
+		logger.instantiation();
 	}
 
 	@Override
@@ -87,7 +87,7 @@ class MontecarloSearch implements Search {
 
 		this.$evaluationFactory = evaluatorFactory;
 
-		this.depth = depth < 5 ? 5 : depth;
+		this.depth = Math.max(depth, 5);
 
 		this.sampleSize = sampleSize;
 
@@ -95,14 +95,14 @@ class MontecarloSearch implements Search {
 			md.calculate(this.depth);
 		}).collect(Collectors.toCollection(ArrayList::new));
 
-		Collections.sort(candidates,
-				(c1, c2) -> (initialPosition.isWhiteMove() ? -1 : 1) * Double.compare(c1.getScore(), c2.getScore()));
+		candidates.sort((c1, c2) -> (initialPosition.isWhiteMove() ? -1 : 1) *
+				Double.compare(c1.getScore(), c2.getScore()));
 
-		$totalScore = candidates.stream().mapToDouble(c -> c.getScore()).sum();
-		candidates.stream().forEach(md -> {
+		$totalScore = candidates.stream().mapToDouble(MoveData::getScore).sum();
+		candidates.forEach(md -> {
 			md.setScore(md.getScore() / $totalScore);
 		});
-		return candidates.stream().map(md -> md.getMove()).findFirst();
+		return candidates.stream().map(MoveData::getMove).findFirst();
 	}
 
 	private Stream<MoveData> candidateMoves() {
@@ -139,13 +139,12 @@ class MoveData {
 
 	}
 
-	public double calculate(int depth) {
-		int sum = firstItearion(depth);
+	public void calculate(int depth) {
+		int sum = firstIteration(depth);
 		score = (double) sum / (double) $positionsCounter;
-		return score;
 	}
 
-	private int firstItearion(int depth) {
+	private int firstIteration(int depth) {
 
 		List<Position> children = GeneratorFactory.instance().generateChildren(position);
 		int output = 0;
@@ -170,7 +169,7 @@ class MoveData {
 			return $evaluationFactory.get().evaluate(p);
 		}
 		List<Position> children = GeneratorFactory.instance().generateChildren(p);
-		if (children.size() == 0) {
+		if (children.isEmpty()) {
 			Rules.setStatus(position);
 			int c = position.isWhiteMove() ? 1 : -1;
 			return position.isCheckmate() ? c * 100000 : 0;

@@ -26,7 +26,6 @@ import java.util.regex.Pattern;
  * @since 1.0.0
  */
 public class MoveFactory {
-	private static final Logger logger = LoggerFactory.getLogger(MoveFactory.class);
 	/**
 	 * New instance.
 	 *
@@ -102,31 +101,23 @@ public class MoveFactory {
 		String regex = "(?<colOrigin>[a-h])(?<rowOrigin>[1-8])(?<colTarget>[a-h])(?<rowTarget>[1-8])(?<promotion>[nbrq])?";
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(move);
-
-		while (matcher.find()) {
+		if (matcher.find()) {
 			int xOrigin = Util.getColIndex(matcher.group("colOrigin"));
 			int yOrigin = Integer.parseInt(matcher.group("rowOrigin")) - 1;
 			int xTarget = Util.getColIndex(matcher.group("colTarget"));
 			int yTarget = Integer.parseInt(matcher.group("rowTarget")) - 1;
 			int origin = Util.getSquareIndex(xOrigin, yOrigin);
 			int target = Util.getSquareIndex(xTarget, yTarget);
-			String promotionPiece;
-			if ((promotionPiece = matcher.group("promotion")) != null && !promotionPiece.equals("")) {
-				try {
-					int promotion = promotionPiece.equals("") ? -1
-							: Piece.valueOf((whiteMove ? "W" : "B") + promotionPiece.toUpperCase()).ordinal();
-
-					return instance(origin, target, promotion);
-				} catch (Exception e) {
-					logger.error(String.format("Error with promotion. Move: %s, WhiteMove: %b, Piece: %s", move,
-							whiteMove, Piece.valueOf((whiteMove ? "W" : "B") + promotionPiece.toUpperCase())));
-
-				}
-
-			} else
+			String promotionPiece  = matcher.group("promotion");
+			if (promotionPiece != null && !promotionPiece.isEmpty()) {
+				String name = (whiteMove ? "W" : "B") + promotionPiece.toUpperCase();
+				int promotion = Piece.valueOf(name).ordinal();
+				return instance(origin, target, promotion);
+			} else {
 				return instance(origin, target);
+			}
+		} else {
+			throw MovementException.invalidString(move);
 		}
-
-		throw MovementException.invalidString(move);
-	};
+	}
 }

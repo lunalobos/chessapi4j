@@ -23,10 +23,10 @@ package chessapi4j;
  */
 class ZobristHasher {
     private static final Logger logger = LoggerFactory.getLogger(ZobristHasher.class);
-    private long[][] zobristTable;
-    private long[] zobristCastle;
-    private long[] zobristEnPassant;
-    private long zobristTurn;
+    private final long[][] zobristTable;
+    private final long[] zobristCastle;
+    private final long[] zobristEnPassant;
+    private final long zobristTurn;
 
     public ZobristHasher(LongProvider longProvider) {
         zobristTable = new long[12][64];
@@ -44,7 +44,7 @@ class ZobristHasher {
             zobristEnPassant[i] = longProvider.nextLong();
         }
         zobristTurn = longProvider.nextLong();
-        logger.instanciation();
+        logger.instantiation();
     }
 
     

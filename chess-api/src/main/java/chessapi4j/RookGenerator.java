@@ -24,13 +24,13 @@ import java.util.List;
  */
 final class RookGenerator {
     private static final Logger logger = LoggerFactory.getLogger(RookGenerator.class);
-    private VisibleMetrics visibleMetrics;
-    private GeneratorUtil generatorUtil;
+    private final VisibleMetrics visibleMetrics;
+    private final GeneratorUtil generatorUtil;
 
     public RookGenerator(VisibleMetrics visibleMetrics, GeneratorUtil generatorUtil) {
         this.visibleMetrics = visibleMetrics;
         this.generatorUtil = generatorUtil;
-        logger.instanciation();
+        logger.instantiation();
     }
 
     public void rookMoves(long br, int square, int pieceType, int kingSquare, long enemies,
@@ -51,17 +51,5 @@ final class RookGenerator {
             children.add(newPosition);
             legalMoves = legalMoves & ~move;
         }
-
     }
-
-    public long rookMoves(long br, int square, int pieceType, int kingSquare, long enemies,
-            long friends, long checkMask, long inCheckMask) {
-        final long defense = generatorUtil.defenseDirection(kingSquare, square);
-        final long pseudoLegalMoves = visibleMetrics.visibleSquaresRook(square, friends, enemies);
-        final long[] pin = new long[] { -1L, pseudoLegalMoves & checkMask & defense };
-        final long pinMask = pin[(int) ((br & checkMask) >>> generatorUtil.squaresMap(br))];
-        return pseudoLegalMoves & pinMask & inCheckMask;
-
-    }
-
 }

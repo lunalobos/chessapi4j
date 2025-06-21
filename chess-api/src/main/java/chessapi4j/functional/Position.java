@@ -16,6 +16,7 @@
 package chessapi4j.functional;
 
 import chessapi4j.Bitboard;
+import chessapi4j.MovementException;
 import chessapi4j.Piece;
 import chessapi4j.Square;
 import chessapi4j.Util;
@@ -32,6 +33,26 @@ import java.util.stream.IntStream;
 
 import static chessapi4j.Square.*;
 /**
+ * Instances of this class represents a chess position. This class is immutable so it is thread-safe and
+ * functional friendly.
+ * 
+ * <p>An instance can be created in many ways: </p>
+ * <ul>
+ * <li>using the {@link Factory} class</li>
+ * <li>using the {@link Generator} class</li>
+ * <li>using the public constructor {@link #Position(String)}</li>
+ * <li>using the {@link #children()} method</li>
+ * <li>using the {@link #move(Move)} method</li>
+ * <li>using the {@link #move(String)} method</li>
+ * <li>using the {@link #sanMove(String)} method</li>
+ * </ul>
+ * 
+ * <p>Due to the immutable nature of this class and the consequent thread-safety behavior, the
+ * startpos can be reduced to a singleton instance. If you need the startpos you can just call {@link Factory#startPos()}.</p>
+ * 
+ * <p>The state of the position such as the check, checkmate, stalemate, lack of material or fifty moves situations can be
+ * obtained using the corresponding methods.</p>
+ * 
  * @author lunalobos
  * @since 1.2.9
  */
@@ -56,6 +77,8 @@ public final class Position implements Serializable {
     private final int mc;
     // half moves counter for 50 move draw rule
     private final int hm;
+    // check
+    private volatile boolean c;
     // checkmate
     private volatile boolean cm;
     // stalemate
@@ -68,18 +91,22 @@ public final class Position implements Serializable {
     private int hash;
     // move info
     private volatile MovesInfo mi;
+    // children
+    private final List<Tuple<Position,Move>> children = new BlockingList<>();
 
     // internal flags
     private volatile boolean movesInfoPresent = false;
+    private volatile boolean cPresent = false;
     private volatile boolean cmPresent = false;
     private volatile boolean smPresent = false;
     private volatile boolean lmPresent = false;
     private volatile boolean zobritsPresent = false;
+    private volatile boolean childrenPresent = false;
     /**
      * Creates a new instance of {@link Position} with the initial
      * position.
      */
-    public Position() {
+    Position() {
         ep = -1;
         b = new long[12];
         b[Piece.WP.ordinal() - 1] = new Bitboard(A2, B2, C2, D2, E2, F2, G2, H2).getValue();
@@ -101,6 +128,8 @@ public final class Position implements Serializable {
         bq = 1L;
         mc = 1;
         hm = 0;
+        c = false;
+        cPresent = true;
         cm = false;
         cmPresent = true;
         sm = false;
@@ -278,6 +307,10 @@ public final class Position implements Serializable {
         // moves counter
         mc = Integer.parseInt(parts[5]);
 
+        // check
+        c = Factory.container.checkMetrics.inCheck(b, wm) == 1L;
+        cPresent = true;
+
         // checkmate
         cm = Factory.container.checkmateMetrics.isCheckmate(b, wm == 1L, wk, wq, bk, bq, ep, mi.getMoves());
         cmPresent = true;
@@ -311,6 +344,9 @@ public final class Position implements Serializable {
         this.mc = mc;
         this.hm = hm;
 
+        // check set to true for magic performance
+        c = true;
+
         // checkmate set to true for magic performance
         cm = true;
 
@@ -319,6 +355,8 @@ public final class Position implements Serializable {
 
         // lack of material set to true for magic performance
         lm = true;
+
+        
     }
 
     MovesInfo movesInfo(){
@@ -327,6 +365,22 @@ public final class Position implements Serializable {
             movesInfoPresent = true;
         }
         return mi;
+    }
+
+    private boolean internalCheck(){
+        if(movesInfoPresent && cPresent){
+            return c;
+        } else if(movesInfoPresent){
+            c = Factory.container.checkMetrics.inCheck(b, wm) == 1L;
+            cPresent = true;
+            return c;
+        } else {
+            mi = Factory.container.bitboardGenerator.generateMoveInfo(b,wm, wk, wq, bk, bq, ep);
+            movesInfoPresent = true;
+            c = Factory.container.checkMetrics.inCheck(b, wm) == 1L;
+            cPresent = true;
+            return c;
+        }
     }
 
     private boolean internalCheckmate(){
@@ -501,6 +555,14 @@ public final class Position implements Serializable {
     }
 
     /**
+     * Check boolean value, true if this position is in check, false otherwise.
+     * @return the check boolean value
+     */
+    public boolean check(){
+        return cm && internalCheck();
+    }
+
+    /**
      * Checkmate boolean value, true if checkmate, false otherwise.
      *
      * @return the checkmate boolean value
@@ -620,7 +682,7 @@ public final class Position implements Serializable {
 
     /**
      * Zobrist hash
-     *
+     * <a href="https://www.chessprogramming.org/Zobrist_Hashing">...</a>
      * @return the zobrist hash
      */
     public long zobristHash() {
@@ -730,6 +792,65 @@ public final class Position implements Serializable {
      */
     public boolean draw() {
         return stalemate() || fiftyMoves() || lackOfMaterial();
+    }
+
+
+    /**
+     * Retrieves the children of the current position in a {@code List} of {@code Tuple<Position, Move>} format.
+     * @return the children
+     */
+    public List<Tuple<Position,Move>> children(){
+        if(childrenPresent)
+            return children;
+        else {
+            children.addAll(Factory.generator().legalMoves(this));
+            childrenPresent = true;
+            return children;
+        }
+    }
+
+    /**
+     * Checks if the given move is legal for the current position.
+     * @param move the move
+     * @return true if the move is legal false otherwise
+     */
+    public boolean isLegal(Move move){
+        return this.children().stream().anyMatch(t -> t.getV2().equals(move));
+    }
+
+    /**
+     * Returns the position that results from the given move.
+     * 
+     * <p>The object returned is a new instance of this class.</p>
+     * 
+     * @param move the move
+     * @return the position that results from the given move
+     */
+    public Position move(Move move){
+        return children().stream().filter(t -> t.getV2().equals(move)).findFirst().map(Tuple::getV1)
+            .orElseThrow(() -> new MovementException(move, this));
+    }
+
+    /**
+     * Returns the position that results from the given move in Universal Chess Interface (UCI) format.
+     * @param move the move
+     * @return the position that results from the given move
+     */
+    public Position move(String move){
+        var moveObj = Factory.move(move, wm == 1L);
+        return move(moveObj);
+    }
+
+    /**
+     * Returns the position that results from the given move in Standard Algebraic Notation (SAN) format.
+     * @param move the move
+     * @return the position that results from the given move
+     */
+    public Position sanMove(String move){
+        var moveObj = PGNHandler.toUCI(this, move).orElseThrow(
+            () -> new MovementException(String.format("move %s is not valid for position %s", move, this.fen()))
+        );
+        return move(moveObj);
     }
 }
 

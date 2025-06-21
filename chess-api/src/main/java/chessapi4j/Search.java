@@ -21,11 +21,11 @@ import java.util.function.Supplier;
 /**
  * Interface for search algorithms. Classes that implements this interface
  * should look for best move. In all the cases an evaluator factory is required.
- * This ensure good responsibility differentiation and an easier testing. This
+ * This ensures good responsibility differentiation and an easier testing. This
  * it's maybe not the best way to approach search algorithms because using an
- * interface means your implementation methods never can be consider inline
+ * interface means your implementation methods never can be considered inline
  * methods by the JVM. Pure final classes with final methods should be
- * consider..
+ * considered...
  *
  * @author lunalobos
  * @since 1.2.0
@@ -41,7 +41,6 @@ public interface Search {
 	 *
 	 * @return an optional with the best move if any
 	 */
-	@Deprecated
 	Optional<Move> seekBestMove(Position p, Supplier<Evaluator> evaluatorFactory, int depth);
 
 	/**
@@ -54,7 +53,6 @@ public interface Search {
 	 *                         parameter.
 	 * @return an optional with the best move if any
 	 */
-	@Deprecated
 	Optional<Move> seekBestMove(Position p, Supplier<Evaluator> evaluatorFactory, int depth, int sampleSize);
 
 	/**
@@ -68,7 +66,6 @@ public interface Search {
 	 * @param searchMoves	   moves to search
 	 * @return an optional with the best move if any
 	 */
-	@Deprecated
 	Optional<Move> seekBestMove(Position p, Supplier<Evaluator> evaluatorFactory, int depth, int sampleSize, String searchMoves);
 
 

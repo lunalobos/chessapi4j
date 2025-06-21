@@ -15,14 +15,21 @@
  */
 package chessapi4j;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
- * Wrapped bitboard class for several debugging or experimenting purposes. I
+ * Wrapped bitboard class for some debugging or experimenting purposes. I
  * don't recommend use it in high performance related functionality.
+ *
+ * <p>This class is not thread safe.</p>
  *
  * @author lunalobos
  *
  * @since 1.2.3
  */
+@Setter
+@Getter
 public class Bitboard {
 	/**
 	 * Apply the "and bit to bit" operation over the values of the bitboards and
@@ -108,7 +115,18 @@ public class Bitboard {
 		return new Bitboard(newValue);
 	}
 
-	private long value;
+    /**
+     * -- GETTER --
+     *  Value wrapped by this object.
+     *
+     *
+     * -- SETTER --
+     *  Sets the value of the bitboard.
+     *
+     @return the long wrapped value
+      * @param value the new value
+     */
+    private long value;
 
 	/**
 	 * Creates an empty wrapped bitboard
@@ -148,25 +166,7 @@ public class Bitboard {
 		this.value = value;
 	}
 
-	/**
-	 * Value wrapped by this object.
-	 *
-	 * @return the long wrapped value
-	 */
-	public long getValue() {
-		return value;
-	}
-
-	/**
-	 * Sets the value of the bitboard.
-	 *
-	 * @param value the new value
-	 */
-	public void setValue(long value) {
-		this.value = value;
-	}
-
-	/**
+    /**
 	 * Removes and returns the least significant bit set to 1 in the bitboard.
 	 *
 	 * @return a new bitboard with the removed bit

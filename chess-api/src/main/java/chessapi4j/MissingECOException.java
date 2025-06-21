@@ -25,6 +25,10 @@ package chessapi4j;
 public class MissingECOException extends RuntimeException {
 
     public MissingECOException(Game game) {
-        super("Missing ECO code for game: \n%s".formatted(game));
+        super(String.format("Missing ECO code for game: \n%s",game));
+    }
+
+    public MissingECOException(chessapi4j.functional.Game game) {
+        super(String.format("Missing ECO code for game: \n%s",game));
     }
 }

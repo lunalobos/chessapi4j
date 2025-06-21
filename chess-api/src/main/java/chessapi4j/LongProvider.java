@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 //import java.util.Random;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 //singleton bean
@@ -27,16 +28,16 @@ import java.util.stream.Collectors;
  * @since 1.2.9
  * @author lunalobos
  */
-class LongProvider {
+final class LongProvider {
     private static final Logger logger = LoggerFactory.getLogger(LongProvider.class);
-    private Long[] backedArray;
+    private final Long[] backedArray;
     private int pointer;
     //private Random random;
 
     public LongProvider(){//Random random) {
         pointer = 0;
         try (var is = this.getClass().getClassLoader().getResourceAsStream("zobrist.txt")) {
-            backedArray = Arrays.stream(new String(is.readAllBytes(), "UTF-8").split("\n"))
+            backedArray = Arrays.stream(new String(Objects.requireNonNull(is).readAllBytes(), "UTF-8").split("\n"))
                     .map(row -> Long.parseUnsignedLong(row.trim(), 16))
                     .collect(Collectors.toCollection(() -> new ArrayList<>(837)))
                     .toArray(new Long[837]);
@@ -45,7 +46,7 @@ class LongProvider {
             logger.fatal(fatalException.getMessage());
             throw fatalException;
         }
-        logger.instanciation();
+        logger.instantiation();
         //this.random = random;
     }
 

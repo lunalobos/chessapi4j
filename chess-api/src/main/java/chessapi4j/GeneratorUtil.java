@@ -15,6 +15,7 @@
  */
 package chessapi4j;
 
+import java.util.Arrays;
 import java.util.List;
 
 //singleton bean
@@ -22,7 +23,7 @@ import java.util.List;
  * @author lunalobos
  * @since 1.2.8
  */
-class GeneratorUtil {
+final class GeneratorUtil {
     private static final Logger logger = LoggerFactory.getLogger(GeneratorUtil.class);
     // short castle black bitboard masks, element 0 for king mask, element 1 for
     // rook mask
@@ -50,7 +51,7 @@ class GeneratorUtil {
 
     // long castle white bitboard masks, element 0 for king mask, element 1 for rook
     // mask
-    private static final long[] LCW_MASK = new long[] { 1L << 4, 1 << 0 };
+    private static final long[] LCW_MASK = new long[] { 1L << 4, 1L};
 
     // long castle white squares, element 0 for king square, element 1 for rook
     // square
@@ -64,9 +65,9 @@ class GeneratorUtil {
     private static final int[] KING_PIECES = new int[] { Piece.BK.ordinal(), Piece.WK.ordinal() };
     private static final int[] ROOK_PIECES = new int[] { Piece.BR.ordinal(), Piece.WR.ordinal() };
 
-    protected static final int[] INDEXES = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
+    static final int[] INDEXES = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
 
-    protected static final int[][] KING_MATRIX = new int[][] { { 9, 8, 1 }, { 10, 8, 9, 2, 0 }, { 11, 9, 10, 3, 1 },
+    static final int[][] KING_MATRIX = new int[][] { { 9, 8, 1 }, { 10, 8, 9, 2, 0 }, { 11, 9, 10, 3, 1 },
             { 12, 10, 11, 4, 2 }, { 13, 11, 12, 5, 3 }, { 14, 12, 13, 6, 4 }, { 15, 13, 14, 7, 5 }, { 14, 15, 6 },
             { 17, 1, 16, 0, 9 }, { 18, 16, 0, 2, 17, 1, 10, 8 }, { 19, 17, 1, 3, 18, 2, 11, 9 },
             { 20, 18, 2, 4, 19, 3, 12, 10 }, { 21, 19, 3, 5, 20, 4, 13, 11 }, { 22, 20, 4, 6, 21, 5, 14, 12 },
@@ -86,8 +87,12 @@ class GeneratorUtil {
             { 62, 60, 44, 46, 61, 45, 54, 52 }, { 63, 61, 45, 47, 62, 46, 55, 53 }, { 62, 46, 63, 47, 54 },
             { 49, 48, 57 }, { 48, 50, 49, 58, 56 }, { 49, 51, 50, 59, 57 }, { 50, 52, 51, 60, 58 },
             { 51, 53, 52, 61, 59 }, { 52, 54, 53, 62, 60 }, { 53, 55, 54, 63, 61 }, { 54, 55, 62 } };
+	static final long[] KING_MOVES = Arrays.stream(KING_MATRIX)
+			.mapToLong(squares ->
+					Arrays.stream(squares).mapToLong(sq -> 1L << sq).reduce(0L, (a,b) -> a | b))
+			.toArray();
 
-    protected static final int[][] KNIGHT_MATRIX = new int[][] { { 17, 10 }, { 18, 16, 11 }, { 19, 17, 12, 8 },
+    static final int[][] KNIGHT_MATRIX = new int[][] { { 17, 10 }, { 18, 16, 11 }, { 19, 17, 12, 8 },
             { 20, 18, 13, 9 }, { 21, 19, 14, 10 }, { 22, 20, 15, 11 }, { 23, 21, 12 }, { 22, 13 }, { 25, 18, 2 },
             { 26, 24, 19, 3 }, { 27, 25, 20, 16, 4, 0 }, { 28, 26, 21, 17, 5, 1 }, { 29, 27, 22, 18, 6, 2 },
             { 30, 28, 23, 19, 7, 3 }, { 31, 29, 20, 4 }, { 30, 21, 5 }, { 33, 26, 1, 10 }, { 34, 32, 27, 2, 0, 11 },
@@ -105,7 +110,7 @@ class GeneratorUtil {
             { 43, 41, 52, 48 }, { 44, 42, 53, 49 }, { 45, 43, 54, 50 }, { 46, 44, 55, 51 }, { 47, 45, 52 },
             { 46, 53 } };
 
-    protected static final int[][] WHITE_PAWN_MATRIX_2 = new int[][] { { 9 }, { 8, 10 }, { 9, 11 }, { 10, 12 },
+    static final int[][] WHITE_PAWN_MATRIX_2 = new int[][] { { 9 }, { 8, 10 }, { 9, 11 }, { 10, 12 },
             { 11, 13 }, { 12, 14 }, { 13, 15 }, { 14 }, { 17 }, { 16, 18 }, { 17, 19 }, { 18, 20 }, { 19, 21 },
             { 20, 22 }, { 21, 23 }, { 22 }, { 25 }, { 24, 26 }, { 25, 27 }, { 26, 28 }, { 27, 29 }, { 28, 30 },
             { 29, 31 }, { 30 }, { 33 }, { 32, 34 }, { 33, 35 }, { 34, 36 }, { 35, 37 }, { 36, 38 }, { 37, 39 }, { 38 },
@@ -113,7 +118,7 @@ class GeneratorUtil {
             { 49, 51 }, { 50, 52 }, { 51, 53 }, { 52, 54 }, { 53, 55 }, { 54 }, { 57 }, { 56, 58 }, { 57, 59 },
             { 58, 60 }, { 59, 61 }, { 60, 62 }, { 61, 63 }, { 62 }, {}, {}, {}, {}, {}, {}, {}, {} };
 
-    protected static final int[][] BLACK_PAWN_MATRIX_2 = new int[][] { {}, {}, {}, {}, {}, {}, {}, {}, { 1 }, { 0, 2 },
+    static final int[][] BLACK_PAWN_MATRIX_2 = new int[][] { {}, {}, {}, {}, {}, {}, {}, {}, { 1 }, { 0, 2 },
             { 1, 3 }, { 2, 4 }, { 3, 5 }, { 4, 6 }, { 5, 7 }, { 6 }, { 9 }, { 8, 10 }, { 9, 11 }, { 10, 12 },
             { 11, 13 }, { 12, 14 }, { 13, 15 }, { 14 }, { 17 }, { 16, 18 }, { 17, 19 }, { 18, 20 }, { 19, 21 },
             { 20, 22 }, { 21, 23 }, { 22 }, { 25 }, { 24, 26 }, { 25, 27 }, { 26, 28 }, { 27, 29 }, { 28, 30 },
@@ -122,19 +127,21 @@ class GeneratorUtil {
             { 49, 51 }, { 50, 52 }, { 51, 53 }, { 52, 54 }, { 53, 55 }, { 54 } };
     
 
-    private VisibleMetrics visibleMetrics;
+    private final VisibleMetrics visibleMetrics;
+	private final MatrixUtil matrixUtil;
 
-    public GeneratorUtil(VisibleMetrics visibleMetrics) {
+    public GeneratorUtil(VisibleMetrics visibleMetrics, MatrixUtil matrixUtil) {
         this.visibleMetrics = visibleMetrics;
-        logger.instanciation();
+		this.matrixUtil = matrixUtil;
+        logger.instantiation();
     }
 
-    protected int squaresMap(long input) {
+    int squaresMap(long input) {
         return Long.numberOfTrailingZeros(input);
     }
 
-    protected long defenseDirection(int kingSquare, int pieceSquare) {
-        final int[][] matrix = Util.QUEEN_MEGAMATRIX[kingSquare];
+    long defenseDirection(int kingSquare, int pieceSquare) {
+        final int[][] matrix = matrixUtil.queenMegamatrix[kingSquare];
         long result = 0L;
         int d = 0;
 
@@ -153,12 +160,12 @@ class GeneratorUtil {
         return result;
     }
 
-    protected long hasBitsPresent(long bitboard){
+    long hasBitsPresent(long bitboard){
         var signum = Long.signum(bitboard);
-        return (long)(signum * signum);
+        return ((long) signum * signum);
     }
 
-    protected void applyCastleRules(Position position) {
+    void applyCastleRules(Position position) {
         final int whiteMove = (int) position.wm();
 
         final long[] scMask = CASTLE_MASK[whiteMove][0];
@@ -178,7 +185,7 @@ class GeneratorUtil {
         position.setBQ(new long[] { position.bq() & lcBitsMasked, position.bq() }[whiteMove]);
     }
 
-    protected void generatePositions(long moves, int pieceType, int square, int[] pawnsDirections, long enemies,
+    void generatePositions(long moves, int pieceType, int square, long enemies,
             Position position, List<Position> children) {
         while (moves != 0L) {
             final long move = moves & -moves;
@@ -189,7 +196,7 @@ class GeneratorUtil {
         }
     }
 
-    protected void makeMove(Position child, long move, int pieceType, int originSquare, long enemies, Position parent) {
+    void makeMove(Position child, long move, int pieceType, int originSquare, long enemies, Position parent) {
 
         //final long[] bits = child.getBits();
         //for (int index : INDEXES) {
@@ -217,7 +224,7 @@ class GeneratorUtil {
                         | (enemyOperation >>> squaresMap(enemyOperation)))]);
     }
 
-    protected final long inCheck(int kingPiece, long[] bits, long whiteMoveNumeric, int[] pawnsDirections) {
+    long inCheck(int kingPiece, long[] bits, long whiteMoveNumeric, int[] pawnsDirections) {
 
         final int kingSquare = squaresMap(bits[kingPiece - 1]);
         long isInCheck = 0L;
@@ -272,12 +279,12 @@ class GeneratorUtil {
         return isInCheck;
     }
 
-    protected long isInCheckD(Position position, int[] pawnsDirections) {
+    long isInCheckD(Position position, int[] pawnsDirections) {
         final int kingPiece = -Piece.WK.ordinal() * (int) position.wm() + Piece.BK.ordinal();
         return inCheck(kingPiece, position.getBits(), position.wm(), pawnsDirections);
     }
 
-    protected long isInCheck(Position position) {
+    long isInCheck(Position position) {
         final int kingPiece = -Piece.WK.ordinal() * (int) position.wm() + Piece.BK.ordinal();
         final int kingSquare = squaresMap(position.getBits()[kingPiece - 1]);
         final int[][] pawnsDirectionChoice = new int[][] { BLACK_PAWN_MATRIX_2[kingSquare],
@@ -286,7 +293,7 @@ class GeneratorUtil {
         return inCheck(kingPiece, position.getBits(), position.wm(), pawnsDirections);
     }
 
-    protected long isLongCastleBlackEnable(int kingSquare, long enemies, long friends, Position position, long inCheck) {
+    long isLongCastleBlackEnable(int kingSquare, long enemies, long friends, Position position, long inCheck) {
 
 		final long kingLocation = ((1L << kingSquare) & (1L << 60)) >>> 60;
 		final long piecesInterruption1 = ((1L << 58) & (enemies | friends)) >>> 58;
@@ -316,14 +323,13 @@ class GeneratorUtil {
 				& ~check1 & ~check2 & ~inCheck;
 	}
 
-    protected long isLongCastleBlackEnable(int kingSquare, long enemies, long friends, long[] bitboards, long bq, long wm, long inCheck) {
+    long isLongCastleBlackEnable(int kingSquare, long enemies, long friends, long[] bitboards, long bq, long wm, long inCheck) {
 
 		final long kingLocation = ((1L << kingSquare) & (1L << 60)) >>> 60;
 		final long piecesInterruption1 = ((1L << 58) & (enemies | friends)) >>> 58;
 		final long piecesInterruption2 = ((1L << 59) & (enemies | friends)) >>> 59;
 		final long piecesInterruption3 = ((1L << 57) & (enemies | friends)) >>> 57;
-		final long castleEnable = bq;
-		final long[] testBits1 = new long[12];
+        final long[] testBits1 = new long[12];
         System.arraycopy(bitboards, 0, testBits1, 0, 12);
 
 		for (int index : INDEXES) {
@@ -342,11 +348,11 @@ class GeneratorUtil {
 		testBits2[Piece.BK.ordinal() - 1] = 1L << 58;
 		final long check2 = inCheck(Piece.BK.ordinal(), testBits2, wm, BLACK_PAWN_MATRIX_2[58]);
 
-		return kingLocation & ~piecesInterruption1 & ~piecesInterruption2 & ~piecesInterruption3 & castleEnable
+		return kingLocation & ~piecesInterruption1 & ~piecesInterruption2 & ~piecesInterruption3 & bq
 				& ~check1 & ~check2 & ~inCheck;
 	}
 
-	protected long isLongCastleWhiteEnable(int kingSquare, long enemies, long friends, Position position, long inCheck) {
+	long isLongCastleWhiteEnable(int kingSquare, long enemies, long friends, Position position, long inCheck) {
 		final long kingLocation = ((1L << kingSquare) & (1L << 4)) >>> 4;
 		final long piecesInterruption1 = ((1L << 2) & (enemies | friends)) >>> 2;
 		final long piecesInterruption2 = ((1L << 3) & (enemies | friends)) >>> 3;
@@ -374,13 +380,12 @@ class GeneratorUtil {
 				& ~check1 & ~check2 & ~inCheck;
 	}
 
-    protected long isLongCastleWhiteEnable(int kingSquare, long enemies, long friends, long[] bitboards, long wq, long wm,  long inCheck) {
+    long isLongCastleWhiteEnable(int kingSquare, long enemies, long friends, long[] bitboards, long wq, long wm,  long inCheck) {
 		final long kingLocation = ((1L << kingSquare) & (1L << 4)) >>> 4;
 		final long piecesInterruption1 = ((1L << 2) & (enemies | friends)) >>> 2;
 		final long piecesInterruption2 = ((1L << 3) & (enemies | friends)) >>> 3;
 		final long piecesInterruption3 = ((1L << 1) & (enemies | friends)) >>> 1;
-		final long castleEnable = wq;
-		final long[] testBits1 = new long[12];
+        final long[] testBits1 = new long[12];
         System.arraycopy(bitboards, 0, testBits1, 0, 12);
 
 		for (int index : INDEXES) {
@@ -398,11 +403,11 @@ class GeneratorUtil {
 		}
 		testBits2[Piece.WK.ordinal() - 1] = 1L << 2;
 		final long check2 = inCheck(Piece.WK.ordinal(), testBits2, wm, WHITE_PAWN_MATRIX_2[2]);
-		return kingLocation & ~piecesInterruption1 & ~piecesInterruption2 & ~piecesInterruption3 & castleEnable
+		return kingLocation & ~piecesInterruption1 & ~piecesInterruption2 & ~piecesInterruption3 & wq
 				& ~check1 & ~check2 & ~inCheck;
 	}
 
-	protected long isShortCastleBlackEnable(int kingSquare, long enemies, long friends, Position position, long inCheck) {
+	long isShortCastleBlackEnable(int kingSquare, long enemies, long friends, Position position, long inCheck) {
 		final long kingLocation = ((1L << kingSquare) & (1L << 60)) >>> 60;
 		final long piecesInterruption1 = ((1L << 61) & (enemies | friends)) >>> 61;
 		final long piecesInterruption2 = ((1L << 62) & (enemies | friends)) >>> 62;
@@ -428,12 +433,11 @@ class GeneratorUtil {
 		return kingLocation & ~piecesInterruption1 & ~piecesInterruption2 & castleEnable & ~check1 & ~check2 & ~inCheck;
 	}
 
-    protected long isShortCastleBlackEnable(int kingSquare, long enemies, long friends, long[] bitboards, long bk, long wm, long inCheck) {
+    long isShortCastleBlackEnable(int kingSquare, long enemies, long friends, long[] bitboards, long bk, long wm, long inCheck) {
 		final long kingLocation = ((1L << kingSquare) & (1L << 60)) >>> 60;
 		final long piecesInterruption1 = ((1L << 61) & (enemies | friends)) >>> 61;
 		final long piecesInterruption2 = ((1L << 62) & (enemies | friends)) >>> 62;
-		final long castleEnable = bk;
-		final long[] testBits1 = new long[12];
+        final long[] testBits1 = new long[12];
         System.arraycopy(bitboards, 0, testBits1, 0, 12);
 
 		for (int index : INDEXES) {
@@ -451,10 +455,10 @@ class GeneratorUtil {
 		}
 		testBits2[Piece.BK.ordinal() - 1] = 1L << 62;
 		final long check2 = inCheck(Piece.BK.ordinal(), testBits2, wm, BLACK_PAWN_MATRIX_2[62]);
-		return kingLocation & ~piecesInterruption1 & ~piecesInterruption2 & castleEnable & ~check1 & ~check2 & ~inCheck;
+		return kingLocation & ~piecesInterruption1 & ~piecesInterruption2 & bk & ~check1 & ~check2 & ~inCheck;
 	}
 
-	protected long isShortCastleWhiteEnable(int kingSquare, long enemies, long friends, Position position, long inCheck) {
+	long isShortCastleWhiteEnable(int kingSquare, long enemies, long friends, Position position, long inCheck) {
 
 		final long kingLocation = ((1L << kingSquare) & (1L << 4)) >>> 4;
 		final long piecesInterruption1 = ((1L << 5) & (enemies | friends)) >>> 5;
@@ -481,13 +485,12 @@ class GeneratorUtil {
 		return kingLocation & ~piecesInterruption1 & ~piecesInterruption2 & castleEnable & ~check1 & ~check2 & ~inCheck;
 	}
 
-    protected long isShortCastleWhiteEnable(int kingSquare, long enemies, long friends, long[] bitboards, long wk, long wm, long inCheck) {
+    long isShortCastleWhiteEnable(int kingSquare, long enemies, long friends, long[] bitboards, long wk, long wm, long inCheck) {
 
 		final long kingLocation = ((1L << kingSquare) & (1L << 4)) >>> 4;
 		final long piecesInterruption1 = ((1L << 5) & (enemies | friends)) >>> 5;
 		final long piecesInterruption2 = ((1L << 6) & (enemies | friends)) >>> 6;
-		final long castleEnable = wk;
-		final long[] testBits1 = new long[12];
+        final long[] testBits1 = new long[12];
         System.arraycopy(bitboards, 0, testBits1, 0, 12);
 
 		for (int index : INDEXES) {
@@ -505,7 +508,7 @@ class GeneratorUtil {
 		}
 		testBits2[Piece.WK.ordinal() - 1] = 1L << 6;
 		final long check2 = inCheck(Piece.WK.ordinal(), testBits2, wm, WHITE_PAWN_MATRIX_2[6]);
-		return kingLocation & ~piecesInterruption1 & ~piecesInterruption2 & castleEnable & ~check1 & ~check2 & ~inCheck;
+		return kingLocation & ~piecesInterruption1 & ~piecesInterruption2 & wk & ~check1 & ~check2 & ~inCheck;
 	}
 
 }

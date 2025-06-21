@@ -25,14 +25,14 @@ import java.util.Set;
  * @author lunalobos
  * @since 1.2.8
  */
-class Combinator {
+final class Combinator {
 	private static final Logger logger = LoggerFactory.getLogger(Combinator.class);
 	public Combinator() {
-		logger.instanciation();
+		logger.instantiation();
 	}
 
-    public Set<Long> compute(int square, int[] directionsIndexs) {
-		List<Integer> list = squaresList(square, directionsIndexs);
+    public Set<Long> compute(int square, int[] directionsIndexes) {
+		List<Integer> list = squaresList(square, directionsIndexes);
 		var combinationsSize = 1 << list.size();
 		Set<Long> combinationList = new HashSet<>();
 		for (var combination = 0; combination < combinationsSize; combination++) {
@@ -47,10 +47,10 @@ class Combinator {
 		return combinationList;
 	}
 
-    private List<Integer> squaresList(int square, int[] directionsIndexs) {
+    private List<Integer> squaresList(int square, int[] directionsIndexes) {
 		int[][] directions = Util.QUEEN_MEGAMATRIX[square];
 		List<Integer> list = new LinkedList<>();
-		for (int directionIndex : directionsIndexs) {
+		for (int directionIndex : directionsIndexes) {
 			for (int sq : directions[directionIndex]) {
 				list.add(sq);
 			}

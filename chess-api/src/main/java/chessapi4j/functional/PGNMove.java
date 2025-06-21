@@ -1,33 +1,19 @@
-/*
- * Copyright 2025 Miguel Angel Luna Lobos
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    https://github.com/lunalobos/chessapi4j/blob/master/LICENSE
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package chessapi4j;
+package chessapi4j.functional;
 
-import lombok.Getter;
-
+import java.util.Deque;
 import java.util.List;
 import java.util.Objects;
-//bean
+
+import lombok.Getter;
 /**
  * Represents a move with Portable Game Notation (PGN) properties. This class extends the
  * Move class and adds PGN specific properties. The position previous to the move is
  * needed to be passed in the constructors. ToString method returns the SAN move
  * notation. 
+ * <p>Instances of this class are immutable, therefore thread-safe and functional 
+ * friendly.</p>
  *
  * @author lunalobos
- * @since 1.1.0
  */
 @Getter
 public class PGNMove extends Move {
@@ -47,11 +33,11 @@ public class PGNMove extends Move {
      *  For example, if the single move symbol "Qxa8?" appears in an import format
      *  PGN movetext, it would be replaced with the two adjacent symbols "Qxa8 $2"."
      *  </p>
-     *  <a href="https://www.thechessdrum.net/PGN_Reference.txt">...</a>
+     *  <a href="https://www.thechessdrum.net/PGN_Reference.txt">PGN_Reference.txt</a>
      *
      * @return the suffix annotations
      */
-    private List<Integer> suffixAnnotations;
+    private final Deque<Integer> suffixAnnotations;
     /**
      * -- GETTER --
      *  Returns the Recursive Annotation Variation (RAV) associated with the move.
@@ -63,11 +49,11 @@ public class PGNMove extends Move {
      *  immediately prior to the RAV. Because the RAV is a recursive construct, it
      *  may be nested."
      *  </p>
-     *  <a href="https://www.thechessdrum.net/PGN_Reference.txt">...</a>
+     *  <a href="https://www.thechessdrum.net/PGN_Reference.txt">PGN_Reference.txt</a>
      *
      * @return the RAV of moves
      */
-    private List<PGNMove> rav;
+    private final Deque<PGNMove> rav;
     /**
      * -- GETTER --
      *  Returns the comment associated with the move.
@@ -85,77 +71,70 @@ public class PGNMove extends Move {
      *  appearing inside of a semicolon comments lose their special meaning and are
      *  ignored."
      *  </p>
-     *  <a href="https://www.thechessdrum.net/PGN_Reference.txt">...</a>
+     *  <a href="https://www.thechessdrum.net/PGN_Reference.txt">PGN_Reference.txt</a>
      *
      * @return the comment text
      */
-    private String comment;
+    private final String comment;
     /**
      * -- GETTER --
      *  Returns the position previous to the move.
      *
      * @return the position previous to the move
      */
-    private Position position;
+    private final Position position;
 
-	/**
-	 * Constructs a PGNMove object with the specified origin, target, and promotion
-	 * piece.
+    /**
+	 * Constructs a PGNMove object with no coronation piece, suffix annotations, RAV, or comment.
 	 *
-	 * @param origin          the origin square of the move
-	 * @param target          the target square of the move
-	 * @param coronationPiece the piece type for coronation (if applicable)
-	 * @param position        the position previous to the move
+	 * @param origin            the origin square of the move
+	 * @param target            the target square of the move
+	 * @param position          the position previous to the move
+	 */
+	public PGNMove(int origin, int target, Position position) {
+		super(1L << target, origin, -1);
+		this.position = position;
+        this.suffixAnnotations = new BlockingList<Integer>().block();
+        this.rav = new BlockingList<PGNMove>().block();
+        this.comment = null;
+	}
+
+
+    /**
+	 * Constructs a PGNMove object with no suffix annotations, RAV, or comment.
+	 *
+	 * @param origin            the origin square of the move
+	 * @param target            the target square of the move
+	 * @param coronationPiece   the piece type for coronation (if applicable)
+	 * @param position          the position previous to the move
 	 */
 	public PGNMove(int origin, int target, int coronationPiece, Position position) {
 		super(1L << target, origin, coronationPiece);
 		this.position = position;
+        this.suffixAnnotations = new BlockingList<Integer>().block();
+        this.rav = new BlockingList<PGNMove>().block();
+        this.comment = null;
 	}
+
 
 	/**
-	 * Constructs a PGNMove object based on a Move object.
+	 * Constructs a PGNMove object.
 	 *
-	 * @param move: the Move object to construct from
-	 * @param position: the position previous to the move
+	 * @param origin            the origin square of the move
+	 * @param target            the target square of the move
+	 * @param coronationPiece   the piece type for coronation (if applicable)
+	 * @param position          the position previous to the move
+     * @param suffixAnnotations the suffix annotations for the move
+     * @param rav               the RAV of moves for the move
+     * @param comment           the comment for the move
 	 */
-	public PGNMove(Move move, Position position) {
-		this(move.getOrigin(), move.getTarget(), move.getPromotionPiece(), position);
-	}
-
-    /**
-	 * Sets the suffix annotations for the move.
-	 *
-	 * @param suffixAnnotations the suffix annotations to set
-	 */
-	public void setSuffixAnnotations(List<Integer> suffixAnnotations) {
-		this.suffixAnnotations = suffixAnnotations;
-	}
-
-    /**
-	 * Sets the Recursive Annotation Variation (RAV) for the move.
-	 *
-	 * @param rav the RAV of moves to set
-	 */
-	public void setRav(List<PGNMove> rav) {
-		this.rav = rav;
-	}
-
-    /**
-	 * Sets the comment for the move.
-	 *
-	 * @param comment the comment text to set
-	 */
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	/**
-	 * Sets the position for the move. Using this method is not recommended.
-	 * A position should be provided when creating the PGNMove object.
-	 * @param position the position previous to the move
-	 */
-	public void setPosition(Position position) {
+	public PGNMove(int origin, int target, int coronationPiece, Position position, Deque<Integer> suffixAnnotations, 
+            Deque<PGNMove> rav, String comment) {
+		super(1L << target, origin, coronationPiece);
 		this.position = position;
+        this.suffixAnnotations = new BlockingList<>(suffixAnnotations).block();
+        this.rav = new BlockingList<>(rav).block();
+        this.comment = comment;
 	}
 
     @Override
@@ -165,7 +144,7 @@ public class PGNMove extends Move {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		final int prime = 48947;
 		int result = super.hashCode();
 		result = prime * result + Objects.hash(comment, rav, suffixAnnotations);
 		return result;

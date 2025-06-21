@@ -1,20 +1,4 @@
-/*
- * Copyright 2025 Miguel Angel Luna Lobos
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    https://github.com/lunalobos/chessapi4j/blob/master/LICENSE
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package chessapi4j;
-
+package chessapi4j.functional;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Arrays;
@@ -22,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import chessapi4j.EcoDescriptor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -38,7 +23,7 @@ import lombok.Data;
  *
  */
 final class Eco {
-    private static final Logger logger = LoggerFactory.getLogger(Eco.class);
+    
     private final Map<String, EcoDescriptor> movesMap;
     private final Map<Position, EcoDescriptor> positionMap;
     private final CsvParser csvParser;
@@ -48,7 +33,7 @@ final class Eco {
         movesMap = loadMoves();
         movesMap.remove("moves");// removing the header
         positionMap = loadPositionMap();
-        logger.instantiation();
+        
     }
 
     private Map<String, EcoDescriptor> loadMoves() {
@@ -60,15 +45,12 @@ final class Eco {
                             HashMap::putAll);
         } catch (IOException e) {
             var fatalException = new ResourceAccessException("openings_sheet.csv", e);
-            logger.fatal(fatalException.getMessage());
             throw fatalException;
         }
     }
 
     private Position makeMove(Position position, String sanMove) {
-        return PGNHandler.toUCI(position, sanMove).map(position::childFromMove)
-                .map(o -> o.orElseThrow(
-                        () -> new IllegalArgumentException(String.format("Move: %s, position: %s", sanMove, position))))
+        return PGNHandler.toUCI(position, sanMove).map(position::move)
                 .orElseThrow(() -> new IllegalArgumentException(String.format("Move: %s, position: %s", sanMove, position)));
     }
 
@@ -81,7 +63,6 @@ final class Eco {
                 try {
                     position = makeMove(position, moves.pop());
                 } catch (IllegalArgumentException e) {
-                    logger.fatal("IllegalArgumentException: %s", e.getMessage());
                     throw new IllegalArgumentException(String.format("entry: %s, position: %s", entry, position), e);
                 }
             }

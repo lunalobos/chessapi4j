@@ -1,10 +1,29 @@
+/*
+ * Copyright 2025 Miguel Angel Luna Lobos
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    https://github.com/lunalobos/chessapi4j/blob/master/LICENSE
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package chessapi4j;
 
+import lombok.Getter;
+
+//bean
 /**
  * @author lunalobos
  * 
  * @since 1.2.9
  */
+@Getter
 final class CheckInfo {
 	private long inCheck;
 	private long inCheckMask;
@@ -16,29 +35,4 @@ final class CheckInfo {
 		this.inCheckMask = inCheckMask;
 		this.checkCount = checkCount;
 	}
-
-	public long getInCheck() {
-		return inCheck;
-	}
-
-	public void setInCheck(long inCheck) {
-		this.inCheck = inCheck;
-	}
-
-	public long getInCheckMask() {
-		return inCheckMask;
-	}
-
-	public void setInCheckMask(long inCheckMask) {
-		this.inCheckMask = inCheckMask;
-	}
-
-	public int getCheckCount() {
-		return checkCount;
-	}
-
-	public void setCheckCount(int checkCount) {
-		this.checkCount = checkCount;
-	}
-
 }

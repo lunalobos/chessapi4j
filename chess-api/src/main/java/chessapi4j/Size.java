@@ -16,26 +16,23 @@
 package chessapi4j;
 
 //bean
+
+import lombok.Getter;
+
 /**
  * @author lunalobos
  * @since 1.2.8
  */
+@Getter
 class Size {
 
-    private int bits;
-    private int capacity;
+    private final int bits;
+    private final int capacity;
 
     public Size(int bits) {
         this.bits = bits;
         this.capacity = 1 << bits;
     }
 
-    public int getBits() {
-        return bits;
-    }
-
-    public int getCapacity() {
-        return capacity;
-    }
 }
 

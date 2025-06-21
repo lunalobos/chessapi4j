@@ -19,10 +19,13 @@ package chessapi4j;
  * @author lunalobos
  * @since 1.2.8
  */
-class MappingException extends Exception {
+final class MappingException extends RuntimeException {
 
     public static MappingException index(int index, int capacity) {
-        return new MappingException("Index %d is out of range for this hashmap with capacity %d.".formatted(index, capacity));
+        return new MappingException(String.format(
+                        "Index %d is out of range for this hashmap with capacity %d.",
+                        index,
+                        capacity));
     }
 
     private MappingException(String message) {

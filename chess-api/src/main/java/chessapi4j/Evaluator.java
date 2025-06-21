@@ -30,20 +30,5 @@ public interface Evaluator {
       *                 score.
       * @return the numerical evaluation score for the position.
       */
-     @Deprecated
-     default int evaluate(Position position){
-          throw new UnsupportedOperationException();
-     }
-
-     /**
-      * Calculates the evaluation score for the given position using various
-      * evaluation heuristics.
-      * 
-      * @param position the chess position for which to calculate the evaluation
-      *                 score.
-      * @return the numerical evaluation score for the position.
-      */
-     default int evaluate(InmutablePosition position) {
-          throw new UnsupportedOperationException();
-     }
+     int evaluate(Position position);
 }

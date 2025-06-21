@@ -1,6 +1,31 @@
+/*
+ * Copyright 2025 Miguel Angel Luna Lobos
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    https://github.com/lunalobos/chessapi4j/blob/master/LICENSE
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package chessapi4j;
 
-class MatrixUtil {
+/**
+ * @author lunalobos
+ * @since 1.2.9
+ */
+final class MatrixUtil {
+    private static final Logger logger = LoggerFactory.getLogger(MatrixUtil.class);
+
+    public MatrixUtil(){
+        logger.instantiation();
+    }
+
     public final int[][] blackPawnMatrix1 = new int[][] { {}, {}, {}, {}, {}, {}, {}, {}, { 0 }, { 1 },
             { 2 }, { 3 }, { 4 }, { 5 }, { 6 }, { 7 }, { 8 }, { 9 }, { 10 }, { 11 }, { 12 }, { 13 }, { 14 }, { 15 },
             { 16 }, { 17 }, { 18 }, { 19 }, { 20 }, { 21 }, { 22 }, { 23 }, { 24 }, { 25 }, { 26 }, { 27 }, { 28 },
@@ -76,4 +101,44 @@ class MatrixUtil {
     public final int[] rooks = new int[] { Piece.BR.ordinal(), Piece.WR.ordinal() };
     public final int[] bishopDirections = new int[] { 0, 1, 2, 3 };
     public final int[] bishops = new int[] { Piece.BB.ordinal(), Piece.WB.ordinal() };
+
+    // short castle black bitboard masks, element 0 for king mask, element 1 for
+    // rook mask
+    public final long[] scbMask = new long[] { 1L << 60, 1L << 63 };
+
+    // short castle black squares, element 0 for king square, element 1 for rook
+    // square
+    public final int[] scbSquares = new int[] { 60, 63 };
+
+    // short castle white bitboard masks, element 0 for king mask, element 1 for
+    // rook mask
+    public final long[] scwMask = new long[] { 1L << 4, 1 << 7 };
+
+    // short castle white squares, element 0 for king square, element 1 for rook
+    // square
+    public final int[] scwSquares = new int[] { 4, 7 };
+
+    // long castle black bitboard masks, element 0 for king mask, element 1 for rook
+    // mask
+    public final long[] lcbMask = new long[] { 1L << 60, 1L << 56 };
+
+    // long castle black squares, element 0 for king square, element 1 for rook
+    // square
+    public final int[] lcbSquares = new int[] { 60, 56 };
+
+    // long castle white bitboard masks, element 0 for king mask, element 1 for rook
+    // mask
+    public final long[] lcwMask = new long[] { 1L << 4, 1L};
+
+    // long castle white squares, element 0 for king square, element 1 for rook
+    // square
+    public final int[] lcwSquares = new int[] { 4, 0 };
+
+    public final long[][][] castleMask = new long[][][] { {scbMask, lcbMask}, {scwMask, lcwMask} };
+
+    public final int[][][] castleSquares = new int[][][] { {scbSquares, lcbSquares},
+            {scwSquares, lcwSquares} };
+
+    public final int[] kingPieces = new int[] { Piece.BK.ordinal(), Piece.WK.ordinal() };
+    public final int[] rookPieces = new int[] { Piece.BR.ordinal(), Piece.WR.ordinal() };
 }

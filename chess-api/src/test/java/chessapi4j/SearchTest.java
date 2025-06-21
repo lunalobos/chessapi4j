@@ -27,7 +27,7 @@ class SearchTest {
 	void test() {
 		Search search = SearchFactory.searchImpl();
 		Position p = new Position();
-		Optional<Move> move = search.seekBestMove(p, () -> EvaluatorFactory.getImpl(), 5, 3);
+		Optional<Move> move = search.seekBestMove(p, EvaluatorFactory::getImpl, 5, 3);
 		assertTrue(move.isPresent());
 	}
 

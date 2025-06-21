@@ -24,16 +24,16 @@ import java.util.Random;
  */
 class VisibleMagic {
     private static final Logger logger = LoggerFactory.getLogger(VisibleMagic.class);
-    private VisibleMetricsUtil visibleMetricsUtils;
+    private final VisibleMetricsUtil visibleMetricsUtils;
     private MagicNumbers bishopMagicNumbers;
     private MagicNumbers rookMagicNumbers;
-    private Random random;
+    private final Random random;
 
     public VisibleMagic(VisibleMetricsUtil visibleMetricsUtils, Random random) {
         this.visibleMetricsUtils = visibleMetricsUtils;
         this.random = random;
         magic();
-        logger.instanciation();
+        logger.instantiation();
         
     }
 
@@ -61,23 +61,15 @@ class VisibleMagic {
         logger.debug("Rook magic numbers calculated");
     }
 
-    public MagicNumbers getBishopMagicNumbers() {
-        return bishopMagicNumbers;
-    }
-
-    public MagicNumbers getRookMagicNumbers() {
-        return rookMagicNumbers;
-    }
-
     public long visibleBishop(int square, long friends, long enemies) {
-        var ocuppied = friends | enemies;
-        var hashed = bishopMagicNumbers.visibleHashed(square, ocuppied);
+        var occupied = friends | enemies;
+        var hashed = bishopMagicNumbers.visibleHashed(square, occupied);
         return hashed & ~friends;
     }
 
     public long visibleRook(int square, long friends, long enemies) {
-        var ocuppied = friends | enemies;
-        var hashed = rookMagicNumbers.visibleHashed(square, ocuppied);
+        var occupied = friends | enemies;
+        var hashed = rookMagicNumbers.visibleHashed(square, occupied);
         return hashed & ~friends;
     }
 }

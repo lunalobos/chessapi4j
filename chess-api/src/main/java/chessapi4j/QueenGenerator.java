@@ -24,13 +24,13 @@ import java.util.List;
  */
 final class QueenGenerator {
     private static final Logger logger = LoggerFactory.getLogger(QueenGenerator.class);
-    private VisibleMetrics visibleMetrics;
-    private GeneratorUtil generatorUtil;
+    private final VisibleMetrics visibleMetrics;
+    private final GeneratorUtil generatorUtil;
 
     public QueenGenerator(VisibleMetrics visibleMetrics, GeneratorUtil generatorUtil) {
         this.visibleMetrics = visibleMetrics;
         this.generatorUtil = generatorUtil;
-        logger.instanciation();
+        logger.instantiation();
     }
 
     public void queenMoves(long br, int square, int pieceType, int kingSquare, long friends, long enemies,
@@ -48,14 +48,5 @@ final class QueenGenerator {
             legalMoves = legalMoves & ~move;
         }
 
-    }
-
-    public long queenMoves(long br, int square, int pieceType, int kingSquare, long friends, long enemies,
-            long checkMask, long inCheckMask) {
-        final long defense = generatorUtil.defenseDirection(kingSquare, square);
-        final long pseudoLegalMoves = visibleMetrics.visibleSquaresQueen(square, friends, enemies);
-        final long[] pin = new long[] { -1L, pseudoLegalMoves & checkMask & defense };
-        final long pinMask = pin[(int) ((br & checkMask) >>> generatorUtil.squaresMap(br & checkMask))];
-        return pseudoLegalMoves & pinMask & inCheckMask;
     }
 }

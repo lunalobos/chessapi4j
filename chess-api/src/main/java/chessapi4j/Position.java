@@ -15,6 +15,9 @@
  */
 package chessapi4j;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -31,28 +34,234 @@ import static chessapi4j.Square.*;
  * @author lunalobos
  * @since 1.0.0
  */
-@Deprecated
 public final class Position implements Serializable {
 	private static final long serialVersionUID = -3129022190813874561L;
 
-	private long[] bits;
+	private static StringBuilder getStringBuilder(int i, int[] squares) {
+		var rowFenSB = new StringBuilder();
+		var emptyCounter = 0;
+		for (int j = i * 8; j < i * 8 + 8; j++) {
+			if (squares[j] == Piece.EMPTY.ordinal())
+				emptyCounter++;
+			else if (emptyCounter != 0) {
+				rowFenSB.append((Integer) emptyCounter);
+				emptyCounter = 0;
+			}
+			if (squares[j] == Piece.EMPTY.ordinal() && j == i * 8 + 7)
+				rowFenSB.append((Integer) emptyCounter);
+			switch (Piece.values()[squares[j]]) {
+				case WP:
+					rowFenSB.append("P");
+					break;
+				case WN:
+					rowFenSB.append("N");
+					break;
+				case WB:
+					rowFenSB.append("B");
+					break;
+				case WR:
+					rowFenSB.append("R");
+					break;
+				case WQ:
+					rowFenSB.append("Q");
+					break;
+				case WK:
+					rowFenSB.append("K");
+					break;
+				case BP:
+					rowFenSB.append("p");
+					break;
+				case BN:
+					rowFenSB.append("n");
+					break;
+				case BB:
+					rowFenSB.append("b");
+					break;
+				case BR:
+					rowFenSB.append("r");
+					break;
+				case BQ:
+					rowFenSB.append("q");
+					break;
+				case BK:
+					rowFenSB.append("k");
+					break;
+				default:
+			}
+		}
+		return rowFenSB;
+	}
+
+    /**
+     * -- GETTER --
+     *  Returns the bitboards array in
+     *  ordinal order excluding EMPTY.
+     *  <p>
+     *  This means that index 0 represents white pawns, index 1 represents white
+     *  knights and so on.
+     *
+     *
+     * -- SETTER --
+     *  Sets the array of bitboards, length has to be always 12.
+     *  <p>
+     *  Setting a different length array will lead to unpredictable behavior.
+     * @return the array of bitboards
+	 * @param bits array of bitboards
+     */
+    @Setter
+    @Getter
+    private long[] bits;
 	private long whiteMoveNumeric, shortCastleWhiteNumeric, longCastleWhiteNumeric, shortCastleBlackNumeric,
 			longCastleBlackNumeric;
-	private int enPassant;
+    /**
+     * -- GETTER --
+     *  Returns the index square of the piece that can be capture using en passant
+     *  rule, even when is not possible for any pawn to reach.
+     *  <p>
+     *  This is no the square that is shown in fen representation, is the pawn that
+     *  can be capture location. Fen representation shows the place where an
+     *  hypothetical pawn will end after using the en passant rule to capture a pawn
+     *  in the represented position.
+     *  <p>
+     *  For a position like "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3
+     *  0 1" this method will return the square index for e4, 28.
+     *
+     *
+     * -- SETTER --
+     *  Sets en passant value.
+     *  <p>
+     *  Setting this value manually could potentially lead to inconsistencies.
+     *  </p>
+     * @return the index square of the piece that can be capture using en passant
+     *         rule
+	 * @param enPassant the en passant square
+     */
+    @Setter
+    @Getter
+    private int enPassant;
 
-	private int movesCounter;// moves counter
-	private int halfMovesCounter;// for 50 move draw rule
+    /**
+     * -- GETTER --
+     *  Returns the number of complete moves.
+     *
+     *
+     * -- SETTER --
+     *  Sets moves counter value.
+     * @return the number of moves
+	 * @param movesCounter the moves counter
+     */
+    @Setter
+    @Getter
+    private int movesCounter;// moves counter
+    /**
+     * -- GETTER --
+     *  Returns the half moves number according to fifty moves rules.
+     *
+     *
+     * -- SETTER --
+     *  Sets half moves counter value.
+     *  <p>
+     *  Setting this value manually could potentially lead to inconsistencies.
+     *  </p>
+     * @return the half moves number
+	 * @param halfMovesCounter the half moves counter
+     */
+    @Setter
+    @Getter
+    private int halfMovesCounter;// for 50 move draw rule
 
-	private transient boolean checkmate;
-	private transient boolean stalemate;
-	private transient boolean fiftyMoves;
-	private transient boolean repetitions;
-	private transient boolean lackOfMaterial;
+    /**
+     * -- GETTER --
+     *  If this method returns true means this position is checkmate.
+     *
+     *
+     * -- SETTER --
+     *  Sets checkmate boolean value.
+     *  <p>
+     *  Setting this value manually could potentially lead to inconsistencies.
+     *  </p>
+     * @return true if this position is checkmate, false otherwise
+	 * @param checkmate true if checkmate, false otherwise
+     */
+    @Setter
+    @Getter
+    private transient boolean checkmate;
+    /**
+     * -- GETTER --
+     *  If this method returns true means this position is a draw because of
+     *  stalemate.
+     *
+     *
+     * -- SETTER --
+     *  Sets stalemate boolean value.
+     *  <p>
+     *  Setting this value manually could potentially lead to inconsistencies.
+     *  </p>
+     * @return true if this position is a draw because of stalemate, false otherwise
+	 * @param stalemate true if stalemate, false otherwise
+     */
+    @Setter
+    @Getter
+    private transient boolean stalemate;
+    /**
+     * -- GETTER --
+     *  If this method returns true means this position can be draw according to
+     *  Fifty Moves's rule.
+     *
+     *
+     * -- SETTER --
+     *  Sets fifty moves boolean value.
+     *  <p>
+     *  Setting this value manually could potentially lead to inconsistencies.
+     *  </p>
+     * @return true if this position can be draw according to Fifty Moves's rule,
+     *         false otherwise
+	 * @param fiftyMoves true if fifty moves, false otherwise
+     */
+    @Setter
+    @Getter
+    private transient boolean fiftyMoves;
+    /**
+     * -- GETTER --
+     *  If this method returns true means this position is a draw because of
+     *  repetitions.
+     *
+     *
+     * -- SETTER --
+     *  Sets repetitions boolean value.
+     *  <p>
+     *  Setting this value manually could potentially lead to inconsistencies.
+     *  </p>
+     * @return true if this position is a draw because of repetitions, false
+     *         otherwise
+	 * @param repetitions true if repetitions, false otherwise
+     */
+    @Setter
+    @Getter
+    private transient boolean repetitions;
+    /**
+     * -- GETTER --
+     *  If this method returns true means this position is a draw because of lack of
+     *  material.
+     *
+     *
+     * -- SETTER --
+     *  Sets lack of material boolean value.
+     *  <p>
+     *  Setting this value manually could potentially lead to inconsistencies.
+     *  </p>
+     * @return true if this position is a draw because of lack of material, false
+     *         otherwise
+	 * @param lackOfMaterial true if lack of material, false otherwise
+     */
+    @Setter
+    @Getter
+    private transient boolean lackOfMaterial;
 
 	/**
 	 * Creates a new position with the started position.
 	 */
-	@Deprecated
+
 	public Position() {
 		enPassant = -1;
 		bits = new long[12];
@@ -76,8 +285,8 @@ public final class Position implements Serializable {
 		setMovesCounter(1);
 	}
 
-	@Deprecated
-	protected Position(long[] bits, int enPassant, long whiteMoveNumeric, long shortCastleWhiteNumeric,
+
+	Position(long[] bits, int enPassant, long whiteMoveNumeric, long shortCastleWhiteNumeric,
 			long shortCastleBlackNumeric, long longCastleWhiteNumeric, long longCastleBlackNumeric, int movesCounter,
 			int halfMovesCounter, boolean checkmate, boolean stalemate, boolean fiftyMoves, boolean repetitions,
 			boolean lackOfMaterial) {
@@ -109,7 +318,7 @@ public final class Position implements Serializable {
 	 * 
 	 * @param fen the FEN string
 	 */
-	@Deprecated
+
 	public Position(String fen) {
 		fromFen(fen);
 	}
@@ -119,7 +328,7 @@ public final class Position implements Serializable {
 	 * 
 	 * @return the black short castle rights as a long
 	 */
-	public final long bk() {
+	public long bk() {
 		return shortCastleBlackNumeric;
 	}
 
@@ -128,14 +337,14 @@ public final class Position implements Serializable {
 	 * 
 	 * @return the black long castle rights as a long
 	 */
-	public final long bq() {
+	public long bq() {
 		return longCastleBlackNumeric;
 	}
 
 	/**
 	 * Interchange players turn to move.
 	 */
-	public final void changeColorToMove() {
+	public void changeColorToMove() {
 		whiteMoveNumeric = ~whiteMoveNumeric & 1L;
 	}
 
@@ -148,7 +357,7 @@ public final class Position implements Serializable {
 	 * @param bitRepresentation the bitboard to set
 	 * @param piece             the piece ordinal to set
 	 */
-	public final void changePieceBit(long bitRepresentation, int piece) {
+	public void changePieceBit(long bitRepresentation, int piece) {
 		getBits()[piece - 1] = bitRepresentation;
 	}
 
@@ -181,8 +390,7 @@ public final class Position implements Serializable {
 		String[] parts = fen.split(" ");
 
 		String[] rows = parts[0].split("/");
-		List<Character> emptyPossibilities = new LinkedList<>(
-				Arrays.asList(new Character[] { '1', '2', '3', '4', '5', '6', '7', '8' }));
+		List<Character> emptyPossibilities = new LinkedList<>(Arrays.asList( '1', '2', '3', '4', '5', '6', '7', '8'));
 		for (int h = 7; h >= 0; h--) {
 			char[] chars = rows[7 - h].toCharArray();
 
@@ -238,10 +446,7 @@ public final class Position implements Serializable {
 			}
 		}
 		setSquares(squares);
-		if (parts[1].equals("w"))
-			setWhiteMove(true);
-		else
-			setWhiteMove(false);
+        setWhiteMove(parts[1].equals("w"));
 
 		String castlePart = parts[2];
 
@@ -290,56 +495,6 @@ public final class Position implements Serializable {
 
 	}
 
-	
-	/**
-	 * Returns the bitboards array in {@code Piece} ordinal order excluding EMPTY.
-	 * <p>
-	 * This means that index 0 represents white pawns, index 1 represents white
-	 * knights and so on.
-	 *
-	 * @return the array of bitboards
-	 */
-	public final long[] getBits() {
-		return bits;
-	}
-
-	/**
-	 * Returns the index square of the piece that can be capture using en passant
-	 * rule, even when is not possible for any pawn to reach.
-	 * <p>
-	 * This is no the square that is shown in fen representation, is the pawn that
-	 * can be capture location. Fen representation shows the place where an
-	 * hypothetical pawn will end after using the en passant rule to capture a pawn
-	 * in the represented position.
-	 * <p>
-	 * For a position like "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3
-	 * 0 1" this method will return the square index for e4, 28.
-	 *
-	 * @return the index square of the piece that can be capture using en passant
-	 *         rule
-	 */
-	public final int getEnPassant() {
-		return enPassant;
-	}
-
-	/**
-	 * Returns the half moves number according to fifty moves rules.
-	 *
-	 * @return the half moves number
-	 */
-	public final int getHalfMovesCounter() {
-		return halfMovesCounter;
-	}
-
-	/**
-	 * Returns the number of complete moves.
-	 *
-	 * @return the number of moves
-	 */
-	public final int getMovesCounter() {
-		return movesCounter;
-	}
-
 	/**
 	 * This method returns a 64 length array. It contains the piece value for each
 	 * square according to {@code Piece} ordinal values.
@@ -377,7 +532,7 @@ public final class Position implements Serializable {
 	 *
 	 * @return the squares array
 	 */
-	public final int[] getSquares() {
+	public int[] getSquares() {
 		int[] squares = new int[64];
 		for (int i = 0; i < 64; i++) {
 			int piece = 0;
@@ -391,64 +546,22 @@ public final class Position implements Serializable {
 
 	@Override
 	public int hashCode() {
-		//final int prime = 103963;
-		//int hash = 1;
-		//for (long bitBoard : getBits()) {
-		//	hash = hash * prime + (int) (bitBoard ^ (bitBoard >>> 32));
-		//}
-		//hash = hash * prime + (int) whiteMoveNumeric;
-		//hash = hash * prime + (int) shortCastleWhiteNumeric;
-		//hash = hash * prime + (int) longCastleWhiteNumeric;
-		//hash = hash * prime + (int) shortCastleBlackNumeric;
-		//hash = hash * prime + (int) longCastleBlackNumeric;
-		//hash = hash * prime + getEnPassant();
 		return zobristHash().hashCode();
 	}
 
 	/**
 	 * Increments movesCounter when white moves.
 	 */
-	public final void increaseMovesCounter() {
+	public void increaseMovesCounter() {
 		setMovesCounter(getMovesCounter() + (int) (1L & wm()));
 	}
 
-	/**
-	 * If this method returns true means this position is checkmate.
-	 * 
-	 * @return true if this position is checkmate, false otherwise
-	 */
-	public final boolean isCheckmate() {
-		return checkmate;
-	}
-
-	/**
-	 * If this method returns true means this position can be draw according to
-	 * Fifty Moves's rule.
-	 * 
-	 * @return true if this position can be draw according to Fifty Moves's rule,
-	 *         false otherwise
-	 */
-	public final boolean isFiftyMoves() {
-		return fiftyMoves;
-	}
-
-	/**
-	 * If this method returns true means this position is a draw because of lack of
-	 * material.
-	 * 
-	 * @return true if this position is a draw because of lack of material, false
-	 *         otherwise
-	 */
-	public final boolean isLackOfMaterial() {
-		return lackOfMaterial;
-	}
-
-	/**
+    /**
 	 * If this method returns true means black is able to castle queen side.
 	 * 
 	 * @return true if black is able to castle queen side, false otherwise
 	 */
-	public final boolean isLongCastleBlack() {
+	public boolean isLongCastleBlack() {
 		return bq() == 1L;
 	}
 
@@ -457,27 +570,16 @@ public final class Position implements Serializable {
 	 * 
 	 * @return true if white is able to castle queen side, false otherwise
 	 */
-	public final boolean isLongCastleWhite() {
+	public boolean isLongCastleWhite() {
 		return wq() == 1L;
 	}
 
-	/**
-	 * If this method returns true means this position is a draw because of
-	 * repetitions.
-	 * 
-	 * @return true if this position is a draw because of repetitions, false
-	 *         otherwise
-	 */
-	public final boolean isRepetitions() {
-		return repetitions;
-	}
-
-	/**
+    /**
 	 * If this method returns true means black is able to castle king side.
 	 * 
 	 * @return true if black is able to castle king side, false otherwise
 	 */
-	public final boolean isShortCastleBlack() {
+	public boolean isShortCastleBlack() {
 		return bk() == 1L;
 	}
 
@@ -486,27 +588,17 @@ public final class Position implements Serializable {
 	 * 
 	 * @return true if white is able to castle king side, false otherwise
 	 */
-	public final boolean isShortCastleWhite() {
+	public boolean isShortCastleWhite() {
 		return wk() == 1L;
 	}
 
-	/**
-	 * If this method returns true means this position is a draw because of
-	 * stalemate.
-	 * 
-	 * @return true if this position is a draw because of stalemate, false otherwise
-	 */
-	public final boolean isStalemate() {
-		return stalemate;
-	}
-
-	/**
+    /**
 	 * If this method returns true means it is white turn to move, otherwise it is
 	 * black turn.
 	 * 
 	 * @return true if it is white turn to move, false otherwise
 	 */
-	public final boolean isWhiteMove() {
+	public boolean isWhiteMove() {
 		return wm() == 1L;
 	}
 
@@ -516,7 +608,7 @@ public final class Position implements Serializable {
 	 * @return the side to move
 	 * @since 1.2.3
 	 */
-	public final Side sideToMove() {
+	public Side sideToMove() {
 		return Side.values()[(int) whiteMoveNumeric];
 	}
 
@@ -525,7 +617,7 @@ public final class Position implements Serializable {
 	 * 
 	 * @return a deep clone of this object
 	 */
-	public final Position makeClone() {
+	public Position makeClone() {
 		var newBitboards = new long[12];
 		System.arraycopy(bits, 0, newBitboards, 0, bits.length);
 		return new Position(newBitboards, getEnPassant(), whiteMoveNumeric, shortCastleWhiteNumeric,
@@ -534,20 +626,7 @@ public final class Position implements Serializable {
 				isLackOfMaterial());
 	}
 
-	//zobrist hash most change
-	/**
-	 * Sets the array of bitboards, length has to be always 12.
-	 * <p>
-	 * Setting a different length array will lead to unpredictable behavior.
-	 *
-	 * @param bits array of bitboards
-	 */
-	public final void setBits(long[] bits) {
-		this.bits = bits;
-	}
-
-	//zobrist hash most change
-	protected void makeMove(int from, long move, int pieceType){
+    void makeMove(int from, long move, int pieceType){
 		for (var index = 0; index < 12; index++) {
             bits[index] = bits[index] & (~move);
         }
@@ -555,8 +634,7 @@ public final class Position implements Serializable {
 		changeColorToMove();
 	}
 
-	//zobrist hash most change
-	protected void makeCastle(long move, int pieceType, int originSquare){
+	void makeCastle(long move, int pieceType, int originSquare){
 
 		for (int index : GeneratorUtil.INDEXES) {
 			bits[index] = bits[index] & (~move);
@@ -576,16 +654,15 @@ public final class Position implements Serializable {
 		rookOrigin = rookOrigin | (((1L << 58) & (move)) >> 2);
 
 		int rookType = pieceType - 2;
-		for (long bitboard : bits) {
-			bitboard = bitboard & (~rookMove);
+		for (int i = 0; i < bits.length; i++) {
+			bits[i] = bits[i] & (~rookMove);
 		}
 		bits[rookType - 1] = (bits[rookType - 1] & (~rookOrigin)) | rookMove;
 		
 		changeColorToMove();
 	}
 
-	//zobrist hash most change
-	protected void makeCoronation(long move, int pieceType, int pieceToCrown, int originSquare){
+    void makeCoronation(long move, int pieceType, int pieceToCrown, int originSquare){
 		
 		for (var index = 0; index < 12; index++) {
 			bits[index] = bits[index] & (~move);
@@ -596,8 +673,7 @@ public final class Position implements Serializable {
 		changeColorToMove();
 	}
 
-	//zobrist hash most change
-	protected void makeEnPassantCapture(long capture, long move, int pieceType, int originSquare){
+    void makeEnPassantCapture(long capture, long move, int pieceType, int originSquare){
 		
 		for (var index = 0; index < 12; index++) {
 			bits[index] = bits[index] & (~capture);
@@ -607,12 +683,11 @@ public final class Position implements Serializable {
 		changeColorToMove();
 	}
 
-	//zobrist hash most change
 	/**
 	 * Sets black short castle rights as a long.
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
-	 *
+	 * </p>
 	 * @param bk
 	 *           black short castle rights as a long
 	 */
@@ -620,150 +695,68 @@ public final class Position implements Serializable {
 		this.shortCastleBlackNumeric = bk;
 	}
 
-	//zobrist hash most change
+
 	/**
 	 * Sets black long castle rights as a long.
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
-	 *
+	 * </p>
 	 * @param bq
 	 *           black long castle rights as a long
 	 */
-	public final void setBQ(long bq) {
+	public void setBQ(long bq) {
 		this.longCastleBlackNumeric = bq;
 	}
 
-	
-	/**
-	 * Sets checkmate boolean value.
-	 * <p>
-	 * Setting this value manually could potentially lead to inconsistencies.
-	 *
-	 * @param checkmate true if checkmate, false otherwise
-	 */
-	public final void setCheckmate(boolean checkmate) {
-		this.checkmate = checkmate;
-	}
 
-	//zobrist hash most change
-	/**
-	 * Sets en passant value.
-	 * <p>
-	 * Setting this value manually could potentially lead to inconsistencies.
-	 *
-	 * @param enPassant the en passant square
-	 */
-	public final void setEnPassant(int enPassant) {
-		this.enPassant = enPassant;
-	}
-
-	
-	/**
-	 * Sets fifty moves boolean value.
-	 * <p>
-	 * Setting this value manually could potentially lead to inconsistencies.
-	 *
-	 * @param fiftyMoves true if fifty moves, false otherwise
-	 */
-	public final void setFiftyMoves(boolean fiftyMoves) {
-		this.fiftyMoves = fiftyMoves;
-	}
-
-	
-	/**
-	 * Sets half moves counter value.
-	 * <p>
-	 * Setting this value manually could potentially lead to inconsistencies.
-	 *
-	 * @param halfMovesCounter the half moves counter
-	 */
-	public final void setHalfMovesCounter(int halfMovesCounter) {
-		this.halfMovesCounter = halfMovesCounter;
-	}
-
-
-	/**
-	 * Sets lack of material boolean value.
-	 * <p>
-	 * Setting this value manually could potentially lead to inconsistencies.
-	 *
-	 * @param lackOfMaterial true if lack of material, false otherwise
-	 */
-	public final void setLackOfMaterial(boolean lackOfMaterial) {
-		this.lackOfMaterial = lackOfMaterial;
-	}
-
-	//zobrist hash most change
-	/**
+    /**
 	 * Sets long castle black boolean value.
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
-	 *
+	 * </p>
 	 * @param longCastleBlack true if long castle black, false otherwise
 	 */
-	public final void setLongCastleBlack(boolean longCastleBlack) {
+	public void setLongCastleBlack(boolean longCastleBlack) {
 		longCastleBlackNumeric = longCastleBlack ? 1L : 0L;
 	}
 
-	//zobrist hash most change
+
 	/**
 	 * Sets long castle white boolean value.
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
-	 *
+	 * </p>
 	 * @param longCastleWhite true if long castle white, false otherwise
 	 */
-	public final void setLongCastleWhite(boolean longCastleWhite) {
+	public void setLongCastleWhite(boolean longCastleWhite) {
 		longCastleWhiteNumeric = longCastleWhite ? 1L : 0L;
 	}
 
 
-	/**
-	 * Sets moves counter value.
-	 *
-	 * @param movesCounter the moves counter
-	 */
-	public final void setMovesCounter(int movesCounter) {
-		this.movesCounter = movesCounter;
-	}
-
-
-	/**
-	 * Sets repetitions boolean value.
-	 * <p>
-	 * Setting this value manually could potentially lead to inconsistencies.
-	 *
-	 * @param repetitions true if repetitions, false otherwise
-	 */
-	public final void setRepetitions(boolean repetitions) {
-		this.repetitions = repetitions;
-	}
-
-	//zobrist hash most change
-	/**
+    /**
 	 * Sets short castle black boolean value.
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
-	 *
+	 * </p>
 	 * @param shortCastleBlack true if short castle black, false otherwise
 	 */
-	public final void setShortCastleBlack(boolean shortCastleBlack) {
+	public void setShortCastleBlack(boolean shortCastleBlack) {
 		shortCastleBlackNumeric = shortCastleBlack ? 1L : 0L;
 	}
 
-	//zobrist hash most change
+
 	/**
 	 * Sets short castle white boolean value.
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
-	 *
+	 * </p>
 	 * @param shortCastleWhite true if short castle white, false otherwise
 	 */
-	public final void setShortCastleWhite(boolean shortCastleWhite) {
+	public void setShortCastleWhite(boolean shortCastleWhite) {
 		shortCastleWhiteNumeric = shortCastleWhite ? 1L : 0L;
 	}
 
-	//zobrist hash most change
+
 	/**
 	 * Sets the squares array. This will be reflected in the the bits array. Each
 	 * element of this array is a square and its value is a piece ordinal. The
@@ -771,7 +764,7 @@ public final class Position implements Serializable {
 	 *
 	 * @param squares the squares
 	 */
-	public final void setSquares(int[] squares) {
+	public void setSquares(int[] squares) {
 		bits = new long[12];
 		for (int i = 0; i < 64; i++) {
 			if (squares[i] > 0) {
@@ -781,64 +774,52 @@ public final class Position implements Serializable {
 	}
 
 
-	/**
-	 * Sets stalemate boolean value.
-	 * <p>
-	 * Setting this value manually could potentially lead to inconsistencies.
-	 *
-	 * @param stalemate true if stalemate, false otherwise
-	 */
-	public final void setStalemate(boolean stalemate) {
-		this.stalemate = stalemate;
-	}
-
-	//zobrist hash most change
-	/**
+    /**
 	 * Sets whiteMove boolean value.
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
-	 *
+	 * </p>
 	 * @param whiteMove true if white move, false otherwise
 	 */
-	public final void setWhiteMove(boolean whiteMove) {
+	public void setWhiteMove(boolean whiteMove) {
 		setWM(whiteMove ? 1L : 0L);
 	}
 
-	//zobrist hash most change
+
 	/**
 	 * Sets the white king side castle rights as a long.
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
-	 *
+	 * </p>
 	 * @param wk
 	 *           the white king side castle rights as a long
 	 */
-	public final void setWK(long wk) {
+	public void setWK(long wk) {
 		this.shortCastleWhiteNumeric = wk;
 	}
 
-	//zobrist hash most change
+
 	/**
 	 * Sets white move rights as a long, meaning 1 for white to move and 0 for black
 	 * to move.
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
-	 *
+	 * </p>
 	 * @param wm the white move rights as a long
 	 */
-	public final void setWM(long wm) {
+	public void setWM(long wm) {
 		this.whiteMoveNumeric = wm;
 	}
 
-	//zobrist hash most change
+
 	/**
 	 * Sets white long castle rights as a long.
 	 * <p>
 	 * Setting this value manually could potentially lead to inconsistencies.
-	 *
+	 * </p>
 	 * @param wq the white long castle rights as a long
 	 */
-	public final void setWQ(long wq) {
+	public void setWQ(long wq) {
 		this.longCastleWhiteNumeric = wq;
 	}
 
@@ -895,13 +876,13 @@ public final class Position implements Serializable {
 				}
 				if (j == 7) {
 					int row = i + 1;
-					sb.append("| " + row + "\n");
+					sb.append("| ").append(row).append("\n");
 					sb.append("+---+---+---+---+---+---+---+---+ \n");
 				}
 			}
 		}
 		sb.append("  a   b   c   d   e   f   g   h \n");
-		sb.append("Fen: " + toFen());
+		sb.append("Fen: ").append(toFen());
 		return sb.toString();
 	}
 
@@ -910,62 +891,11 @@ public final class Position implements Serializable {
 	 *
 	 * @return the FEN string
 	 */
-	public final String toFen() {
+	public String toFen() {
 		StringBuilder fenSB = new StringBuilder();
-		int[] squares = getSquares();
+		var squares = getSquares();
 		for (int i = 7; i >= 0; i--) {
-			StringBuilder rowFenSB = new StringBuilder();
-			int emptyCounter = 0;
-			for (int j = i * 8; j < i * 8 + 8; j++) {
-				if (squares[j] == Piece.EMPTY.ordinal())
-					emptyCounter++;
-				else if (emptyCounter != 0) {
-					rowFenSB.append((Integer) emptyCounter);
-					emptyCounter = 0;
-				}
-				if (squares[j] == Piece.EMPTY.ordinal() && j == i * 8 + 7)
-					rowFenSB.append((Integer) emptyCounter);
-				switch (Piece.values()[squares[j]]) {
-					case WP:
-						rowFenSB.append("P");
-						break;
-					case WN:
-						rowFenSB.append("N");
-						break;
-					case WB:
-						rowFenSB.append("B");
-						break;
-					case WR:
-						rowFenSB.append("R");
-						break;
-					case WQ:
-						rowFenSB.append("Q");
-						break;
-					case WK:
-						rowFenSB.append("K");
-						break;
-					case BP:
-						rowFenSB.append("p");
-						break;
-					case BN:
-						rowFenSB.append("n");
-						break;
-					case BB:
-						rowFenSB.append("b");
-						break;
-					case BR:
-						rowFenSB.append("r");
-						break;
-					case BQ:
-						rowFenSB.append("q");
-						break;
-					case BK:
-						rowFenSB.append("k");
-						break;
-					default:
-						rowFenSB.append("");
-				}
-			}
+			var rowFenSB = getStringBuilder(i, squares);
 			if (i == 7)
 				fenSB.append(rowFenSB);
 			else
@@ -989,7 +919,7 @@ public final class Position implements Serializable {
 		if (getEnPassant() == -1)
 			enPassant = "-";
 		else
-			enPassant = "" + Util.getColLetter(Util.getCol(getEnPassant()))
+			enPassant = Util.getColLetter(Util.getCol(getEnPassant()))
 					+ (Util.getRow(getEnPassant()) == 3 ? 3 : 6);
 		String halfMoveClock = "" + getHalfMovesCounter();
 
@@ -1011,7 +941,7 @@ public final class Position implements Serializable {
 	 * 
 	 * @return the white short castling rights as a long
 	 */
-	public final long wk() {
+	public long wk() {
 		return shortCastleWhiteNumeric;
 	}
 
@@ -1021,7 +951,7 @@ public final class Position implements Serializable {
 	 * 
 	 * @return the white move rights as a long
 	 */
-	public final long wm() {
+	public long wm() {
 		return whiteMoveNumeric;
 	}
 
@@ -1030,7 +960,7 @@ public final class Position implements Serializable {
 	 * 
 	 * @return the white long castling rights as a long
 	 */
-	public final long wq() {
+	public long wq() {
 		return longCastleWhiteNumeric;
 	}
 
@@ -1064,7 +994,16 @@ public final class Position implements Serializable {
 	 * @since 1.2.3
 	 */
 	public Piece getPiece(Square square) {
-		return Piece.values()[getSquares()[square.ordinal()]];
+		return Util.arraytoLongStream(bits).collect(
+						() -> Accumulator.of(0),
+						(r, e) -> {
+							var absSignum = Long.signum(e.getValue() & (1L << square.ordinal())) *
+									Long.signum(e.getValue() & (1L << square.ordinal()));
+							var p = (e.getIndex() + 1) * absSignum;
+							r.accumulate(p, (a, b) -> a | b);
+						},
+						(a, b) -> a.accumulate(b, (x, y) -> x | y))
+				.map(Piece::get).getValue();
 	}
 
 	/**
@@ -1091,8 +1030,8 @@ public final class Position implements Serializable {
 	 * @since 1.2.3
 	 */
 	public List<Square> getSquares(Piece piece) {
-		return Util.longToList(bits[piece.ordinal() - 1]).stream().map(l -> Long.numberOfTrailingZeros(l))
-				.map(i -> Square.get(i)).collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
+		return Util.longToList(bits[piece.ordinal() - 1]).stream().map(Long::numberOfTrailingZeros)
+				.map(Square::get).collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
 
 	}
 
@@ -1126,7 +1065,7 @@ public final class Position implements Serializable {
 		return isStalemate() || isFiftyMoves() || isLackOfMaterial() || isRepetitions();
 	}
 
-	//zobrist hash most change
+
 	/**
 	 * Sets the {@code Bitboard} object that represent the positions of the given
 	 * {@code Piece}.
@@ -1141,7 +1080,6 @@ public final class Position implements Serializable {
 		
 	}
 
-	//zobrist hash most change
 	/**
 	 * For each square in the given array, sets the piece type in that square.
 	 * 
@@ -1163,6 +1101,5 @@ public final class Position implements Serializable {
 	public Long zobristHash() {
 		return ZobristHasherFactory.instance().computeZobristHash(this);
 	}
-
 	
 }

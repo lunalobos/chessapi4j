@@ -24,13 +24,13 @@ import java.util.List;
  */
 final class BishopGenerator {
 	private static final Logger logger = LoggerFactory.getLogger(BishopGenerator.class);
-    private VisibleMetrics visibleMetrics;
-    private GeneratorUtil generatorUtil;
+    private final VisibleMetrics visibleMetrics;
+    private final GeneratorUtil generatorUtil;
 
     public BishopGenerator(VisibleMetrics visibleMetrics, GeneratorUtil generatorUtil) {
         this.visibleMetrics = visibleMetrics;
         this.generatorUtil = generatorUtil;
-		logger.instanciation();
+		logger.instantiation();
     }
 
     public void bishopMoves(long br, int square, int pieceType, int kingSquare, long enemies, long friends,
@@ -48,16 +48,6 @@ final class BishopGenerator {
 			children.add(newPosition);
 			legalMoves = legalMoves & ~move;
 		}
-
-	}
-
-	public long bishopMoves(long br, int square, int kingSquare, long enemies, long friends,
-			long checkMask, long inCheckMask) {
-
-		final long pseudoLegalMoves = visibleMetrics.visibleSquaresBishop(square, friends, enemies);
-		final long[] pin = new long[] { -1L, pseudoLegalMoves & checkMask & generatorUtil.defenseDirection(kingSquare, square) };
-		final long isPin = pin[(int) ((br & checkMask) >>> generatorUtil.squaresMap(br & checkMask))];
-		return pseudoLegalMoves & isPin & inCheckMask;
 
 	}
 

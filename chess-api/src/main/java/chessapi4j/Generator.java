@@ -31,7 +31,7 @@ import java.util.List;
  */
 public final class Generator {
 	private static final Logger logger = LoggerFactory.getLogger(Generator.class);
-	protected static final int[] BISHOP_DIRECTIONS = new int[] { 0, 1, 2, 3 };
+	static final int[] BISHOP_DIRECTIONS = new int[] { 0, 1, 2, 3 };
 	private static final int[] BISHOPS = new int[] { Piece.BB.ordinal(), Piece.WB.ordinal() };
 
 	// black pawn advance matrix
@@ -43,7 +43,7 @@ public final class Generator {
 			{ 51 }, { 52 }, { 53 }, { 54 }, { 55 } };
 
 	// black pawn capture matrix
-	protected static final int[][] BLACK_PAWN_MATRIX_2 = new int[][] { {}, {}, {}, {}, {}, {}, {}, {}, { 1 }, { 0, 2 },
+	static final int[][] BLACK_PAWN_MATRIX_2 = new int[][] { {}, {}, {}, {}, {}, {}, {}, {}, { 1 }, { 0, 2 },
 			{ 1, 3 }, { 2, 4 }, { 3, 5 }, { 4, 6 }, { 5, 7 }, { 6 }, { 9 }, { 8, 10 }, { 9, 11 }, { 10, 12 },
 			{ 11, 13 }, { 12, 14 }, { 13, 15 }, { 14 }, { 17 }, { 16, 18 }, { 17, 19 }, { 18, 20 }, { 19, 21 },
 			{ 20, 22 }, { 21, 23 }, { 22 }, { 25 }, { 24, 26 }, { 25, 27 }, { 26, 28 }, { 27, 29 }, { 28, 30 },
@@ -74,7 +74,7 @@ public final class Generator {
 
 	private static final int[] KINGS = new int[] { Piece.BK.ordinal(), Piece.WK.ordinal() };
 
-	protected static final int[][] KNIGHT_MATRIX = new int[][] { { 17, 10 }, { 18, 16, 11 }, { 19, 17, 12, 8 },
+	static final int[][] KNIGHT_MATRIX = new int[][] { { 17, 10 }, { 18, 16, 11 }, { 19, 17, 12, 8 },
 			{ 20, 18, 13, 9 }, { 21, 19, 14, 10 }, { 22, 20, 15, 11 }, { 23, 21, 12 }, { 22, 13 }, { 25, 18, 2 },
 			{ 26, 24, 19, 3 }, { 27, 25, 20, 16, 4, 0 }, { 28, 26, 21, 17, 5, 1 }, { 29, 27, 22, 18, 6, 2 },
 			{ 30, 28, 23, 19, 7, 3 }, { 31, 29, 20, 4 }, { 30, 21, 5 }, { 33, 26, 1, 10 }, { 34, 32, 27, 2, 0, 11 },
@@ -99,7 +99,7 @@ public final class Generator {
 			{ 36 }, { 37 }, { 38 }, { 39 }, { 40 }, { 41 }, { 42 }, { 43 }, { 44 }, { 45 }, { 46 }, { 47 }, { 48 },
 			{ 49 }, { 50 }, { 51 }, { 52 }, { 53 }, { 54 }, { 55 }, { 56 }, { 57 }, { 58 }, { 59 }, { 60 }, { 61 },
 			{ 62 }, { 63 }, {}, {}, {}, {}, {}, {}, {}, {} };
-	protected static final int[][] WHITE_PAWN_MATRIX_2 = new int[][] { { 9 }, { 8, 10 }, { 9, 11 }, { 10, 12 },
+	static final int[][] WHITE_PAWN_MATRIX_2 = new int[][] { { 9 }, { 8, 10 }, { 9, 11 }, { 10, 12 },
 			{ 11, 13 }, { 12, 14 }, { 13, 15 }, { 14 }, { 17 }, { 16, 18 }, { 17, 19 }, { 18, 20 }, { 19, 21 },
 			{ 20, 22 }, { 21, 23 }, { 22 }, { 25 }, { 24, 26 }, { 25, 27 }, { 26, 28 }, { 27, 29 }, { 28, 30 },
 			{ 29, 31 }, { 30 }, { 33 }, { 32, 34 }, { 33, 35 }, { 34, 36 }, { 35, 37 }, { 36, 38 }, { 37, 39 }, { 38 },
@@ -107,28 +107,26 @@ public final class Generator {
 			{ 49, 51 }, { 50, 52 }, { 51, 53 }, { 52, 54 }, { 53, 55 }, { 54 }, { 57 }, { 56, 58 }, { 57, 59 },
 			{ 58, 60 }, { 59, 61 }, { 60, 62 }, { 61, 63 }, { 62 }, {}, {}, {}, {}, {}, {}, {}, {} };
 	private static final int[][][] PAWN_MATRIX1 = new int[][][] { BLACK_PAWN_MATRIX_1, WHITE_PAWN_MATRIX_1 };
-	protected static final int[][][] PAWN_MATRIX2 = new int[][][] { BLACK_PAWN_MATRIX_2, WHITE_PAWN_MATRIX_2 };
+	static final int[][][] PAWN_MATRIX2 = new int[][][] { BLACK_PAWN_MATRIX_2, WHITE_PAWN_MATRIX_2 };
 	private static final int[] PAWNS = new int[] { Piece.BP.ordinal(), Piece.WP.ordinal() };
-	protected static final int[] QUEEN_DIRECTIONS = new int[] { 0, 1, 2, 3, 4, 5, 6, 7 };
-	protected static final int[][][] QUEEN_MEGAMATRIX = Util.QUEEN_MEGAMATRIX;
 	private static final int[] QUEENS = new int[] { Piece.BQ.ordinal(), Piece.WQ.ordinal() };
-	protected static final int[] ROOK_DIRECTIONS = new int[] { 4, 5, 6, 7 };
+	static final int[] ROOK_DIRECTIONS = new int[] { 4, 5, 6, 7 };
 	private static final int[] ROOKS = new int[] { Piece.BR.ordinal(), Piece.WR.ordinal() };
 
 	private static int squaresMap(long input) {
 		return Long.numberOfTrailingZeros(input);
 	}
 
-	private PawnGenerator pawnGenerator;
-	private KnightGenerator knightGenerator;
-	private BishopGenerator bishopGenerator;
-	private RookGenerator rookGenerator;
-	private QueenGenerator queenGenerator;
-	private KingGenerator kingGenerator;
-	private VisibleMetrics visibleMetrics;
-	private GeneratorUtil generatorUtil;
+	private final PawnGenerator pawnGenerator;
+	private final KnightGenerator knightGenerator;
+	private final BishopGenerator bishopGenerator;
+	private final RookGenerator rookGenerator;
+	private final QueenGenerator queenGenerator;
+	private final KingGenerator kingGenerator;
+	private final VisibleMetrics visibleMetrics;
+	private final GeneratorUtil generatorUtil;
 
-	protected Generator(PawnGenerator pawnGenerator, KnightGenerator knightGenerator, BishopGenerator bishopGenerator,
+	Generator(PawnGenerator pawnGenerator, KnightGenerator knightGenerator, BishopGenerator bishopGenerator,
 			RookGenerator rookGenerator, QueenGenerator queenGenerator, KingGenerator kingGenerator,
 			VisibleMetrics visibleMetrics, GeneratorUtil generatorUtil) {
 		this.pawnGenerator = pawnGenerator;
@@ -139,7 +137,7 @@ public final class Generator {
 		this.kingGenerator = kingGenerator;
 		this.visibleMetrics = visibleMetrics;
 		this.generatorUtil = generatorUtil;
-		logger.instanciation();
+		logger.instantiation();
 	}
 
 	private long createCheckMask(int kingSquare, long enemies, long friends, Position position, long nextWhiteMove,
@@ -251,8 +249,7 @@ public final class Generator {
 	 * @param position the position from which the children are generated
 	 * @return the list of legal positions that arise from this particular position
 	 */
-	@Deprecated
-	public final List<Position> generateChildren(Position position) {
+	public List<Position> generateChildren(Position position) {
 		List<Position> children = new LinkedList<>();
 		final long[] bits = position.getBits();
 		final int aux = (int) (6L & (position.wm() << 1 | position.wm() << 2));
@@ -272,7 +269,7 @@ public final class Generator {
 
 		final int[] pawnsDirections = new int[][] { BLACK_PAWN_MATRIX_2[kingSquare],
 				WHITE_PAWN_MATRIX_2[kingSquare] }[(int) position.wm()];
-		final CheckInfo info = isInCheckWhithMask(kingPiece, position.getBits(), position.wm(), pawnsDirections);
+		final CheckInfo info = isInCheckWithMask(kingPiece, position.getBits(), position.wm(), pawnsDirections);
 
 		long inCheckMask = info.getInCheckMask();
 
@@ -295,8 +292,7 @@ public final class Generator {
 	 * @param children the list of children
 	 * @return a list with the Move objects for the given children in the same order
 	 */
-	@Deprecated
-	public final List<Move> generateMoves(Position parent, List<Position> children) {
+	public List<Move> generateMoves(Position parent, List<Position> children) {
 		List<Move> legalMoves = new ArrayList<>(children.size());
 		for (Position child : children) {
 			final MoveDetector d = new MoveDetector(parent, child);
@@ -305,7 +301,7 @@ public final class Generator {
 		return legalMoves;
 	}
 
-	private CheckInfo isInCheckWhithMask(int kingPiece, long[] bits, long whiteMoveNumeric, int[] pawnsDirections) {
+	private CheckInfo isInCheckWithMask(int kingPiece, long[] bits, long whiteMoveNumeric, int[] pawnsDirections) {
 		long inCheckMask = 0L;
 		int checkCount = 0;
 		final int kingSquare = squaresMap(bits[kingPiece - 1]);
@@ -347,24 +343,24 @@ public final class Generator {
 			checkCount += (int) operation2;
 		}
 		// bishops directions
-		final long enemyBishopsAndQuens = bits[enemies[2] - 1] | bits[enemies[4] - 1];
+		final long enemyBishopsAndQueens = bits[enemies[2] - 1] | bits[enemies[4] - 1];
 
 		for (int i = 0; i < 4; i++) {
 			final long visible = visibleMetrics.visibleSquares(bits, new int[] { i },
 					kingSquare, whiteMoveNumeric);
 
-			final long isPresent = generatorUtil.hasBitsPresent(enemyBishopsAndQuens & visible);
+			final long isPresent = generatorUtil.hasBitsPresent(enemyBishopsAndQueens & visible);
 			isInCheck = isInCheck | isPresent;
 			inCheckMask = inCheckMask | new long[] { 0L, visible }[(int) isPresent];
 			checkCount += (int) isPresent;
 		}
 
 		// rooks directions
-		final long enemyRooksAndQuens = bits[enemies[3] - 1] | bits[enemies[4] - 1];
+		final long enemyRooksAndQueens = bits[enemies[3] - 1] | bits[enemies[4] - 1];
 		for (int i = 4; i < 8; i++) {
 			final long visible = visibleMetrics.visibleSquares(bits, new int[] { i }, kingSquare, whiteMoveNumeric);
 
-			final long isPresent = generatorUtil.hasBitsPresent(enemyRooksAndQuens & visible);
+			final long isPresent = generatorUtil.hasBitsPresent(enemyRooksAndQueens & visible);
 			isInCheck = isInCheck | isPresent;
 			inCheckMask = inCheckMask | new long[] { 0L, visible }[(int) isPresent];
 			checkCount += (int) isPresent;

@@ -25,7 +25,7 @@ public class SearchFactory {
 
 	/**
 	 * An experimental implementation. It may not work correctly.
-	 * @return
+	 * @return an implementation of Search interface
 	 */
 	public static Search searchImpl() {
 		return new MontecarloSearch();

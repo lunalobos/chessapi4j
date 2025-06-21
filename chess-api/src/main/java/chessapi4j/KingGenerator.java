@@ -24,23 +24,18 @@ import java.util.List;
  */
 final class KingGenerator {
 	private static final Logger logger = LoggerFactory.getLogger(KingGenerator.class);
-    private GeneratorUtil generatorUtil;
-	private CheckMetrics checkMetrics;
+    private final GeneratorUtil generatorUtil;
 
-    public KingGenerator(GeneratorUtil generatorUtil, CheckMetrics checkMetrics) {
+    public KingGenerator(GeneratorUtil generatorUtil) {
         this.generatorUtil = generatorUtil;
-		this.checkMetrics = checkMetrics;
-		logger.instanciation();
+		logger.instantiation();
     }
 
     public void kingMoves(int square, int pieceType, long enemies, long friends, Position pos, long inCheck,
 			List<Position> children) {
-		final int[] kingDirections = GeneratorUtil.KING_MATRIX[square];
 		final long emptyOrEnemy = ~friends;
-		long moves = 0L;
-		for (int move : kingDirections) {
-			moves = moves | (1L << move);
-		}
+		long moves = GeneratorUtil.KING_MOVES[square];
+
 		generateKingPositions(moves & emptyOrEnemy, pieceType, square, enemies, pos, children);
 		long castleMoves = 0L;
 		castleMoves = castleMoves | (generatorUtil.isShortCastleWhiteEnable(square, enemies, friends, pos, inCheck) << 6);
@@ -48,22 +43,6 @@ final class KingGenerator {
 		castleMoves = castleMoves | (generatorUtil.isShortCastleBlackEnable(square, enemies, friends, pos, inCheck) << 62);
 		castleMoves = castleMoves | (generatorUtil.isLongCastleBlackEnable(square, enemies, friends, pos, inCheck) << 58);
 		generateCastlePositions(castleMoves, pieceType, square, pos, children);
-	}
-
-	public long kingMoves(int square, int pieceType, long enemies, long friends, long inCheck, long[] bitboards, boolean whiteMove, long wk, long wq, long bk, long bq) {
-		final int[] kingDirections = GeneratorUtil.KING_MATRIX[square];
-		final long emptyOrEnemy = ~friends;
-		long moves = 0L;
-		for (int move : kingDirections) {
-			moves = moves | (1L << move);
-		}
-		long legalMoves = generateKingPositions(moves & emptyOrEnemy, pieceType, square, enemies, bitboards, whiteMove);
-		long castleMoves = 0L;
-		castleMoves = castleMoves | (generatorUtil.isShortCastleWhiteEnable(square, enemies, friends, bitboards, wk, whiteMove ? 1L : 0L, inCheck) << 6);
-		castleMoves = castleMoves | (generatorUtil.isLongCastleWhiteEnable(square, enemies, friends, bitboards, wq, whiteMove ? 1L : 0L, inCheck) << 2);
-		castleMoves = castleMoves | (generatorUtil.isShortCastleBlackEnable(square, enemies, friends, bitboards, bk, whiteMove ? 1L : 0L, inCheck) << 62);
-		castleMoves = castleMoves | (generatorUtil.isLongCastleBlackEnable(square, enemies, friends, bitboards, bq, whiteMove ? 1L : 0L, inCheck) << 58);
-		return castleMoves | legalMoves;
 	}
 
     private void generateKingPositions(long moves, int pieceType, int originSquare, long enemies, Position position,
@@ -82,30 +61,6 @@ final class KingGenerator {
 			}
 			moves = moves & ~move;
 		}
-	}
-
-	private long generateKingPositions(long moves, int pieceType, int originSquare, long enemies, long[] bitboards, boolean whiteMove) {
-		var movesCopy = moves;
-		var legalMoves = 0L;
-		var bitboardsCopy = new long[bitboards.length];
-		System.arraycopy(bitboards, 0, bitboardsCopy, 0, bitboards.length);
-		while (movesCopy != 0L) {
-			final long move = movesCopy & -movesCopy;
-			makeMove(originSquare, move, pieceType, bitboardsCopy);
-			if (!checkMetrics.isInCheck(bitboards, whiteMove)) {
-				legalMoves |= move;
-			}
-			movesCopy = movesCopy & ~move;
-		}
-		return legalMoves;
-	}
-
-	private void makeMove(int from, long move, int pieceType, long[] bitboards){
-		for (var index = 0; index < 12; index++) {
-            bitboards[index] = bitboards[index] & (~move);
-        }
-        bitboards[pieceType - 1] = (bitboards[pieceType - 1] & (~(1L << from))) | move;
-		
 	}
 
     private void generateCastlePositions(long moves, int kingPiece, int square, Position position,

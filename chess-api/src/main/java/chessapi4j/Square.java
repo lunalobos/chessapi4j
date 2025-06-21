@@ -34,7 +34,7 @@ public enum Square {
 
 	/**
 	 * Retrieves the square object for the square number provided.
-	 * @param squareNumber
+	 * @param squareNumber the number of the square
 	 * @return the square object for the square number provided
 	 */
 	public static Square get(int squareNumber) {
@@ -43,7 +43,7 @@ public enum Square {
 
 	/**
 	 * Retrieves the square object for the square name provided.
-	 * @param squareName
+	 * @param squareName the name of the square
 	 * @return the square object for the square name provided
 	 */
 	public static Square get(String squareName) {
