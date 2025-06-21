@@ -1,21 +1,41 @@
-package chessapi4j;
+/*
+ * Copyright 2025 Miguel Angel Luna Lobos
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    https://github.com/lunalobos/chessapi4j/blob/master/LICENSE
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package chessapi4j.functional;
 
-import static chessapi4j.Square.*;
+import chessapi4j.Bitboard;
+import chessapi4j.Piece;
+import chessapi4j.Square;
+import chessapi4j.Util;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.stream.IntStream;
 
+import static chessapi4j.Square.*;
 /**
- * This class is intended to represent a position and to be inmutable.
- * Inmutability makes the class thread-safe and brings a more clear overall view
- * of a program flow making this class preferable to {@link Position}.
- * 
  * @author lunalobos
  * @since 1.2.9
  */
-public final class InmutablePosition implements Serializable {
+public final class Position implements Serializable {
     private static final long serialVersionUID = -1129123190893874561L;
 
     // bitboards for white and black pieces
@@ -37,24 +57,29 @@ public final class InmutablePosition implements Serializable {
     // half moves counter for 50 move draw rule
     private final int hm;
     // checkmate
-    private final boolean cm;
+    private volatile boolean cm;
     // stalemate
-    private final boolean sm;
-    // fifty moves
-    private final boolean fm;
+    private volatile boolean sm;
     // lack of material
-    private final boolean lm;
-
+    private volatile boolean lm;
     // zobrist hash
-    private final long zobristHash;
+    private volatile long zobristHash;
     // hash
-    private final int hash;
+    private int hash;
+    // move info
+    private volatile MovesInfo mi;
 
+    // internal flags
+    private volatile boolean movesInfoPresent = false;
+    private volatile boolean cmPresent = false;
+    private volatile boolean smPresent = false;
+    private volatile boolean lmPresent = false;
+    private volatile boolean zobritsPresent = false;
     /**
-     * Creates a new instance of {@link InmutablePosition} with the initial
+     * Creates a new instance of {@link Position} with the initial
      * position.
      */
-    public InmutablePosition() {
+    public Position() {
         ep = -1;
         b = new long[12];
         b[Piece.WP.ordinal() - 1] = new Bitboard(A2, B2, C2, D2, E2, F2, G2, H2).getValue();
@@ -77,18 +102,44 @@ public final class InmutablePosition implements Serializable {
         mc = 1;
         hm = 0;
         cm = false;
+        cmPresent = true;
         sm = false;
-        fm = false;
+        smPresent = true;
         lm = false;
-        zobristHash = ZobristHasherFactory.instance().computeZobristHash(b, cm, sm, lm, fm, cm, ep);
+        lmPresent = true;
+        zobristHash = Factory.initialHash;
+        zobritsPresent = true;
         hash = ((Long) zobristHash).hashCode();
+        var enemies = new Bitboard(A7, B7, C7, D7, E7, F7, G7, H7, B8, G8, C8, F8, A8, H8, D8, E8);
+        mi = new MovesInfo(
+                new Bitboard(A3, A4, B3, B4, C3, C4, D3, D4, E3, E4, F3, F4, G3, G4, H3, H4).getValue(),
+                List.of(
+                        new PawnMoves(Piece.WP, A2, enemies, new Bitboard(A3), new Bitboard(A4), new Bitboard(), new Bitboard()),
+                        new PawnMoves(Piece.WP, B2, enemies, new Bitboard(B3), new Bitboard(B4), new Bitboard(), new Bitboard()),
+                        new PawnMoves(Piece.WP, C2, enemies, new Bitboard(C3), new Bitboard(C4), new Bitboard(), new Bitboard()),
+                        new PawnMoves(Piece.WP, D2, enemies, new Bitboard(D3), new Bitboard(D4), new Bitboard(), new Bitboard()),
+                        new PawnMoves(Piece.WP, E2, enemies, new Bitboard(E3), new Bitboard(E4), new Bitboard(), new Bitboard()),
+                        new PawnMoves(Piece.WP, F2, enemies, new Bitboard(F3), new Bitboard(F4), new Bitboard(), new Bitboard()),
+                        new PawnMoves(Piece.WP, G2, enemies, new Bitboard(G3), new Bitboard(G4), new Bitboard(), new Bitboard()),
+                        new PawnMoves(Piece.WP, H2, enemies, new Bitboard(H3), new Bitboard(H4), new Bitboard(), new Bitboard())
+                ),
+                List.of(
+                        new RegularPieceMoves(Piece.WN, B1, enemies, new Bitboard(A3, C3)),
+                        new RegularPieceMoves(Piece.WN, G1, enemies, new Bitboard(H3, F3))
+                ),
+                List.of(),
+                List.of(),
+                List.of(),
+                new KingMoves(Piece.WK, E1, enemies, new Bitboard(), new Bitboard())
+        );
+        movesInfoPresent = true;
     }
 
     /**
-     * Creates a new instance of {@link InmutablePosition} with the given FEN.
+     * Creates a new instance of {@link Position} with the given FEN.
      * @param fen the fen string
      */
-    public InmutablePosition(String fen) {
+    public Position(String fen) {
         // parse to squares
         int[] squares = new int[64];
 
@@ -148,13 +199,13 @@ public final class InmutablePosition implements Serializable {
                             break;
                         default:
                             throw new IllegalArgumentException(
-                                    "Invalid character %c in fen string".formatted(character));
+                                    String.format("Invalid character %c in fen string",character));
                     }
                     i++;
                 }
             }
         }
-        // squares to botboards
+        // squares to bitboards
         b = new long[12];
         for (int i = 0; i < 64; i++) {
             if (squares[i] > 0) {
@@ -196,12 +247,12 @@ public final class InmutablePosition implements Serializable {
         bq = bq_;
 
         // en passant
-        String enPassantPart = parts[3];
+        var enPassantPart = parts[3];
         if (enPassantPart.equals("-")) {
             ep = -1;
         } else {
             char[] chars = enPassantPart.toCharArray();
-            String col = "" + chars[0];
+            var col = "" + chars[0];
             int x = Util.getColIndex(col);
             int y;
             if (Integer.parseInt("" + chars[1]) == 6)
@@ -213,6 +264,11 @@ public final class InmutablePosition implements Serializable {
 
             ep = Util.getSquareIndex(x, y);
         }
+
+        // move info
+        mi = Factory.container.bitboardGenerator.generateMoveInfo(b,wm, wk, wq, bk, bq, ep);
+        movesInfoPresent = true;
+
         // half moves
         hm = Integer.parseInt(parts[4]);
         if (hm > 50 || hm < 0) {
@@ -223,20 +279,20 @@ public final class InmutablePosition implements Serializable {
         mc = Integer.parseInt(parts[5]);
 
         // checkmate
-        cm = GeneratorFactory.checkmateMetrics.isCheckmate(b, wm == 1L, wk, wq, bk, bq, ep);
+        cm = Factory.container.checkmateMetrics.isCheckmate(b, wm == 1L, wk, wq, bk, bq, ep, mi.getMoves());
+        cmPresent = true;
 
         // stalemate
-        sm = GeneratorFactory.stalemateMetrics.isStalemate(b, wm == 1L, wk, wq, bk, bq, ep);
-
-        // fifty moves
-        fm = hm == 50;
+        sm = Factory.container.stalemateMetrics.isStalemate(b, wm == 1L, wk, wq, bk, bq, ep, mi.getMoves());
+        smPresent = true;
 
         // lack of material
-        lm = GeneratorFactory.lackOfMaterialMetrics.isLackOfMaterial(b);
+        lm = Factory.container.lackOfMaterialMetrics.isLackOfMaterial(b);
+        lmPresent = true;
 
         // zobrist hash
-        zobristHash = ZobristHasherFactory.instance().computeZobristHash(b, cm, sm, lm, fm, cm, ep);
-
+        zobristHash = Factory.zobristHasher.computeZobristHash(b, cm, sm, lm, hm == 50, cm, ep);
+        zobritsPresent = true;
         // hash
         hash = ((Long) zobristHash).hashCode();
     }
@@ -244,8 +300,7 @@ public final class InmutablePosition implements Serializable {
     /**
      * Low level constructor for internal use.
      */
-    protected InmutablePosition(long[] b, long wm, long wk, long wq, long bk, long bq, int ep, int mc, int hm, boolean cm,
-            boolean sm, boolean fm, boolean lm, long zobristHash, int hash) {
+    Position(long[] b, long wm, long wk, long wq, long bk, long bq, int ep, int mc, int hm) {
         this.b = b;
         this.wm = wm;
         this.wk = wk;
@@ -255,21 +310,75 @@ public final class InmutablePosition implements Serializable {
         this.ep = ep;
         this.mc = mc;
         this.hm = hm;
-        this.cm = cm;
-        this.sm = sm;
-        this.fm = fm;
-        this.lm = lm;
-        this.zobristHash = zobristHash;
-        this.hash = hash;
+
+        // checkmate set to true for magic performance
+        cm = true;
+
+        // stalemate set to true for magic performance
+        sm = true;
+
+        // lack of material set to true for magic performance
+        lm = true;
     }
 
+    MovesInfo movesInfo(){
+        if (!movesInfoPresent) {
+            mi = Factory.container.bitboardGenerator.generateMoveInfo(b, wm, wk, wq, bk, bq, ep);
+            movesInfoPresent = true;
+        }
+        return mi;
+    }
+
+    private boolean internalCheckmate(){
+        if(movesInfoPresent && cmPresent){
+            return cm;
+        } else if(movesInfoPresent){
+            cm = Factory.container.checkmateMetrics.isCheckmate(b, wm == 1L, wk, wq, bk, bq, ep,
+                    mi.getMoves());
+            cmPresent = true;
+            return cm;
+        } else {
+            mi = Factory.container.bitboardGenerator.generateMoveInfo(b,wm, wk, wq, bk, bq, ep);
+            movesInfoPresent = true;
+            cm = Factory.container.checkmateMetrics.isCheckmate(b, wm == 1L, wk, wq, bk, bq, ep,
+                    mi.getMoves());
+            cmPresent = true;
+            return cm;
+        }
+    }
+
+    private boolean internalStalemate(){
+        if(movesInfoPresent && smPresent){
+            return sm;
+        } else if(movesInfoPresent){
+            sm = Factory.container.stalemateMetrics.isStalemate(b, wm == 1L, wk, wq, bk, bq, ep,
+                    mi.getMoves());
+            smPresent = true;
+            return sm;
+        } else {
+            mi = Factory.container.bitboardGenerator.generateMoveInfo(b,wm, wk, wq, bk, bq, ep);
+            movesInfoPresent = true;
+            sm = Factory.container.stalemateMetrics.isStalemate(b, wm == 1L, wk, wq, bk, bq, ep,
+                    mi.getMoves());
+            smPresent = true;
+            return sm;
+        }
+    }
+
+    /**
+     * Returns the bitboards representing this position as an array of longs.
+     * The bitboards are ordered according to the {@code Piece} enum,
+     * excluding any entry for empty squares for obvious reasons.
+     *
+     * @return an array of longs representing the bitboards for this position
+     */
     public long[] bitboards() {
-        return b;
+        return Util.copyBitboards(b);
     }
 
     /**
      * Side to move rights. If white moves return 1L, if black moves return 0L.
-     * 
+     *
      * @return the side to move rights in long representation
      */
     public long wm() {
@@ -278,7 +387,7 @@ public final class InmutablePosition implements Serializable {
 
     /**
      * Side to move rights. If white moves return true, if black moves return false.
-     * 
+     *
      * @return the side to move rights in boolean representation
      */
     public boolean whiteMove() {
@@ -287,9 +396,8 @@ public final class InmutablePosition implements Serializable {
 
     /**
      * Returns the white castle kingside right as a long, meaning 1 that white can
-     * castle
-     * kingside and 0 that white can not castle kingside.
-     * 
+     * castle kingside and 0 that white can not castle kingside.
+     *
      * @return the white castle kingside right as a long
      */
     public long wk() {
@@ -298,7 +406,7 @@ public final class InmutablePosition implements Serializable {
 
     /**
      * Returns true if white can castle kingside, false otherwise.
-     * 
+     *
      * @return the white castle kingside right as boolean
      */
     public boolean whiteCastleKingside() {
@@ -309,7 +417,7 @@ public final class InmutablePosition implements Serializable {
      * Returns the black castle kingside right as a long, meaning 1 that black can
      * castle
      * kingside and 0 that black can not castle kingside.
-     * 
+     *
      * @return the black castle kingside right as a long
      */
     public long bk() {
@@ -318,7 +426,7 @@ public final class InmutablePosition implements Serializable {
 
     /**
      * Returns true if black can castle kingside, false otherwise.
-     * 
+     *
      * @return the black castle kingside right as boolean
      */
     public boolean blackCastleKingside() {
@@ -328,7 +436,7 @@ public final class InmutablePosition implements Serializable {
     /**
      * Returns the white castle queenside right as a long, meaning 1 that white can
      * castle queenside and 0 that white can not castle queenside.
-     * 
+     *
      * @return the white castle queenside right as a long
      */
     public long wq() {
@@ -337,7 +445,7 @@ public final class InmutablePosition implements Serializable {
 
     /**
      * Returns true if white can castle queenside, false otherwise.
-     * 
+     *
      * @return the white castle queenside right as boolean
      */
     public boolean whiteCastleQueenside() {
@@ -347,7 +455,7 @@ public final class InmutablePosition implements Serializable {
     /**
      * Returns the black castle queenside right as a long, meaning 1 that black can
      * castle queenside and 0 that black can not castle queenside.
-     * 
+     *
      * @return the black castle queenside right as a long
      */
     public long bq() {
@@ -356,7 +464,7 @@ public final class InmutablePosition implements Serializable {
 
     /**
      * Returns true if black can castle queenside, false otherwise.
-     * 
+     *
      * @return the black castle queenside right as boolean
      */
     public boolean blackCastleQueenside() {
@@ -365,7 +473,7 @@ public final class InmutablePosition implements Serializable {
 
     /**
      * Moves counter.
-     * 
+     *
      * @return the moves counter
      */
     public int movesCounter() {
@@ -374,7 +482,7 @@ public final class InmutablePosition implements Serializable {
 
     /**
      * Half moves counter.
-     * 
+     *
      * @return the half moves counter
      */
     public int halfMovesCounter() {
@@ -385,7 +493,7 @@ public final class InmutablePosition implements Serializable {
      * En passant square. This is the square index of the pawn that can be capture
      * using en passant rule. This is not the same square that is shown in fen
      * representation.
-     * 
+     *
      * @return the en passant square
      */
     public int enPassantSquare() {
@@ -394,51 +502,60 @@ public final class InmutablePosition implements Serializable {
 
     /**
      * Checkmate boolean value, true if checkmate, false otherwise.
-     * 
+     *
      * @return the checkmate boolean value
      */
     public boolean checkmate() {
-        return cm;
+        return cm && internalCheckmate();
     }
 
     /**
      * Stalemate boolean value, true if stalemate, false otherwise.
-     * 
+     *
      * @return the stalemate boolean value
      */
     public boolean stalemate() {
-        return sm;
+        return sm && internalStalemate();
     }
 
     /**
      * Fifty moves boolean value, true if fifty moves, false otherwise.
-     * 
+     *
      * @return the fifty moves boolean value
      */
     public boolean fiftyMoves() {
-        return fm;
+        return hm == 50;
     }
 
-    /**
-     * Lack of material boolean value, true if lack of material, false otherwise.
-     * 
-     * @return the lack of material boolean value
-     */
-    public boolean lackOfMaterial() {
+    private boolean internalLackOfMaterial(){
+        if (!lmPresent) {
+            lm = Factory.container.lackOfMaterialMetrics.isLackOfMaterial(b);
+            lmPresent = true;
+        }
         return lm;
     }
 
     /**
+     * Lack of material boolean value, true if lack of material, false otherwise.
+     *
+     * @return the lack of material boolean value
+     */
+    public boolean lackOfMaterial() {
+        return lm && internalLackOfMaterial();
+    }
+
+    /**
      * Fen string representation.
-     * 
+     *
      * <p>
      * This method consumes computation
      * </p>
-     * 
+     *
      * @return the fen
      */
     public String fen() {
-        return GeneratorFactory.internalUtil.toFen(getSquares(), wm == 1L, wk == 1L, bk == 1L, wq == 1L, bq == 1L, ep, hm, mc);
+        return Factory.container.internalUtil.toFen(getSquares(), wm == 1L, wk == 1L,
+                bk == 1L, wq == 1L, bq == 1L, ep, hm, mc);
     }
 
     /**
@@ -478,10 +595,10 @@ public final class InmutablePosition implements Serializable {
      * <p>
      * This method consumes computation, squares array is not cached.
      * </p>
-     * 
+     *
      * @return the squares array
      */
-    public final int[] getSquares() {
+    public int[] getSquares() {
         int[] squares = new int[64];
         for (int i = 0; i < 64; i++) {
             int piece = 0;
@@ -493,181 +610,152 @@ public final class InmutablePosition implements Serializable {
         return squares;
     }
 
+    private void internalZobristHash(){
+        if (!zobritsPresent) {
+            zobristHash = Factory.zobristHasher.computeZobristHash(b, cm, sm, lm, hm == 50, cm, ep);
+            hash = ((Long) zobristHash).hashCode();
+            zobritsPresent = true;
+        }
+    }
+
     /**
      * Zobrist hash
-     * 
+     *
      * @return the zobrist hash
      */
     public long zobristHash() {
+        internalZobristHash();
         return zobristHash;
     }
 
     @Override
     public int hashCode() {
+        internalZobristHash();
         return hash;
     }
 
     @Override
     public String toString() {
-        int[] squares = getSquares();
-        StringBuilder sb = new StringBuilder();
-        sb.append("\n+---+---+---+---+---+---+---+---+ \n");
-        for (int i = 7; i >= 0; i--) {
-            for (int j = 0; j < 8; j++) {
-                switch (Piece.values()[squares[i * 8 + j]]) {
-                    case WP:
-                        sb.append("| P ");
-                        break;
-                    case WN:
-                        sb.append("| N ");
-                        break;
-                    case WB:
-                        sb.append("| B ");
-                        break;
-                    case WR:
-                        sb.append("| R ");
-                        break;
-                    case WQ:
-                        sb.append("| Q ");
-                        break;
-                    case WK:
-                        sb.append("| K ");
-                        break;
-                    case BP:
-                        sb.append("| p ");
-                        break;
-                    case BN:
-                        sb.append("| n ");
-                        break;
-                    case BB:
-                        sb.append("| b ");
-                        break;
-                    case BR:
-                        sb.append("| r ");
-                        break;
-                    case BQ:
-                        sb.append("| q ");
-                        break;
-                    case BK:
-                        sb.append("| k ");
-                        break;
-                    default:
-                        sb.append("|   ");
-                }
-                if (j == 7) {
-                    int row = i + 1;
-                    sb.append("| " + row + "\n");
-                    sb.append("+---+---+---+---+---+---+---+---+ \n");
-                }
-            }
-        }
-        sb.append("  a   b   c   d   e   f   g   h \n");
-        sb.append("Fen: " + fen());
-        return sb.toString();
-    }
-
-    /**
-     * Converts this inmutable position to a {@code Position} object
-     * @return a position object builded from this inmutable position
-     */
-    @SuppressWarnings("deprecation")
-    public Position toPosition() {
-        var bbCopy = new long[12];
-        System.arraycopy(b, 0, bbCopy, 0, 12);
-        return new Position(bbCopy, ep, wm, wk, bk, wq, bq, mc, hm, cm, sm, fm, false, lm);
+        return Factory.container.internalUtil.stringRepresentation(getSquares(), fen());
     }
 
     @Override
     public boolean equals(Object obj) {
         if(obj == null) {
-			return false;
-		} else if (obj == this){
-			return true;
-		} else if (!(obj instanceof InmutablePosition)){
-			return false;
-		}		
-		InmutablePosition o = (InmutablePosition) obj;
-		long op = 0L;
-		for (int i = 0; i < 12; i++) {
-			op = op | (b[i] ^ o.b[i]);
-		}
-		op = op | (wm ^ o.wm());
-		op = op | (wk ^ o.wk());
-		op = op | (wq ^ o.wq());
-		op = op | (bk ^ o.bk());
-		op = op | (bq ^ o.bq());
-		op = op | (long) (ep ^ o.ep);
-		return op == 0L;
+            return false;
+        } else if (obj == this){
+            return true;
+        } else if (!(obj instanceof Position)){
+            return false;
+        }
+        Position o = (Position) obj;
+        long op = 0L;
+        for (int i = 0; i < 12; i++) {
+            op = op | (b[i] ^ o.b[i]);
+        }
+        op = op | (wm ^ o.wm());
+        op = op | (wk ^ o.wk());
+        op = op | (wq ^ o.wq());
+        op = op | (bk ^ o.bk());
+        op = op | (bq ^ o.bq());
+        op = op | (long) (ep ^ o.ep);
+        return op == 0L;
     }
 
     /**
-	 * Retrieves the {@code Piece} object that represent the piece present in the
-	 * given {@code Square} object given as argument
-	 *
-	 * @param square the {@code Square} object
-	 * @return the {@code Piece} object that represent the piece present in the
-	 *         given square
-	 *
-	 */
-	public Piece getPiece(Square square) {
-        var pieceType = 0;
-		for (int i = 0; i < 12; i++) {
-			var isPiece = (b[i] & (1L << square.ordinal())) >>> square.ordinal();
-			pieceType += isPiece * (i + 1);
-		}
-		return Piece.values()[pieceType];
-	}
+     * Retrieves the {@code Piece} object that represent the piece present in the
+     * given {@code Square} object given as argument
+     *
+     * @param square the {@code Square} object
+     * @return the {@code Piece} object that represent the piece present in the
+     *         given square
+     */
+    public Piece getPiece(Square square) {
+        return IntStream.range(0, b.length).mapToObj(i -> new IndexedValue<>(i, b[i])).collect(
+                        () -> Accumulator.of(0),
+                        (r, e) -> {
+                            var absSignum = Long.signum(e.getValue() & (1L << square.ordinal())) *
+                                    Long.signum(e.getValue() & (1L << square.ordinal()));
+                            var p = (e.getIndex() + 1) * absSignum;
+                            r.accumulate(p, (a, b) -> a | b);
+                        },
+                        (a, b) -> a.accumulate(b, (x, y) -> x | y))
+                .map(Piece::get).getValue();
+    }
 
-	/**
-	 * Retrieves the {@code Bitboard} object that represent the positions of the
-	 * given {@code Piece}.
-	 *
-	 * @param piece the piece to search
-	 * @return the {@code Bitboard} object that represent the positions of the piece
-	 */
-	public Bitboard getBitboard(Piece piece) {
-		return new Bitboard(b[piece.ordinal() - 1]);
-	}
+    /**
+     * Retrieves the {@code Bitboard} object that represent the positions of the
+     * given {@code Piece}.
+     *
+     * @param piece the piece to search
+     * @return the {@code Bitboard} object that represent the positions of the piece
+     */
+    public Bitboard getBitboard(Piece piece) {
+        return new Bitboard(b[piece.ordinal() - 1]);
+    }
 
-	/**
-	 * Retrieves a {@code List} with all the squares where is a piece like the given
-	 * as argument.
-	 *
-	 * @param piece the piece to search
-	 * @return a {@code List} with all the squares where is a piece like the given
-	 *         as argument
-	 */
-	public List<Square> getSquares(Piece piece) {
-		return Util.longToList(b[piece.ordinal() - 1]).stream().map(l -> Long.numberOfTrailingZeros(l))
-				.map(i -> Square.get(i)).collect(ShiftList::new, ShiftList::add, ShiftList::addAll);
+    /**
+     * Retrieves a {@code List} with all the squares where is a piece like the given
+     * as argument.
+     *
+     * @param piece the piece to search
+     * @return a {@code List} with all the squares where is a piece like the given
+     *         as argument
+     */
+    public List<Square> getSquares(Piece piece) {
+        return Util.longToList(b[piece.ordinal() - 1]).stream().map(Long::numberOfTrailingZeros)
+                .map(Square::get).collect(BlockingList::new, BlockingList::add, BlockingList::addAll);
+    }
 
-	}
+    /**
+     * Checks if the game is over.
+     * <p>
+     * The game is over if it is checkmate, stalemate, fifty moves, lack of material
+     * or
+     * repetitions.
+     *
+     * @return true if the game is over, false otherwise
+     */
+    public boolean gameOver() {
+        return checkmate() || stalemate() || fiftyMoves() || lackOfMaterial();
+    }
 
-	/**
-	 * Checks if the game is over.
-	 * <p>
-	 * The game is over if it is checkmate, stalemate, fifty moves, lack of material
-	 * or
-	 * repetitions.
-	 *
-	 * @return true if the game is over, false otherwise
-	 */
-	public boolean isGameOver() {
-		return cm || sm || fm || lm;
-	}
+    /**
+     * Retrieves if the current position is a forced draw.
+     * <p>
+     * A position is considered a draw if it results from stalemate, the fifty-move
+     * rule, insufficient material, or threefold repetition.
+     *
+     * @return true if the position is a draw, false otherwise
+     */
+    public boolean draw() {
+        return stalemate() || fiftyMoves() || lackOfMaterial();
+    }
+}
 
-	/**
-	 * Retrieves if the current position is a forced draw.
-	 * <p>
-	 * A position is considered a draw if it results from stalemate, the fifty-move
-	 * rule, insufficient material, or threefold repetition.
-	 *
-	 * @return true if the position is a draw, false otherwise
-	 * 
-	 * @since 1.2.6
-	 */
+/**
+ * @author lunalobos
+ * @since 1.2.9
+ */
+@Data
+@AllArgsConstructor
+final class Accumulator<T> {
 
-	public boolean isDraw() {
-		return sm || fm || lm;
-	}
+    public static <T> Accumulator<T> of(T value) {
+        return new Accumulator<T>(value);
+    }
+
+    private T value;
+
+    public void accumulate(T value, BinaryOperator<T> function) {
+        this.value = function.apply(this.value, value);
+    }
+
+    public void accumulate(Accumulator<T> accumulator, BinaryOperator<T> function) {
+        value = function.apply(this.value, accumulator.getValue());
+    }
+
+    public <R> Accumulator<R> map(Function<T,R> mapper){
+        return of(mapper.apply(value));
+    }
 }
