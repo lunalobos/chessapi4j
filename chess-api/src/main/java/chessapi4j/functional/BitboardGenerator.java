@@ -33,6 +33,7 @@ final class BitboardGenerator {
             this.checkCount = checkCount;
         }
     }
+    private final static Logger logger = Factory.getLogger(BitboardGenerator.class);
     private final PawnGenerator pawnGenerator;
     private final KnightGenerator knightGenerator;
     private final BishopGenerator bishopGenerator;
@@ -57,6 +58,7 @@ final class BitboardGenerator {
         this.visibleMetrics = visibleMetrics;
         this.internalUtil = internalUtil;
         this.matrixUtil = matrixUtil;
+        logger.instantiation();
     }
 
     CheckInfo isInCheckWithMask(int kingPiece, long[] bits, long whiteMoveNumeric, int[] pawnsDirections) {

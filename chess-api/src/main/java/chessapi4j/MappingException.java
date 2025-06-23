@@ -16,6 +16,7 @@
 package chessapi4j;
 
 /**
+ * Exception for mapping exceptions.
  * @author lunalobos
  * @since 1.2.8
  */

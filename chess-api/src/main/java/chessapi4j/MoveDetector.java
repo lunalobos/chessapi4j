@@ -15,8 +15,6 @@
  */
 package chessapi4j;
 
-import lombok.Getter;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,21 +26,11 @@ import java.util.Optional;
  * @author lunalobos
  *
  */
-@Getter
+
 public final class MoveDetector {
-    /**
-     * -- GETTER --
-     *  Returns the parent
-     *
-     * @return the parent
-     */
+
     private Position parent;
-	/**
-     * -- GETTER --
-     *  Returns the child
-     *
-     * @return the child
-     */
+
 	private Position child;
 
 	/**
@@ -149,4 +137,19 @@ public final class MoveDetector {
 		this.child = child;
 	}
 
+	/**
+	 * The parent position
+	 * @return the paren position
+	 */
+	public Position getParent() {
+		return this.parent;
+	}
+
+	/**
+	 * The child position
+	 * @return the child position
+	 */
+	public Position getChild() {
+		return this.child;
+	}
 }

@@ -21,13 +21,14 @@ import chessapi4j.Piece;
  * @since 1.2.9
  */
 final class StalemateMetrics {
-
+    private static final Logger logger = Factory.getLogger(StalemateMetrics.class);
     private final VisibleMetrics visibleMetrics;
     private final InternalUtil internalUtil;
 
     StalemateMetrics(VisibleMetrics visibleMetrics, InternalUtil internalUtil) {
         this.visibleMetrics = visibleMetrics;
         this.internalUtil = internalUtil;
+        logger.instantiation();
     }
 
     public boolean isStalemate(long[] bitboards, boolean isWhiteMove, long wk, long wq, long bk, long bq, int enPassant,

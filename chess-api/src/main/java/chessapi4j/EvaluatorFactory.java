@@ -30,5 +30,5 @@ public class EvaluatorFactory {
 	public static Evaluator getImpl() {
 		return defaultEvaluator;
 	}
-
+	private EvaluatorFactory(){}
 }

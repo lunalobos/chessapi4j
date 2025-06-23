@@ -60,7 +60,7 @@ public class PGNHandler {
 
 	/**
      * Numeric Annotation Glyphs mapping according to
-     * <a href="https://www.thechessdrum.net/PGN_Reference.txt">...</a>
+     * <a href="https://www.thechessdrum.net/PGN_Reference.txt">PGN_Reference</a>
      */
 	public static final Map<Integer, String> NAGS = Map.<Integer, String>ofEntries(Map.entry(0, ""), Map.entry(1, "!"),
 			Map.entry(2, "?"), Map.entry(3, "!!"), Map.entry(4, "??"), Map.entry(5, "!?"), Map.entry(6, "?!"),
@@ -382,8 +382,12 @@ public class PGNHandler {
 				}).filter(m -> Piece.values()[position.getSquares()[m.getOrigin()]] == piece).filter(m -> {
 					int row = -1;
 					int col = -1;
-					if (origin.length() == 1)
-						row = Integer.parseInt(origin) - 1;
+					try {
+						if (origin.length() == 1)
+							row = Integer.parseInt(origin) - 1;
+					} catch (Exception e) {
+						
+					}
 					if (row == -1 && origin.length() == 1) {
 						col = Util.getColIndex(origin);
 					}
@@ -581,6 +585,8 @@ public class PGNHandler {
 		else
 			return Optional.of(builder.toString());
 	}
+
+	private PGNHandler() {}
 }
 
 @Setter
@@ -666,4 +672,5 @@ class GameBuilder {
 				+ ", moves=" + moves + "]";
 	}
 
+	
 }

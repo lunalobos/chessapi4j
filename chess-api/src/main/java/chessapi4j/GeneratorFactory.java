@@ -33,4 +33,6 @@ public class GeneratorFactory {
 	public static Generator instance() {
 		return container.generator;
 	}
+
+	private GeneratorFactory() {}
 }

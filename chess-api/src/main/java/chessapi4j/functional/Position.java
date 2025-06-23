@@ -681,8 +681,8 @@ public final class Position implements Serializable {
     }
 
     /**
-     * Zobrist hash
-     * <a href="https://www.chessprogramming.org/Zobrist_Hashing">...</a>
+     * Zobrist hash. See 
+     * <a href="https://www.chessprogramming.org/Zobrist_Hashing">Zobrist_Hashing</a>
      * @return the zobrist hash
      */
     public long zobristHash() {
@@ -690,6 +690,16 @@ public final class Position implements Serializable {
         return zobristHash;
     }
 
+    /**
+     * For this class hashCode is identical to call {@link #zobristHash()}
+     * and then apply the hash standard method to that value.
+     * <pre><code>
+     * var position = ...
+     * var hash = ((Long)position.zobristHash()).hashCode();
+     * </code></pre>
+     *
+     * @return the hashCode
+     */
     @Override
     public int hashCode() {
         internalZobristHash();
@@ -800,13 +810,11 @@ public final class Position implements Serializable {
      * @return the children
      */
     public List<Tuple<Position,Move>> children(){
-        if(childrenPresent)
-            return children;
-        else {
+        if(!childrenPresent) {
             children.addAll(Factory.generator().legalMoves(this));
             childrenPresent = true;
-            return children;
         }
+        return children;
     }
 
     /**

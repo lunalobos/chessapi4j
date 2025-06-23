@@ -15,10 +15,6 @@
  */
 package chessapi4j;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-
 import java.util.regex.Pattern;
 
 /**
@@ -217,4 +213,5 @@ public class Rules {
 				&& validHalfMoveClock && validFullMoveCounter && kingsPresence;
 	}
 
+	private Rules() {}
 }

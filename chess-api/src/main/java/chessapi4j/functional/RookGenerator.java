@@ -19,12 +19,14 @@ package chessapi4j.functional;
  * @since 1.2.9
  */
 final class RookGenerator {
+    private static final Logger logger = Factory.getLogger(RookGenerator.class);
     private final VisibleMetrics visibleMetrics;
     private final InternalUtil internalUtil;
 
     public RookGenerator(VisibleMetrics visibleMetrics, InternalUtil internalUtil){
         this.visibleMetrics = visibleMetrics;
         this.internalUtil = internalUtil;
+        logger.instantiation();
     }
 
     public RegularPieceMoves rookMoves(long br, int square, int pieceType, int kingSquare, long enemies,

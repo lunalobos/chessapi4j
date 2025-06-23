@@ -15,9 +15,6 @@
  */
 package chessapi4j;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,79 +39,23 @@ public class Game implements Iterable<Position> {
 	private static final CsvParser csvParser = new CsvParser();
 	static final Eco eco = new Eco(csvParser);
 
-    /**
-     * -- GETTER --
-     *  Returns the event tag.
-     *
-     * @return the event tag
-     */
-    @Getter
+
     private Tag event;
-    /**
-     * -- GETTER --
-     *  Returns the site tag.
-     *
-     * @return the site tag
-     */
-    @Getter
+
     private Tag site;
-    /**
-     * -- GETTER --
-     *  Returns the date tag.
-     *
-     * @return the date tag
-     */
-    @Getter
+
     private Tag date;
-    /**
-     * -- GETTER --
-     *  Returns the round tag.
-     *
-     * @return the round tag
-     */
-    @Getter
+
     private Tag round;
-    /**
-     * -- GETTER --
-     *  Returns the white tag.
-     *
-     * @return the white tag
-     */
-    @Getter
+
     private Tag white;
-    /**
-     * -- GETTER --
-     *  Returns the black tag.
-     *
-     * @return the black tag
-     */
-    @Getter
-    private Tag black; /**
-     * -- GETTER --
-     *  Returns the result tag.
-     *
-     * @return the result tag
-     */
-    @Getter
+
+    private Tag black;
+
     private Tag result;
-    /**
-     * -- GETTER --
-     *  Returns the supplemental tags.
-     *
-     * @return the supplemental tags
-     */
-    @Getter
+
     private Set<Tag> supplementalTags;
-    /**
-     * -- SETTER --
-     *  Sets the list of moves.
-     * -- GETTER --
-     *  Returns the list of moves.
-     * @param moves the list of moves to set
-	 * @return the list of moves
-     */
-    @Getter
-    @Setter
+
     private List<PGNMove> moves;
 	private final List<Position> positions;
 	private EcoDescriptor ecoDescriptor;
@@ -515,6 +456,86 @@ public class Game implements Iterable<Position> {
 				.ifPresent(eco -> tags.put("ECO", eco));
 		}
 		return Optional.ofNullable(tags.get(tagName));
+	}
+
+	/**
+	 * The event tag
+	 * @return the event tag
+	 */
+	public Tag getEvent() {
+		return this.event;
+	}
+
+	/**
+	 * The site tag
+	 * @return the site tag
+	 */
+	public Tag getSite() {
+		return this.site;
+	}
+
+	/**
+	 * The date tag
+	 * @return the date tag
+	 */
+	public Tag getDate() {
+		return this.date;
+	}
+
+	/**
+	 * The round tag
+	 * @return the round tag
+	 */
+	public Tag getRound() {
+		return this.round;
+	}
+
+	/**
+	 * The white tag
+	 * @return the white tag
+	 */
+	public Tag getWhite() {
+		return this.white;
+	}
+
+	/**
+	 * The black tag
+	 * @return the balck tag
+	 */
+	public Tag getBlack() {
+		return this.black;
+	}
+
+	/**
+	 * The result tag
+	 * @return the result tag
+	 */
+	public Tag getResult() {
+		return this.result;
+	}
+
+	/**
+	 * The supplemental tags
+	 * @return the supplemental tags
+	 */
+	public Set<Tag> getSupplementalTags() {
+		return this.supplementalTags;
+	}
+
+	/**
+	 * The moves collection
+	 * @return the moves collection
+	 */
+	public List<PGNMove> getMoves() {
+		return this.moves;
+	}
+
+	/**
+	 * Set the moves collection
+	 * @param moves the new moves collection
+	 */
+	public void setMoves(List<PGNMove> moves) {
+		this.moves = moves;
 	}
 
 }

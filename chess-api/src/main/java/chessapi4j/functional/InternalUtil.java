@@ -26,10 +26,13 @@ import java.util.stream.Stream;
  * @since 1.2.9
  */
 final class InternalUtil {
-    private MatrixUtil matrixUtil;
+    private static final Logger logger = Factory.getLogger(InternalUtil.class);
+
+    private final MatrixUtil matrixUtil;
 
     public InternalUtil(MatrixUtil matrixUtil){
         this.matrixUtil = matrixUtil;
+        logger.instantiation();
     }
 
     public Stream<IndexedValue<Long>> arraytoLongStream(long[] array) {

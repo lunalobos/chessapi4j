@@ -30,7 +30,7 @@ final class Logger {
     private Level filterLevel;
 
     public Logger(Class<?> clazz) {
-        this.className = clazz.getSimpleName();
+        this.className = clazz.getCanonicalName();
     }
 
     public void instantiation() {

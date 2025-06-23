@@ -15,9 +15,6 @@
  */
 package chessapi4j;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -92,176 +89,22 @@ public final class Position implements Serializable {
 		return rowFenSB;
 	}
 
-    /**
-     * -- GETTER --
-     *  Returns the bitboards array in
-     *  ordinal order excluding EMPTY.
-     *  <p>
-     *  This means that index 0 represents white pawns, index 1 represents white
-     *  knights and so on.
-     *
-     *
-     * -- SETTER --
-     *  Sets the array of bitboards, length has to be always 12.
-     *  <p>
-     *  Setting a different length array will lead to unpredictable behavior.
-     * @return the array of bitboards
-	 * @param bits array of bitboards
-     */
-    @Setter
-    @Getter
+
     private long[] bits;
 	private long whiteMoveNumeric, shortCastleWhiteNumeric, longCastleWhiteNumeric, shortCastleBlackNumeric,
 			longCastleBlackNumeric;
-    /**
-     * -- GETTER --
-     *  Returns the index square of the piece that can be capture using en passant
-     *  rule, even when is not possible for any pawn to reach.
-     *  <p>
-     *  This is no the square that is shown in fen representation, is the pawn that
-     *  can be capture location. Fen representation shows the place where an
-     *  hypothetical pawn will end after using the en passant rule to capture a pawn
-     *  in the represented position.
-     *  <p>
-     *  For a position like "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3
-     *  0 1" this method will return the square index for e4, 28.
-     *
-     *
-     * -- SETTER --
-     *  Sets en passant value.
-     *  <p>
-     *  Setting this value manually could potentially lead to inconsistencies.
-     *  </p>
-     * @return the index square of the piece that can be capture using en passant
-     *         rule
-	 * @param enPassant the en passant square
-     */
-    @Setter
-    @Getter
     private int enPassant;
-
-    /**
-     * -- GETTER --
-     *  Returns the number of complete moves.
-     *
-     *
-     * -- SETTER --
-     *  Sets moves counter value.
-     * @return the number of moves
-	 * @param movesCounter the moves counter
-     */
-    @Setter
-    @Getter
     private int movesCounter;// moves counter
-    /**
-     * -- GETTER --
-     *  Returns the half moves number according to fifty moves rules.
-     *
-     *
-     * -- SETTER --
-     *  Sets half moves counter value.
-     *  <p>
-     *  Setting this value manually could potentially lead to inconsistencies.
-     *  </p>
-     * @return the half moves number
-	 * @param halfMovesCounter the half moves counter
-     */
-    @Setter
-    @Getter
     private int halfMovesCounter;// for 50 move draw rule
-
-    /**
-     * -- GETTER --
-     *  If this method returns true means this position is checkmate.
-     *
-     *
-     * -- SETTER --
-     *  Sets checkmate boolean value.
-     *  <p>
-     *  Setting this value manually could potentially lead to inconsistencies.
-     *  </p>
-     * @return true if this position is checkmate, false otherwise
-	 * @param checkmate true if checkmate, false otherwise
-     */
-    @Setter
-    @Getter
     private transient boolean checkmate;
-    /**
-     * -- GETTER --
-     *  If this method returns true means this position is a draw because of
-     *  stalemate.
-     *
-     *
-     * -- SETTER --
-     *  Sets stalemate boolean value.
-     *  <p>
-     *  Setting this value manually could potentially lead to inconsistencies.
-     *  </p>
-     * @return true if this position is a draw because of stalemate, false otherwise
-	 * @param stalemate true if stalemate, false otherwise
-     */
-    @Setter
-    @Getter
     private transient boolean stalemate;
-    /**
-     * -- GETTER --
-     *  If this method returns true means this position can be draw according to
-     *  Fifty Moves's rule.
-     *
-     *
-     * -- SETTER --
-     *  Sets fifty moves boolean value.
-     *  <p>
-     *  Setting this value manually could potentially lead to inconsistencies.
-     *  </p>
-     * @return true if this position can be draw according to Fifty Moves's rule,
-     *         false otherwise
-	 * @param fiftyMoves true if fifty moves, false otherwise
-     */
-    @Setter
-    @Getter
     private transient boolean fiftyMoves;
-    /**
-     * -- GETTER --
-     *  If this method returns true means this position is a draw because of
-     *  repetitions.
-     *
-     *
-     * -- SETTER --
-     *  Sets repetitions boolean value.
-     *  <p>
-     *  Setting this value manually could potentially lead to inconsistencies.
-     *  </p>
-     * @return true if this position is a draw because of repetitions, false
-     *         otherwise
-	 * @param repetitions true if repetitions, false otherwise
-     */
-    @Setter
-    @Getter
     private transient boolean repetitions;
-    /**
-     * -- GETTER --
-     *  If this method returns true means this position is a draw because of lack of
-     *  material.
-     *
-     *
-     * -- SETTER --
-     *  Sets lack of material boolean value.
-     *  <p>
-     *  Setting this value manually could potentially lead to inconsistencies.
-     *  </p>
-     * @return true if this position is a draw because of lack of material, false
-     *         otherwise
-	 * @param lackOfMaterial true if lack of material, false otherwise
-     */
-    @Setter
-    @Getter
     private transient boolean lackOfMaterial;
 
 	/**
 	 * Creates a new position with the started position.
 	 */
-
 	public Position() {
 		enPassant = -1;
 		bits = new long[12];
@@ -1101,5 +944,192 @@ public final class Position implements Serializable {
 	public Long zobristHash() {
 		return ZobristHasherFactory.instance().computeZobristHash(this);
 	}
-	
+
+	/**
+	 *  Sets the array of bitboards, length has to be always 12. Setting a different
+	 *  length array will lead to unpredictable behavior.
+	 * @param bits the bitboard array
+	 */
+	public void setBits(long[] bits) {
+		this.bits = bits;
+	}
+
+	/**
+	 *  Returns the bitboards array in ordinal order excluding EMPTY. This means that
+	 *  index 0 represents white pawns, index 1 represents white knights and so on.
+	 *
+	 * @return the array of bitboards
+	 */
+	public long[] getBits() {
+		return this.bits;
+	}
+
+	/**
+	 *  Sets en passant value.
+	 *  <p>
+	 *  Setting this value manually could potentially lead to inconsistencies.
+	 *  </p>
+	 *
+	 * @param enPassant the en passant square
+	 */
+	public void setEnPassant(int enPassant) {
+		this.enPassant = enPassant;
+	}
+
+	/**
+	 *  Returns the index square of the piece that can be capture using en passant
+	 *  rule, even when is not possible for any pawn to reach.
+	 *  <p>
+	 *  This is no the square that is shown in fen representation, is the pawn that
+	 *  can be capture location. Fen representation shows the place where an
+	 *  hypothetical pawn will end after using the en passant rule to capture a pawn
+	 *  in the represented position.
+	 *  </p>
+	 *  <p>
+	 *  For a position like "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3
+	 *  0 1" this method will return the square index for e4, 28.
+	 *  </p>
+	 *
+	 * @return the index square of the piece that can be capture using en passant rule
+	 */
+	public int getEnPassant() {
+		return this.enPassant;
+	}
+
+	/**
+	 * Sets moves counter value.
+	 * @param movesCounter the moves counter
+	 */
+	public void setMovesCounter(int movesCounter) {
+		this.movesCounter = movesCounter;
+	}
+
+	/**
+	 *  Returns the number of complete moves.
+	 * @return the number of moves
+	 */
+	public int getMovesCounter() {
+		return this.movesCounter;
+	}
+
+
+	/**
+	 *  Sets half moves counter value.
+	 *  <p>
+	 *  Setting this value manually could potentially lead to inconsistencies.
+	 *  </p>
+	 * @param halfMovesCounter the half moves counter
+	 */
+	public void setHalfMovesCounter(int halfMovesCounter) {
+		this.halfMovesCounter = halfMovesCounter;
+	}
+
+	/**
+	 * Returns the half moves number according to fifty moves rules.
+	 * @return the half moves number
+	 */
+	public int getHalfMovesCounter() {
+		return this.halfMovesCounter;
+	}
+	/**
+	 *  Sets checkmate boolean value.
+	 *  <p>
+	 *  Setting this value manually could potentially lead to inconsistencies.
+	 *  </p>
+	 * @param checkmate true if checkmate, false otherwise
+	 */
+	public void setCheckmate(boolean checkmate) {
+		this.checkmate = checkmate;
+	}
+
+	/**
+	 * If this method returns true means this position is checkmate.
+	 * @return true if this position is checkmate, false otherwise
+	 */
+	public boolean isCheckmate() {
+		return this.checkmate;
+	}
+
+	/**
+	 *  Sets stalemate boolean value.
+	 *  <p>
+	 *  Setting this value manually could potentially lead to inconsistencies.
+	 *  </p>
+	 * @param stalemate true if stalemate, false otherwise
+	 */
+	public void setStalemate(boolean stalemate) {
+		this.stalemate = stalemate;
+	}
+
+	/**
+	 * If this method returns true means this position is a draw because of
+	 * stalemate.
+	 * @return true if this position is a draw because of stalemate, false otherwise
+	 */
+	public boolean isStalemate() {
+		return this.stalemate;
+	}
+
+	/**
+	 *  Sets fifty moves boolean value.
+	 *  <p>
+	 *  Setting this value manually could potentially lead to inconsistencies.
+	 *  </p>
+	 * @param fiftyMoves true if fifty moves, false otherwise
+	 */
+	public void setFiftyMoves(boolean fiftyMoves) {
+		this.fiftyMoves = fiftyMoves;
+	}
+
+	/**
+	 * If this method returns true means this position can be draw according to
+	 * Fifty Moves's rule.
+	 * @return true if this position can be draw according to Fifty Moves's rule,
+	 *         false otherwise
+	 */
+	public boolean isFiftyMoves() {
+		return this.fiftyMoves;
+	}
+
+	/**
+	 *  Sets repetitions boolean value.
+	 *  <p>
+	 *  Setting this value manually could potentially lead to inconsistencies.
+	 *  </p>
+	 * @param repetitions true if repetitions, false otherwise
+	 */
+	public void setRepetitions(boolean repetitions) {
+		this.repetitions = repetitions;
+	}
+
+	/**
+	 * If this method returns true means this position is a draw because of
+	 * repetitions.
+	 * @return true if this position is a draw because of repetitions, false
+	 *         otherwise
+	 */
+	public boolean isRepetitions() {
+		return this.repetitions;
+	}
+
+	/**
+	 *  Sets lack of material boolean value.
+	 *  <p>
+	 *  Setting this value manually could potentially lead to inconsistencies.
+	 *  </p>
+	 * @param lackOfMaterial true if lack of material, false otherwise
+	 */
+	public void setLackOfMaterial(boolean lackOfMaterial) {
+		this.lackOfMaterial = lackOfMaterial;
+	}
+
+	/**
+	 * If this method returns true means this position is a draw because of lack of
+	 * material.
+	 * @return true if this position is a draw because of lack of material, false
+	 *         otherwise
+	 */
+	public boolean isLackOfMaterial() {
+		return this.lackOfMaterial;
+	}
 }

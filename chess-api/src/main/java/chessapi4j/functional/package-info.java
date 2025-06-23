@@ -11,10 +11,11 @@
  * </p>
  * <p>
  * Some additional features has been added to the classes of this package. The Game class is more 
- * user friendly, more robust in terms of concurrency and game logic. The Position
+ * user-friendly, more robust in terms of concurrency and game logic. The Position
  * class is immutable, thread-safe and has methods with better or more simple names. Generator class
- * is still accecssible but it becomes less necessary due to the {@link Position#children()} method.
- * List retrived from many of this classes are an immutable special implementation.
+ * is still accessible, but it becomes less necessary due to the
+ * {@link chessapi4j.functional.Position#children()} method.
+ * List retrieved from many of these classes are an immutable special implementation.
  * </p>
  * <p>
  * Position class does not require utility classes to determinate the game state (check, checkmate,

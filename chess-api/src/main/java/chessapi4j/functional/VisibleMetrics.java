@@ -21,7 +21,11 @@ import lombok.Getter;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.IntStream;
-
+/**
+ * 
+ * @author lunalobos
+ * @since 1.2.9
+ */
 final class VisibleMetrics {
     final class MagicNumbers {
         private final Combinator combinator;
@@ -87,7 +91,7 @@ final class VisibleMetrics {
             return result == null ? 0L : result;
         }
     }
-    
+    private static final Logger logger = Factory.getLogger(VisibleMetrics.class);
     private final long[] opts = new long[] { 0L, 1L, 0b11L, 0b111L, 0b1111L, 0b11111L, 0b111111L, 0b1111111L };
     private final long[][][] visibleOptions = new long[64][8][];
     private final int[] trailingZeros = new int[256];
@@ -131,6 +135,7 @@ final class VisibleMetrics {
                 this::visibleSquaresQueen,
                 (sq, f, e) -> visibleSquaresKing(sq, f)
         };
+        logger.instantiation();
     }
 
     private void fillMap() {
@@ -318,10 +323,7 @@ final class MappingException extends RuntimeException {
         super(message);
     }
 }
-/**
- * @author lunalobos
- * @since 1.2.9
- */
+
 final class FastFailLongMap {
     private final Long[] map;
 
@@ -359,14 +361,13 @@ final class FastFailLongMap {
         Arrays.fill(map, null);
     }
 }
-/**
- * @author lunalobos
- * @since 1.2.9
- */
+
 final class Combinator {
+    private static final Logger logger = Factory.getLogger(Combinator.class);
     private final MatrixUtil matrixUtil;
     public Combinator(MatrixUtil matrixUtil) {
         this.matrixUtil = matrixUtil;
+        logger.instantiation();
     }
 
     public Set<Long> compute(int square, int[] directionsIndexes) {
@@ -396,10 +397,7 @@ final class Combinator {
         return list;
     }
 }
-/**
- * @author lunalobos
- * @since 1.2.9
- */
+
 final class BitIterator {
 
     private final int bits;
@@ -422,18 +420,16 @@ final class BitIterator {
     }
 
 }
-/**
- * @author lunalobos
- * @since 1.2.9
- */
+
 final class MagicHasher {
+    private static final Logger logger = Factory.getLogger(MagicHasher.class);
     private final int indexBits;
     private final long[] maskMatrix;
 
     public MagicHasher(int indexBits, int[][][] queenMatrix, int[] directions) {
         this.indexBits = indexBits;
         maskMatrix = createMaskMatrix(queenMatrix, directions);
-
+        logger.instantiation();
     }
 
     private long[] createMaskMatrix(int[][][] queenMatrix, int[] directions) {
@@ -456,10 +452,7 @@ final class MagicHasher {
         return (int) ((blockers * magic) >>> (64 - indexBits));
     }
 }
-/**
- * @author lunalobos
- * @since 1.2.9
- */
+
 @Getter
 final class Size {
     private final int bits;
@@ -469,10 +462,7 @@ final class Size {
         this.capacity = 1 << bits;
     }
 }
-/**
- * @author lunalobos
- * @since 1.2.9
- */
+
 interface VisibleCalculator {
     long visibleSquares(int square, long friends, long enemies);
 }

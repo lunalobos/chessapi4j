@@ -264,6 +264,11 @@ public class Util {
 		return output;
 	}
 
+	/**
+	 * Creates a deep copy of the given bitboard array.
+	 * @param bitboards the bitboard array
+	 * @return a deep copy of the given bitboard array
+	 */
 	public static long[] copyBitboards(long[] bitboards){
 		var newBitboards = new long[bitboards.length];
 		System.arraycopy(bitboards, 0, newBitboards, 0, bitboards.length);
@@ -455,4 +460,6 @@ public class Util {
 	static Stream<IndexedValue<Long>> arraytoLongStream(long[] array) {
 		return IntStream.range(0, array.length).mapToObj(i -> new IndexedValue<>(i, array[i]));
 	}
+
+	private Util(){}
 }

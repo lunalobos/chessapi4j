@@ -26,7 +26,7 @@ import java.util.function.Function;
  * @since 1.2.9
  */
 final public class Generator {
-
+    private static final Logger logger = Factory.getLogger(Generator.class);
     private final PawnGenerator pawnGenerator;
     private final KingGenerator kingGenerator;
     private final MatrixUtil matrixUtil;
@@ -35,6 +35,7 @@ final public class Generator {
         this.pawnGenerator = pawnGenerator;
         this.kingGenerator = kingGenerator;
         this.matrixUtil = matrixUtil;
+        logger.instantiation();
     }
 
     /**

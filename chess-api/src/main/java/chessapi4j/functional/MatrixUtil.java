@@ -24,9 +24,9 @@ import java.util.Arrays;
  * @since 1.2.9
  */
 final class MatrixUtil {
-
+    private static final Logger logger = Factory.getLogger(MatrixUtil.class);
     public MatrixUtil(){
-
+        logger.instantiation();
     }
 
     public final int[][] blackPawnMatrix1 = new int[][] { {}, {}, {}, {}, {}, {}, {}, {}, { 0 }, { 1 },

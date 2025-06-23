@@ -15,9 +15,6 @@
  */
 package chessapi4j;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * Wrapped bitboard class for some debugging or experimenting purposes. I
  * don't recommend use it in high performance related functionality.
@@ -28,8 +25,6 @@ import lombok.Setter;
  *
  * @since 1.2.3
  */
-@Setter
-@Getter
 public class Bitboard {
 	/**
 	 * Apply the "and bit to bit" operation over the values of the bitboards and
@@ -115,17 +110,6 @@ public class Bitboard {
 		return new Bitboard(newValue);
 	}
 
-    /**
-     * -- GETTER --
-     *  Value wrapped by this object.
-     *
-     *
-     * -- SETTER --
-     *  Sets the value of the bitboard.
-     *
-     @return the long wrapped value
-      * @param value the new value
-     */
     private long value;
 
 	/**
@@ -184,7 +168,6 @@ public class Bitboard {
 	 */
 	public Bitboard popFirstBit() {
 		long highest = Long.highestOneBit(value);
-		;
 		value &= ~(highest);
 		return new Bitboard(highest);
 	}
@@ -219,7 +202,7 @@ public class Bitboard {
 	 * This method is equivalent to
 	 * {@link java.lang.Long#numberOfTrailingZeros(long)
 	 * Long.numberOfTrailingZeros(long)}.
-	 * 
+	 * @return the number of trailing zeros
 	 * @since 1.2.9
 	 */
 	public int trailingZeros() {
@@ -236,9 +219,7 @@ public class Bitboard {
 			StringBuilder isb = new StringBuilder(24);
 			long masked = (inverted & (mask << (i * 8))) >>> (i * 8);
 			int lz = Long.numberOfLeadingZeros(masked) - 56;
-			for (int j = 0; j < lz; j++) {
-				isb.append('0');
-			}
+            isb.append("0".repeat(Math.max(0, lz)));
 			isb.append(masked == 0L ? "" : Long.toBinaryString(masked));
 			char[] characters = isb.toString().toCharArray();
 			for (char c : characters) {
@@ -248,6 +229,22 @@ public class Bitboard {
 			sb.append("\n+---+---+---+---+---+---+---+---+ \n");
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * Sets the value of the bitboard.
+	 * @param value the new internal value
+	 */
+	public void setValue(long value) {
+		this.value = value;
+	}
+
+	/**
+	 * Value wrapped by this object.
+	 * @return the value wrapped by this object
+	 */
+	public long getValue() {
+		return this.value;
 	}
 
 }

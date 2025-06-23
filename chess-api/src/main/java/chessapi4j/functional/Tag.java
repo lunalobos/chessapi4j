@@ -1,6 +1,5 @@
 package chessapi4j.functional;
 
-import lombok.Getter;
 
 import java.util.Objects;
 //bean
@@ -8,15 +7,19 @@ import java.util.Objects;
  * This class provides a simple structure to represent a tag with a name and a
  * corresponding value, along with methods for manipulation and comparison.
  * 
- * Instances of this class are immutable.
+ * <p>Instances of this class are immutable.</p>
  *
  * @author lunalobos
  */
-@Getter
-public class Tag {
-	private String name;
-	private String value;
+public class Tag implements Comparable<Tag> {
+	private final String name;
+	private final String value;
 
+	/**
+	 * Creates a new Tag with the given name and value.
+	 * @param name the tag name
+	 * @param value the tag value
+	 */
 	public Tag(String name, String value) {
 		super();
 		this.name = name;
@@ -46,4 +49,28 @@ public class Tag {
 				.append("]").toString();
 	}
 
+	/**
+	 * The tag name
+	 * @return the tag name
+	 */
+	public String getName() {
+		return this.name;
+	}
+
+	/**
+	 * The tag value
+	 * @return the tag value
+	 */
+	public String getValue() {
+		return this.value;
+	}
+
+	@Override
+	public int compareTo(Tag o) {
+		int cmp = this.name.compareTo(o.name);
+        if (cmp != 0) {
+            return cmp;
+        }
+        return this.value.compareTo(o.value);
+	}
 }

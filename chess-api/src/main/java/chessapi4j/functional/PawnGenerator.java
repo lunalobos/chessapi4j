@@ -24,7 +24,7 @@ import java.util.List;
  * @since 1.2.9
  */
 final class PawnGenerator {
-
+    private static final Logger logger = Factory.getLogger(PawnGenerator.class);
     private static final int[] EP_CHOICE = new int[] { 8, -8 };
 
     static long isPromotion(int finalSquare) {
@@ -49,6 +49,7 @@ final class PawnGenerator {
         this.checkMetrics = checkMetrics;
         this.matrixUtil = matrixUtil;
         this.internalUtil = internalUtil;
+        logger.instantiation();
     }
 
     public PawnMoves pawnMoves(long br, int square, int[] pawnsDirections, int pieceType, int[][] matrix1,

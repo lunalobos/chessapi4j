@@ -1,3 +1,18 @@
+/*
+ * Copyright 2025 Miguel Angel Luna Lobos
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    https://github.com/lunalobos/chessapi4j/blob/master/LICENSE
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package chessapi4j.functional;
 
 import java.io.BufferedReader;
@@ -25,7 +40,12 @@ import chessapi4j.Util;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
-
+/**
+ * This class is used to handle PGN files. It provides methods to read and parse PGN files.
+ * 
+ * @author lunalobos
+ * @since 1.2.9
+ */
 public class PGNHandler {
     private static final String[] PIECES = new String[] { "", "", "N", "B", "R", "Q", "K", "", "N", "B", "R", "Q",
 			"K" };
@@ -45,7 +65,7 @@ public class PGNHandler {
 
 	/**
      * Numeric Annotation Glyphs mapping according to
-     * <a href="https://www.thechessdrum.net/PGN_Reference.txt">...</a>
+     * <a href="https://www.thechessdrum.net/PGN_Reference.txt">PGN_Reference</a>
      */
 	public static final Map<Integer, String> NAGS = Map.<Integer, String>ofEntries(Map.entry(0, ""), Map.entry(1, "!"),
 			Map.entry(2, "?"), Map.entry(3, "!!"), Map.entry(4, "??"), Map.entry(5, "!?"), Map.entry(6, "?!"),
@@ -315,8 +335,12 @@ public class PGNHandler {
 				}).filter(m -> Piece.values()[position.getSquares()[m.getOrigin()]] == piece).filter(m -> {
 					int row = -1;
 					int col = -1;
-					if (origin.length() == 1)
-						row = Integer.parseInt(origin) - 1;
+					try {
+						if (origin.length() == 1)
+							row = Integer.parseInt(origin) - 1;
+					} catch (Exception e) {
+						
+					}
 					if (row == -1 && origin.length() == 1) {
 						col = Util.getColIndex(origin);
 					}
@@ -343,13 +367,13 @@ public class PGNHandler {
 
 	private static Tags parseTags(String tags) {
 		Matcher matcher = TAG_PATTERN.matcher(tags);
-		Tag event = null;
-		Tag site = null;
-		Tag date = null;
-		Tag round = null;
-		Tag white = null;
-		Tag black = null;
-		Tag result = null;
+		Tag event = new Tag("Event", "unknown");
+		Tag site = new Tag("Site", "unknown");
+		Tag date = new Tag("Date", "unknown");
+		Tag round = new Tag("Round", "unknown");
+		Tag white = new Tag("White", "unknown");
+		Tag black = new Tag("Black", "unknown");
+		Tag result = new Tag("Result", "unknown");
 		var supplementalTags = new ArrayDeque<Tag>();
 		while (matcher.find()) {
 			String name = matcher.group("name");
@@ -385,7 +409,7 @@ public class PGNHandler {
 
 	private static Optional<String> readMoreLines(BufferedReader reader) {
 		StringBuilder builder = new StringBuilder();
-		String line = "";
+		String line;
 		int i = 0;
 		while (i < 25) {
 			try {
@@ -469,7 +493,7 @@ public class PGNHandler {
 					tagsObj.getWhite(),
 					tagsObj.getBlack(),
 					tagsObj.getResult(),
-					new HashSet<Tag>(tagsObj.getSupplementalTags()),
+					new HashSet<>(tagsObj.getSupplementalTags()),
 					movesObj
 				);
 				games.add(game);
@@ -518,7 +542,8 @@ public class PGNHandler {
 		}
 	}
 
-	
+	private PGNHandler() {}
+
 }
 
 @Getter
@@ -531,7 +556,7 @@ class Tags {
 
 	public Optional<String> getFen(){
 		return supplementalTags.stream()
-			.filter(tag -> tag.getName().equals("FEN"))
+			.filter(tag -> tag.getName().equalsIgnoreCase("fen"))
 			.map(Tag::getValue)
 			.findFirst();
 	}

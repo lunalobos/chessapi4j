@@ -26,6 +26,8 @@ import java.util.function.Function;
  * @since 1.2.9
  */
 final class Container {
+    static class ContainerBuilder{}
+
     static final Container.ContainerBuilder defaultBuilder = Container.builder()
             .randomFactory(Random::new)
             .matrixUtilFactory(MatrixUtil::new)

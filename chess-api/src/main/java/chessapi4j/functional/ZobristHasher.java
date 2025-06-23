@@ -25,11 +25,11 @@ import java.util.stream.Collectors;
  * @since 1.2.9
  */
 final class ZobristHasher {
-
-    private long[][] zobristTable;
-    private long[] zobristCastle;
-    private long[] zobristEnPassant;
-    private long zobristTurn;
+    private static final Logger logger = Factory.getLogger(LongProvider.class);
+    private final long[][] zobristTable;
+    private final long[] zobristCastle;
+    private final long[] zobristEnPassant;
+    private final long zobristTurn;
 
     public ZobristHasher() {
         var longProvider = new LongProvider();
@@ -48,7 +48,7 @@ final class ZobristHasher {
             zobristEnPassant[i] = longProvider.nextLong();
         }
         zobristTurn = longProvider.nextLong();
-
+        logger.instantiation();
     }
 
     public long computeZobristHash(long[] bitBoards, boolean whiteMove, boolean shortCastleWhite, boolean longCastleWhite,
@@ -84,6 +84,7 @@ final class ZobristHasher {
  * @since 1.2.9
  */
 final class LongProvider {
+    private static final Logger logger = Factory.getLogger(LongProvider.class);
     private final Long[] backedArray;
     private int pointer;
     //private Random random;
@@ -98,7 +99,7 @@ final class LongProvider {
         } catch (IOException | NumberFormatException e) {
             throw new ResourceAccessException("zobrist.txt", e);
         }
-
+        logger.instantiation();
     }
 
     public long nextLong() {

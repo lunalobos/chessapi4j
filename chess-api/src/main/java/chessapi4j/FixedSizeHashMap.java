@@ -19,6 +19,10 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
 /**
+ * A LinkedHashMap with a fixed size.
+ * 
+ * @param <K> the key type
+ * @param <V> the value type
  * @author lunalobos
  * @since 1.2.8
  */

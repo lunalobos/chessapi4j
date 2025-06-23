@@ -24,10 +24,18 @@ package chessapi4j;
  */
 public class MissingECOException extends RuntimeException {
 
+    /**
+     * Constructs a new MissingECOException for the given game.
+     * @param game the game that produce the exception
+     */ 
     public MissingECOException(Game game) {
         super(String.format("Missing ECO code for game: \n%s",game));
     }
 
+    /**
+     * Constructs a new MissingECOException for the given game.
+     * @param game the game that produce the exception
+     */
     public MissingECOException(chessapi4j.functional.Game game) {
         super(String.format("Missing ECO code for game: \n%s",game));
     }

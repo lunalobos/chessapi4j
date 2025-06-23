@@ -20,10 +20,12 @@ package chessapi4j.functional;
  * @since 1.2.9
  */
 final class KnightGenerator {
+    private static final Logger logger = Factory.getLogger(KnightGenerator.class);
     private final MatrixUtil matrixUtil;
 
     public KnightGenerator(MatrixUtil matrixUtil) {
         this.matrixUtil = matrixUtil;
+        logger.instantiation();
     }
 
     public RegularPieceMoves knightMoves(long br, int square, int pieceType, long enemies, long friends, long checkMask,

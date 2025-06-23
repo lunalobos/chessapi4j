@@ -1,3 +1,18 @@
+/*
+ * Copyright 2025 Miguel Angel Luna Lobos
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    https://github.com/lunalobos/chessapi4j/blob/master/LICENSE
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package chessapi4j.functional;
 
 import lombok.Getter;
@@ -18,6 +33,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.stream.Collectors;
 
 import chessapi4j.EcoDescriptor;
@@ -59,11 +75,128 @@ import chessapi4j.Side;
  */
 public class Game implements Iterable<Position> {
     static final Eco eco = new Eco(new CsvParser());
-
+    /**
+     * This enum represents the possible modes for handling three repetitions.
+     */
     public enum RepetitionsMode {
+        /**
+         * Ignore repetitions.
+         */
         IGNORE,
+        /**
+         * Consider repetitions as game over condition.
+         */
         STRICT,
+        /**
+         * Consider repetitions but do not set the result tag.
+         */
         AWARE
+    }
+
+    /**
+     * Builder for open {@code Game} instances.
+     * <p>To create an open {@code Game} instance, you need to provide the tags: event, site, date, round, white, and black.</p>
+     * <p>The {@code RepetitionsMode} is set to {@code RepetitionsMode.STRICT} by default, but it can be changed.</p>
+     */
+    public static class Builder {
+        private Tag event;
+        private Tag site;
+        private Tag date;
+        private Tag round;
+        private Tag white;
+        private Tag black;
+        private RepetitionsMode repetitionsMode = RepetitionsMode.STRICT; // valor por defecto
+
+         /**
+         * Creates a new {@code Builder} instance.
+         */
+        public Builder() {}
+
+        /**
+         * Sets the event tag.
+         * @param event the event tag value
+         * @return this builder
+         */
+        public Builder event(String event) {
+            this.event = new Tag("Event", event);
+            return this;
+        }
+
+        /**
+         * Sets the site tag.
+         * @param site the site tag value
+         * @return this builder
+         */
+        public Builder site(String site) {
+            this.site = new Tag("Site", site);
+            return this;
+        }
+
+        /**
+         * Sets the date tag.
+         * @param date the date tag value
+         * @return this builder
+         */
+        public Builder date(String date) {
+            this.date = new Tag("Date", date);
+            return this;
+        }
+
+        /**
+         * Sets the round tag.
+         * @param round the round tag value
+         * @return this builder
+         */
+        public Builder round(String round) {
+            this.round = new Tag("Round", round);
+            return this;
+        }
+
+        /**
+         * Sets the white tag.
+         * @param white the white tag value
+         * @return this builder
+         */
+        public Builder white(String white) {
+            this.white = new Tag("White", white);
+            return this;
+        }
+
+        /**
+         * Sets the black tag.
+         * @param black the black tag value
+         * @return this builder
+         */
+        public Builder black(String black) {
+            this.black = new Tag("Black", black);
+            return this;
+        }
+
+        /**
+         * Sets the repetitions mode.
+         * @param repetitionsMode the repetitions mode
+         * @return this builder
+         */
+        public Builder repetitionsMode(RepetitionsMode repetitionsMode) {
+            this.repetitionsMode = repetitionsMode;
+            return this;
+        }
+
+        /**
+         * Builds the {@code Game} instance.
+         * @return the built {@code Game} instance
+         */
+        public Game build() {
+            return new Game(event, site, date, round, white, black, repetitionsMode);
+        }
+    }
+
+    /**
+     * Creates a new {@code Builder} instance. This builder is used only for creating open instances.
+     * @return a new {@code Builder} instance
+     */
+    public Builder builder(){
+        return new Builder();
     }
 
     private class SamePositionCounter {
@@ -107,88 +240,28 @@ public class Game implements Iterable<Position> {
 
         private void strict() {
             repetitions = true;
-            setResult(new Tag("Result", "1/2-1/2"));
+            setResult( "1/2-1/2");
         }
     }
 
-    /**
-     * -- GETTER --
-     * Returns the event tag.
-     *
-     * @return the event tag
-     */
-    @Getter
     private volatile Tag event;
-    /**
-     * -- GETTER --
-     * Returns the site tag.
-     *
-     * @return the site tag
-     */
-    @Getter
     private volatile Tag site;
-    /**
-     * -- GETTER --
-     * Returns the date tag.
-     *
-     * @return the date tag
-     */
-    @Getter
     private volatile Tag date;
-    /**
-     * -- GETTER --
-     * Returns the round tag.
-     *
-     * @return the round tag
-     */
-    @Getter
     private volatile Tag round;
-    /**
-     * -- GETTER --
-     * Returns the white tag.
-     *
-     * @return the white tag
-     */
-    @Getter
     private volatile Tag white;
-    /**
-     * -- GETTER --
-     * Returns the black tag.
-     *
-     * @return the black tag
-     */
-    @Getter
     private volatile Tag black;
-
     private volatile Tag result;
-    /**
-     * -- GETTER --
-     * Returns the supplemental tags.
-     *
-     * @return the supplemental tags
-     */
-    @Getter
     private Set<Tag> supplementalTags;
-    /**
-     * -- GETTER --
-     * Returns the list of moves.
-     * 
-     * @param moves the list of moves to set
-     * @return the list of moves
-     */
-    @Getter
     private Deque<PGNMove> moves;
-    @Getter
     private volatile Deque<Position> positions;
     private volatile EcoDescriptor ecoDescriptor;
-    @Getter
     private volatile Map<String, String> tags;
     private volatile boolean isResultSet = false;
     private volatile boolean repetitions = false;
-    private volatile RepetitionsMode repetitionsMode;
+    private final RepetitionsMode repetitionsMode;
     private volatile SamePositionCounter sameWhitePositionCounter;
     private volatile SamePositionCounter sameBlackPositionCounter;
-    private Object $lock = new Object();
+    private final Object $lock = new Object();
 
     /**
      * Constructs a Game immutable instance with the specified parameters.
@@ -241,7 +314,7 @@ public class Game implements Iterable<Position> {
     }
 
     /**
-     * Constructs an open to modfications instance with the specified initial
+     * Constructs an open to modifications instance with the specified initial
      * parameters.
      * 
      * @param event           the event tag
@@ -259,6 +332,7 @@ public class Game implements Iterable<Position> {
         this.round = Objects.requireNonNull(round, "Round tag cannot be null.");
         this.white = Objects.requireNonNull(white, "White tag cannot be null.");
         this.black = Objects.requireNonNull(black, "Black tag cannot be null.");
+        this.repetitionsMode = Objects.requireNonNull(repetitionsMode, "Repetitions mode cannot be null.");
         positions = new ConcurrentLinkedDeque<>();
         tags = new ConcurrentHashMap<>();
         tags.put("Event", event.getValue());
@@ -267,7 +341,6 @@ public class Game implements Iterable<Position> {
         tags.put("Round", round.getValue());
         tags.put("White", white.getValue());
         tags.put("Black", black.getValue());
-        this.repetitionsMode = repetitionsMode;
         positions.add(Factory.startPos);
         sameWhitePositionCounter = new SamePositionCounter(Factory.startPos);
     }
@@ -278,9 +351,8 @@ public class Game implements Iterable<Position> {
     }
 
     /**
-     * Returns the repetitions flag. I made a desing desition here for include this
-     * state in the game class for the functional package. Positions can determinate
-     * other states by it self but three repetitions rule is a game property.
+     * Returns the repetitions flag. Positions can determinate other states by
+     * itself but three repetitions rule is a game property.
      * 
      * @return the repetitions flag
      */
@@ -304,10 +376,10 @@ public class Game implements Iterable<Position> {
      * @param event the event tag to set
      */
     @Synchronized("$lock")
-    public void setEvent(Tag event) {
+    public void setEvent(String event) {
         checkImmutable();
-        this.event = Objects.requireNonNull(event, "Cannot set event tag to null.");
-        tags.put("Event", event.getValue());
+        this.event = new Tag("Event", Objects.requireNonNull(event, "Cannot set event tag to null."));
+        tags.put("Event", this.event.getValue());
     }
 
     /**
@@ -316,10 +388,10 @@ public class Game implements Iterable<Position> {
      * @param site the site tag to set
      */
     @Synchronized("$lock")
-    public void setSite(Tag site) {
+    public void setSite(String site) {
         checkImmutable();
-        this.site = Objects.requireNonNull(site, "Cannot set site tag to null.");
-        tags.put("Site", site.getValue());
+        this.site = new Tag("Site", Objects.requireNonNull(site, "Cannot set site tag to null."));
+        tags.put("Site", this.site.getValue());
     }
 
     /**
@@ -328,10 +400,10 @@ public class Game implements Iterable<Position> {
      * @param date the date tag to set
      */
     @Synchronized("$lock")
-    public void setDate(Tag date) {
+    public void setDate(String date) {
         checkImmutable();
-        this.date = Objects.requireNonNull(date, "Cannot set date tag to null.");
-        tags.put("Date", date.getValue());
+        this.date = new Tag("Date", Objects.requireNonNull(date, "Cannot set date tag to null."));
+        tags.put("Date", this.date.getValue());
     }
 
     /**
@@ -340,10 +412,10 @@ public class Game implements Iterable<Position> {
      * @param round the round tag to set
      */
     @Synchronized("$lock")
-    public void setRound(Tag round) {
+    public void setRound(String round) {
         checkImmutable();
-        this.round = Objects.requireNonNull(round, "Cannot set round tag to null.");
-        tags.put("Round", round.getValue());
+        this.round = new Tag("Round", Objects.requireNonNull(round, "Cannot set round tag to null."));
+        tags.put("Round", this.round.getValue());
     }
 
     /**
@@ -352,10 +424,10 @@ public class Game implements Iterable<Position> {
      * @param white the white tag to set
      */
     @Synchronized("$lock")
-    public void setWhite(Tag white) {
+    public void setWhite(String white) {
         checkImmutable();
-        this.white = Objects.requireNonNull(white, "Cannot set white tag to null.");
-        tags.put("White", white.getValue());
+        this.white = new Tag("White", Objects.requireNonNull(white, "Cannot set white tag to null."));
+        tags.put("White", this.white.getValue());
     }
 
     /**
@@ -364,10 +436,10 @@ public class Game implements Iterable<Position> {
      * @param black the black tag to set
      */
     @Synchronized("$lock")
-    public void setBlack(Tag black) {
+    public void setBlack(String black) {
         checkImmutable();
-        this.black = Objects.requireNonNull(black, "Cannot set black tag to null.");
-        tags.put("Black", black.getValue());
+        this.black = new Tag("Black", Objects.requireNonNull(black, "Cannot set black tag to null."));
+        tags.put("Black", this.black.getValue());
 
     }
 
@@ -381,15 +453,16 @@ public class Game implements Iterable<Position> {
      * @param result the result tag to set
      */
     @Synchronized("$lock")
-    public void setResult(Tag result) {
+    public void setResult(String result) {
         checkImmutable();
-        this.result = Objects.requireNonNull(result, "Cannot set result tag to null.");
-        tags.put("Result", result.getValue());
+        this.result = new Tag("Result", Objects.requireNonNull(result, "Cannot set result tag to null."));
+        tags.put("Result", this.result.getValue());
         isResultSet = true;
         ((BlockingList<Position>) positions).block();
         tags = Collections.unmodifiableMap(tags);
         moves = new BlockingList<>(moves).block();
         positions = new BlockingList<>(positions).block();
+        supplementalTags = Collections.unmodifiableSet(supplementalTags);
     }
 
     /**
@@ -404,7 +477,7 @@ public class Game implements Iterable<Position> {
             tags.remove(tag.getName());
         }
 
-        this.supplementalTags = supplementalTags;
+        this.supplementalTags = new ConcurrentSkipListSet<>(supplementalTags);
 
         for (Tag tag : supplementalTags) {
             tags.put(tag.getName(), tag.getValue());
@@ -428,12 +501,12 @@ public class Game implements Iterable<Position> {
         var current = currentPosition();
         if (current.gameOver()) {
             if (current.draw()) {
-                this.setResult(new Tag("Result", "1/2-1/2"));
+                this.setResult( "1/2-1/2");
             } else {
                 if (current.whiteMove()) {
-                    this.setResult(new Tag("Result", "0-1"));
+                    this.setResult("0-1");
                 } else {
-                    this.setResult(new Tag("Result", "1-0"));
+                    this.setResult("1-0");
                 }
             }
         }
@@ -543,13 +616,12 @@ public class Game implements Iterable<Position> {
      * @param sideToMove the side to move
      * @param after      if true, return the position after the move
      * @return the position at the given move number
-     *
      */
     public Position positionAt(int moveNumber, Side sideToMove, boolean after) {
         var index = (moveNumber - 1) * 2 + (sideToMove == Side.BLACK ? 1 : 0);
         index += (after ? 1 : 0);
         var list = new ArrayList<Position>(positions.size());
-        positions.forEach(list::add);
+        list.addAll(positions);
         return list.get(index);
     }
 
@@ -747,4 +819,93 @@ public class Game implements Iterable<Position> {
         return Optional.ofNullable(tags.get(tagName));
     }
 
+    /**
+     * Returns the event tag.
+     *
+     * @return the event tag
+     */
+    public Tag getEvent() {
+        return this.event;
+    }
+
+    /**
+     * Returns the site tag.
+     *
+     * @return the site tag
+     */
+    public Tag getSite() {
+        return this.site;
+    }
+
+    /**
+     * Returns the date tag.
+     *
+     * @return the date tag
+     */
+    public Tag getDate() {
+        return this.date;
+    }
+
+    /**
+     * Returns the round tag.
+     *
+     * @return the round tag
+     */
+    public Tag getRound() {
+        return this.round;
+    }
+
+    /**
+     * Returns the white tag.
+     *
+     * @return the white tag
+     */
+    public Tag getWhite() {
+        return this.white;
+    }
+
+    /**
+     * Returns the black tag.
+     *
+     * @return the black tag
+     */
+    public Tag getBlack() {
+        return this.black;
+    }
+
+    /**
+     * Returns the supplemental tags.
+     *
+     * @return the supplemental tags
+     */
+    public Set<Tag> getSupplementalTags() {
+        return this.supplementalTags;
+    }
+
+    /**
+     * Returns the list of moves.
+     *
+     * @return the list of moves
+     */
+    public Deque<PGNMove> getMoves() {
+        return this.moves;
+    }
+
+    /**
+     * The position collection of this game
+     * @return the position collection of this game
+     */
+    public Deque<Position> getPositions() {
+        return this.positions;
+    }
+
+    /**
+     * Returns the tags as a map of name to value.
+     * @return the tags as a map
+     */
+    public Map<String, String> getTags() {
+        return this.tags;
+    }
 }
+
+

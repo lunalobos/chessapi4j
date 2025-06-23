@@ -19,12 +19,15 @@ package chessapi4j.functional;
  * @since 1.2.9
  */
 final class QueenGenerator {
+    private static final Logger logger = Factory.getLogger(QueenGenerator.class);
+
     private final VisibleMetrics visibleMetrics;
     private final InternalUtil internalUtil;
 
     public QueenGenerator(VisibleMetrics visibleMetrics, InternalUtil internalUtil){
         this.visibleMetrics = visibleMetrics;
         this.internalUtil = internalUtil;
+        logger.instantiation();
     }
 
     public RegularPieceMoves queenMoves(long br, int square, int pieceType, int kingSquare, long friends, long enemies,

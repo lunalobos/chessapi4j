@@ -25,7 +25,9 @@ import java.util.stream.IntStream;
  * @since 1.2.9
  */
 final class LackOfMaterialMetrics {
+    private static final Logger logger = Factory.getLogger(LackOfMaterialMetrics.class);
     public LackOfMaterialMetrics(){
+        logger.instantiation();
     }
     private final Integer[] pieceMask = new Integer[] { 1 << Piece.EMPTY.ordinal(), 1 << Piece.WP.ordinal(),
             1 << Piece.WN.ordinal(), 1 << Piece.WB.ordinal(), 1 << Piece.WR.ordinal(), 1 << Piece.WQ.ordinal(),

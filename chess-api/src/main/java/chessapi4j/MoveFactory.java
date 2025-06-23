@@ -31,7 +31,7 @@ public class MoveFactory {
 	 *
 	 * @param origin the origin square
 	 * @param target the target square
-	 * @return a move representation instance
+	 * @return a move instance
 	 */
 	public static Move instance(int origin, int target) {
 		return new Move(1L << target, origin, -1);
@@ -43,7 +43,7 @@ public class MoveFactory {
 	 * @param origin the origin square
 	 * @param target the target square
 	 * @param coronationPiece the coronation piece
-	 * @return a move representation instance
+	 * @return a move instance
 	 */
 	public static Move instance(int origin, int target, int coronationPiece) {
 		return new Move(1L << target, origin, coronationPiece);
@@ -54,7 +54,7 @@ public class MoveFactory {
 	 *
 	 * @param origin the origin square
 	 * @param target the target square
-	 * @return a move representation instance
+	 * @return a move instance
 	 *
 	 * @since 1.2.3
 	 */
@@ -68,7 +68,7 @@ public class MoveFactory {
 	 * @param origin the origin square
 	 * @param target the target square
 	 * @param coronationPiece the coronation piece
-	 * @return a move representation instance
+	 * @return a move instance
 	 *
 	 * @since 1.2.3
 	 */
@@ -80,8 +80,9 @@ public class MoveFactory {
 	/**
 	 * New instance.
 	 *
-	 * @param move the move representation
-	 *
+	 * @param move the move
+	 *	
+	 * @return a move instance
 	 * @since 1.2.3
 	 */
 	public static Move instance(Move move) {
@@ -94,7 +95,7 @@ public class MoveFactory {
 	 *
 	 * @param move the move string in UCI notation
 	 * @param whiteMove the player who moves
-	 * @return a move representation instance
+	 * @return a move instance
 	 * @throws MovementException if the move is illegal or the string is invalid
 	 */
 	public static Move instance(String move, boolean whiteMove) throws MovementException {
@@ -120,4 +121,6 @@ public class MoveFactory {
 			throw MovementException.invalidString(move);
 		}
 	}
+
+	private MoveFactory() {}
 }

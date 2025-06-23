@@ -15,9 +15,6 @@
  */
 package chessapi4j;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.Objects;
 //bean
 /**
@@ -27,12 +24,15 @@ import java.util.Objects;
  * @author lunalobos
  * @since 1.1.0
  */
-@Setter
-@Getter
 public class Tag {
 	private String name;
 	private String value;
 
+	/**
+	 * Creates a new tag
+	 * @param name the name of the tag
+	 * @param value the value of the tag
+	 */
 	public Tag(String name, String value) {
 		super();
 		this.name = name;
@@ -60,6 +60,38 @@ public class Tag {
 	public String toString() {
 		return new StringBuilder().append("[").append(name).append(" ").append('"').append(value).append('"')
 				.append("]").toString();
+	}
+
+	/**
+	 * Sets the name of this tag
+	 * @param name the new name of this tag
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * Sets the value for this tag
+	 * @param value the new value for this tag
+	 */
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	/**
+	 * The name of this tag
+	 * @return the name of this tag
+	 */
+	public String getName() {
+		return this.name;
+	}
+
+	/**
+	 * The value of this tag
+	 * @return the value of this tag
+	 */
+	public String getValue() {
+		return this.value;
 	}
 
 }

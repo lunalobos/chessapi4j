@@ -22,13 +22,14 @@ import chessapi4j.Piece;
  * @since 1.2.9
  */
 final class CheckmateMetrics {
-
+    private static final Logger logger = Factory.getLogger(CheckmateMetrics.class);
     private final VisibleMetrics visibleMetrics;
     private final InternalUtil internalUtil;
 
     public CheckmateMetrics(VisibleMetrics visibleMetrics, InternalUtil internalUtil) {
         this.visibleMetrics = visibleMetrics;
         this.internalUtil = internalUtil;
+        logger.instantiation();
     }
 
     public boolean isCheckmate(long[] bitboards, boolean isWhiteMove, long wk, long wq, long bk, long bq,

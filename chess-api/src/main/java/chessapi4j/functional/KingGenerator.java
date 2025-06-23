@@ -22,13 +22,14 @@ import java.util.List;
  * @since 1.2.9
  */
 final class KingGenerator {
-
+    private static final Logger logger = Factory.getLogger(KingGenerator.class);
     private final VisibleMetrics visibleMetrics;
     private final MatrixUtil matrixUtil;
 
     public KingGenerator(VisibleMetrics visibleMetrics, MatrixUtil matrixUtil) {
         this.visibleMetrics = visibleMetrics;
         this.matrixUtil = matrixUtil;
+        logger.instantiation();
     }
 
     public KingMoves kingMoves(int square, int pieceType, long enemies, long friends, long inCheck, long[] bitboards,

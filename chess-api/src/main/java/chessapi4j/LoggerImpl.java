@@ -30,7 +30,7 @@ class LoggerImpl implements Logger {
     private Level filterLevel;
 
     public LoggerImpl(Class<?> clazz) {
-        this.className = clazz.getSimpleName();
+        this.className = clazz.getCanonicalName();
 
     }
 

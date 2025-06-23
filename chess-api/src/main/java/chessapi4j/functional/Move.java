@@ -18,7 +18,6 @@ package chessapi4j.functional;
 import chessapi4j.Bitboard;
 import chessapi4j.Piece;
 import chessapi4j.Square;
-import lombok.Getter;
 
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -29,28 +28,10 @@ import java.util.regex.Pattern;
  * @author lunalobos
  * @since 1.2.9
  */
-@Getter
 public class Move {
-    /**
-     * -- GETTER --
-     *  Bitboard representing the move. It's equivalent to
-     *
-     * @return the bitboard move representation
-     */
+
     private final long move;
-    /**
-     * -- GETTER --
-     *  Origin square
-     *
-     * @return the origin square
-     */
     private final int origin;
-    /**
-     * -- GETTER --
-     *  Promotion piece or -1 if there is no promotion.
-     *
-     * @return the promotion piece or -1 if there is no promotion
-     */
     private final int promotionPiece;
 
     /**
@@ -193,10 +174,37 @@ public class Move {
             return false;
         if (obj == this)
             return true;
-        if (!(obj instanceof chessapi4j.Move))
+        if (!(obj instanceof Move))
             return false;
-        chessapi4j.Move other = (chessapi4j.Move) obj;
+        Move other = (Move) obj;
         return getOrigin() == other.getOrigin() && getTarget() == other.getTarget()
                 && getPromotionPiece() == other.getPromotionPiece();
+    }
+
+    /**
+     *  Bitboard representing the move. It's equivalent to
+     *
+     * @return the bitboard move representation
+     */
+    public long getMove() {
+        return this.move;
+    }
+
+    /**
+     *  Origin square
+     *
+     * @return the origin square
+     */
+    public int getOrigin() {
+        return this.origin;
+    }
+
+    /**
+     *  Promotion piece or -1 if there is no promotion.
+     *
+     * @return the promotion piece or -1 if there is no promotion
+     */
+    public int getPromotionPiece() {
+        return this.promotionPiece;
     }
 }

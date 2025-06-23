@@ -23,12 +23,14 @@ import chessapi4j.Piece;
  * @since 1.2.9
  */
 final class CheckMetrics {
+    private static final Logger logger = Factory.getLogger(CheckMetrics.class);
     private final VisibleMetrics visibleMetrics;
     private final InternalUtil internalUtil;
 
     public CheckMetrics(VisibleMetrics visibleMetrics, InternalUtil internalUtil) {
         this.visibleMetrics = visibleMetrics;
         this.internalUtil = internalUtil;
+        logger.instantiation();
     }
 
     public long inCheck(long[] bitboards, long wm) {

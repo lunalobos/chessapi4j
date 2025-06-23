@@ -30,4 +30,6 @@ public class SearchFactory {
 	public static Search searchImpl() {
 		return new MontecarloSearch();
 	}
+
+	private SearchFactory() {}
 }

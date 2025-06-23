@@ -23,6 +23,14 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 /**
+ * This is a modified version of ShiftList, a class created by <a href="https://github.com/hjohn">John Hendrikx</a>.
+ * <p>See the original code here:
+ * <a href="https://github.com/int4-org/Common/blob/master/common-collection/src/main/java/org/int4/common/collection/ShiftList.java">
+ *     common-collection.ShiftList</a>
+ * </p>
+ * <p>This internal class it's meant to be fast and them after finishing the elements addition been able to becomes
+ * immutable through calling the {@link #block()} method.</p>
+ * @author hjohn
  * @author lunalobos
  * @since 1.2.9
  */

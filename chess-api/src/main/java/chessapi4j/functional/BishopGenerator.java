@@ -20,12 +20,14 @@ package chessapi4j.functional;
  * @since 1.2.9
  */
 final class BishopGenerator {
+    private static final Logger logger = Factory.getLogger(BishopGenerator.class);
     private final VisibleMetrics visibleMetrics;
     private final InternalUtil internalUtil;
 
     public BishopGenerator(VisibleMetrics visibleMetrics, InternalUtil internalUtil) {
         this.visibleMetrics = visibleMetrics;
         this.internalUtil = internalUtil;
+        logger.instantiation();
     }
 
     public RegularPieceMoves bishopMoves(long br, int square, int pieceType, int kingSquare, long enemies, long friends,

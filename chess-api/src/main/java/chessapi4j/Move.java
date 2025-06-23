@@ -15,8 +15,6 @@
  */
 package chessapi4j;
 
-import lombok.Getter;
-
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,29 +25,12 @@ import java.util.regex.Pattern;
  *
  * @author lunalobos
  */
-@Getter
 public class Move {
 
-    /**
-     * -- GETTER --
-     *  Bitboard representing the move. It's equivalent to
-     *
-     * @return the bitboard move representation
-     */
     private long move;
-    /**
-     * -- GETTER --
-     *  Origin square
-     *
-     * @return the origin square
-     */
+
     private int origin;
-	/**
-     * -- GETTER --
-     *  Promotion piece or -1 if there is no promotion.
-     *
-     * @return the promotion piece or -1 if there is no promotion
-     */
+
 	private int promotionPiece;
 
 	/**
@@ -243,5 +224,29 @@ public class Move {
 		Move other = (Move) obj;
 		return getOrigin() == other.getOrigin() && getTarget() == other.getTarget()
 				&& getPromotionPiece() == other.getPromotionPiece();
+	}
+
+	/**
+	 * The move bitboard as a long
+	 * @return the move bitboard as a long
+	 */
+	public long getMove() {
+		return this.move;
+	}
+
+	/**
+	 * The origin square index
+	 * @return the origin square index
+	 */
+	public int getOrigin() {
+		return this.origin;
+	}
+
+	/**
+	 * The promotion piece index
+	 * @return the promotion piece index
+	 */
+	public int getPromotionPiece() {
+		return this.promotionPiece;
 	}
 }

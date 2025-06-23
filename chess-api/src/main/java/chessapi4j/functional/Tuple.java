@@ -15,16 +15,47 @@
  */
 package chessapi4j.functional;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+import java.util.Objects;
+
 /**
  * Generic tuple for two values
+ * @param <T1> The type of the first value
+ * @param <T2> The type of the second value
  * @author lunalobos
  * @since 1.2.9
  */
-@AllArgsConstructor
-@Getter
+@EqualsAndHashCode
+@ToString
 public final class Tuple <T1,T2> {
-    private T1 v1;
-    private T2 v2;
+    private final T1 v1;
+    private final T2 v2;
+
+    /**
+     * Constructs a new tuple
+     * @param v1 the first value
+     * @param v2 the second value
+     */
+    public Tuple(T1 v1, T2 v2) {
+        this.v1 = Objects.requireNonNull(v1);
+        this.v2 = Objects.requireNonNull(v2);
+    }
+    
+    /**
+     * Returns the first value
+     * @return The first value
+     */
+    public T1 getV1() {
+        return this.v1;
+    }
+
+    /**
+     * Returns the second value
+     * @return The second value
+     */
+    public T2 getV2() {
+        return this.v2;
+    }
 }

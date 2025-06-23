@@ -27,7 +27,7 @@ final class LoggerFactory {
     private static final String DEFAULT_FILTER_LEVEL = "DEBUG";
 
     public static Logger getLogger(Class<?> clazz) {
-        var logger = LOGGERS.computeIfAbsent(clazz.getName(), k -> new LoggerImpl(clazz));
+        var logger = LOGGERS.computeIfAbsent(clazz.getCanonicalName(), k -> new LoggerImpl(clazz));
         logger.setFilterLevel(DEFAULT_FILTER_LEVEL);
         return logger;
     }

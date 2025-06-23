@@ -17,7 +17,6 @@ package chessapi4j.functional;
 
 
 import chessapi4j.*;
-import chessapi4j.Util;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,7 +63,7 @@ public class Factory {
     static final Position startPos = new Position();
 
     static Logger getLogger(Class<?> clazz) {
-        var logger = LOGGERS.computeIfAbsent(clazz.getName(), k -> new Logger(clazz));
+        var logger = LOGGERS.computeIfAbsent(clazz.getCanonicalName(), k -> new Logger(clazz));
         logger.setFilterLevel(DEFAULT_FILTER_LEVEL);
         return logger;
     }
@@ -135,8 +134,8 @@ public class Factory {
     }
 
     /**
-     * Returns the start position
-     * @return the start position
+     * Starter position.
+     * @return the starter position
      */
     public static Position startPos(){
         return startPos;
@@ -148,7 +147,7 @@ public class Factory {
      *
      * @param move the move string in UCI notation
      * @param whiteMove the player who moves
-     * @return a move representation instance
+     * @return a Move instance
      */
     public static Move move(String move, boolean whiteMove) {
         String regex = "(?<colOrigin>[a-h])(?<rowOrigin>[1-8])(?<colTarget>[a-h])(?<rowTarget>[1-8])(?<promotion>[nbrq])?";
@@ -178,7 +177,7 @@ public class Factory {
      * Creates a move from the origin and target square
      * @param origin the origin square
      * @param target the target square
-     * @return the move
+     * @return a Move instance
      */
     public static Move move(Square origin, Square target) {
         return new Move(origin, target);
@@ -189,9 +188,30 @@ public class Factory {
      * @param origin the origin square
      * @param target the target square
      * @param promotionPiece the promotion piece
-     * @return
+     * @return a Move instance
      */
     public static Move move(Square origin, Square target, Piece promotionPiece) {
         return new Move(origin, target, promotionPiece);
     }
+
+    /**
+     * Takes a move string (SAN notation) and the position from which the move came and returns
+     * a {@link PGNMove} instance.
+     * @param move the move in SAN notation
+     * @param position the position before the move
+     * @return a PGNMove instance
+     */
+    public static PGNMove pgnMove(String move, Position position){
+        var moveObj = PGNHandler.toUCI(position, move).orElseThrow(
+                () -> new MovementException(String.format("move %s is not valid for position %s", move, position.fen()))
+        );
+        return new PGNMove(
+                moveObj.getOrigin(),
+                moveObj.getTarget(),
+                moveObj.getPromotionPiece(),
+                position);
+    }
+
+    private Factory() {}
+
 }

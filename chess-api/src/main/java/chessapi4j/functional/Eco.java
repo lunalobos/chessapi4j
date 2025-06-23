@@ -1,3 +1,18 @@
+/*
+ * Copyright 2025 Miguel Angel Luna Lobos
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    https://github.com/lunalobos/chessapi4j/blob/master/LICENSE
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package chessapi4j.functional;
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -15,7 +30,7 @@ import lombok.Data;
 /**
  * This internal class handles the search of the ECO description. Thansk to
  * the csv file created by Destaq. An original version is provided at
- * <a href="https://github.com/Destaq/chess-graph/blob/master/elo_reading/openings_sheet.csv">...</a>
+ * <a href="https://github.com/Destaq/chess-graph/blob/master/elo_reading/openings_sheet.csv">openings_sheet</a>
  * The file in resources has been sanitized.
  *
  * @author lunalobos
@@ -23,7 +38,7 @@ import lombok.Data;
  *
  */
 final class Eco {
-    
+    private static final Logger logger = Factory.getLogger(Eco.class);
     private final Map<String, EcoDescriptor> movesMap;
     private final Map<Position, EcoDescriptor> positionMap;
     private final CsvParser csvParser;
@@ -33,7 +48,7 @@ final class Eco {
         movesMap = loadMoves();
         movesMap.remove("moves");// removing the header
         positionMap = loadPositionMap();
-        
+        logger.instantiation();
     }
 
     private Map<String, EcoDescriptor> loadMoves() {

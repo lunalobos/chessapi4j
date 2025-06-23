@@ -73,12 +73,12 @@ public class PositionFactory {
 	 * Custom new instance. Arguments are the initial position and a list of the
 	 * next moves. Returns the position after play all moves.
 	 *
-	 * @param p, moves
-	 * @return a new instance
+	 * @param startpos 	the initial position
+	 * @param moves 	the list of the next moves
+	 * @return a new Position instance
 	 */
-	@Deprecated
-	public static Position fromMoves(Position p, List<Move> moves) throws MovementException {
-		Position fp = p.makeClone();
+	public static Position fromMoves(Position startpos, List<Move> moves) throws MovementException {
+		Position fp = startpos.makeClone();
 		for (Move move : moves) {
 			final var copy = fp;
 			fp = fp.childFromMove(move)
@@ -99,4 +99,6 @@ public class PositionFactory {
 	public Optional<Position> secureInstance(String fen){
 		return Rules.isValidFen(fen) ? Optional.of(new Position(fen)) : Optional.empty();
 	}	
+
+	private PositionFactory() {}
 }
