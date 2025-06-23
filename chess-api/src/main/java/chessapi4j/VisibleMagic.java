@@ -15,7 +15,7 @@
  */
 package chessapi4j;
 
-import java.security.SecureRandom;
+import java.util.Random;
 
 //singleton bean
 /**
@@ -24,14 +24,17 @@ import java.security.SecureRandom;
  */
 class VisibleMagic {
     private static final Logger logger = LoggerFactory.getLogger(VisibleMagic.class);
-    private VisibleMetricsUtil visibleMetricsUtils;
+    private final VisibleMetricsUtil visibleMetricsUtils;
     private MagicNumbers bishopMagicNumbers;
     private MagicNumbers rookMagicNumbers;
+    private final Random random;
 
-    public VisibleMagic(VisibleMetricsUtil visibleMetricsUtils) {
+    public VisibleMagic(VisibleMetricsUtil visibleMetricsUtils, Random random) {
         this.visibleMetricsUtils = visibleMetricsUtils;
+        this.random = random;
         magic();
-        logger.instanciation();
+        logger.instantiation();
+        
     }
 
     private void magic() {
@@ -43,10 +46,8 @@ class VisibleMagic {
 
         var combinator = new Combinator();
 
-        var rookHasher = new Hasher(rookSize.getBits(), Util.QUEEN_MEGAMATRIX, Util.ROOK_DIRECTIONS);
-        var bishopHasher = new Hasher(bishopSize.getBits(), Util.QUEEN_MEGAMATRIX, Util.BISHOP_DIRECTIONS);
-
-        var random = new SecureRandom();
+        var rookHasher = new MagicHasher(rookSize.getBits(), Util.QUEEN_MEGAMATRIX, Util.ROOK_DIRECTIONS);
+        var bishopHasher = new MagicHasher(bishopSize.getBits(), Util.QUEEN_MEGAMATRIX, Util.BISHOP_DIRECTIONS);
 
         rookMagicNumbers = new MagicNumbers(combinator, visibleMetricsUtils, rookHasher, rookSize.getCapacity(),
                 Util.ROOK_DIRECTIONS, random);
@@ -60,23 +61,15 @@ class VisibleMagic {
         logger.debug("Rook magic numbers calculated");
     }
 
-    public MagicNumbers getBishopMagicNumbers() {
-        return bishopMagicNumbers;
-    }
-
-    public MagicNumbers getRookMagicNumbers() {
-        return rookMagicNumbers;
-    }
-
     public long visibleBishop(int square, long friends, long enemies) {
-        var ocuppied = friends | enemies;
-        var hashed = bishopMagicNumbers.visibleHashed(square, ocuppied);
+        var occupied = friends | enemies;
+        var hashed = bishopMagicNumbers.visibleHashed(square, occupied);
         return hashed & ~friends;
     }
 
     public long visibleRook(int square, long friends, long enemies) {
-        var ocuppied = friends | enemies;
-        var hashed = rookMagicNumbers.visibleHashed(square, ocuppied);
+        var occupied = friends | enemies;
+        var hashed = rookMagicNumbers.visibleHashed(square, occupied);
         return hashed & ~friends;
     }
 }

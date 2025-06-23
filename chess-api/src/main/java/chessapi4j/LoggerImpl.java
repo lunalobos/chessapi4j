@@ -26,16 +26,16 @@ import java.time.format.DateTimeFormatter;
 class LoggerImpl implements Logger {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
-    private String className;
+    private final String className;
     private Level filterLevel;
 
     public LoggerImpl(Class<?> clazz) {
-        this.className = clazz.getSimpleName();
+        this.className = clazz.getCanonicalName();
 
     }
 
     @Override
-    public void instanciation() {
+    public void instantiation() {
         debug("%s created", className);
     }
 
@@ -49,7 +49,7 @@ class LoggerImpl implements Logger {
     @Override
     public void trace(String format, Object... args) {
         if (check(Level.TRACE)) {
-            sendMsg(format.formatted(args), Level.TRACE);
+            sendMsg(String.format(format,args), Level.TRACE);
         }
     }
 
@@ -63,7 +63,7 @@ class LoggerImpl implements Logger {
     @Override
     public void debug(String format, Object... args) {
         if (check(Level.DEBUG)) {
-            sendMsg(format.formatted(args), Level.DEBUG);
+            sendMsg(String.format(format,args), Level.DEBUG);
         }
     }
 
@@ -76,7 +76,7 @@ class LoggerImpl implements Logger {
 
     @Override
     public void info(String format, Object... args) {
-        info(format.formatted(args));
+        info(String.format(format,args));
     }
 
     @Override
@@ -88,7 +88,7 @@ class LoggerImpl implements Logger {
 
     @Override
     public void warn(String format, Object... args) {
-        warn(format.formatted(args));
+        warn(String.format(format,args));
     }
 
     @Override
@@ -100,7 +100,7 @@ class LoggerImpl implements Logger {
 
     @Override
     public void error(String format, Object... args) {
-        error(format.formatted(args));
+        error(String.format(format,args));
     }
 
     @Override
@@ -112,7 +112,7 @@ class LoggerImpl implements Logger {
 
     @Override
     public void fatal(String format, Object... args) {
-        fatal(format.formatted(args));
+        fatal(String.format(format,args));
     }
     
     public void disable() {
@@ -132,7 +132,7 @@ class LoggerImpl implements Logger {
     }
 
     private String format(String msg, Level level) {
-        return "[%s] %s - %s: %s".formatted(level.name(), DATE_FORMATTER.format(OffsetDateTime.now()), className, msg);
+        return String.format("[%s] %s - %s: %s",level.name(), DATE_FORMATTER.format(OffsetDateTime.now()), className, msg);
     }
 
     public void setFilterLevel(String filterLevel) {

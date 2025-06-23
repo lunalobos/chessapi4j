@@ -20,24 +20,17 @@ package chessapi4j;
  * @author lunalobos
  * @since 1.2.8
  */
-class Hasher {
-    private static final Logger logger = LoggerFactory.getLogger(Hasher.class);
-    private int indexBits;
-    private long[] maskMatrix;
+final class MagicHasher {
+    private static final Logger logger = LoggerFactory.getLogger(MagicHasher.class);
+    private final int indexBits;
+    private final long[] maskMatrix;
   
 
-    public Hasher(int indexBits, int[][][] queenMatrix, int[] directions) {
+    public MagicHasher(int indexBits, int[][][] queenMatrix, int[] directions) {
         this.indexBits = indexBits;
         maskMatrix = createMaskMatrix(queenMatrix, directions);
-        logger.instanciation();
+        logger.instantiation();
     }
-
-    //public int hash(long ocuppied, long magic, int square, int[] directionsIndexs, int[][] directions) {
-        //var mask = visibleMetricsUtil.computeVisible(square, directionsIndexs, directions, 0L, 0L);
-        //var blockers = ocuppied & mask;
-        //return (int) ((blockers * magic) >>> (64 - indexBits));
-        //return magicHash(ocuppied, magic, square);
-    //}
 
     private long[] createMaskMatrix(int[][][] queenMatrix, int[] directions) {
         var maskMatrix = new long[64];
@@ -55,9 +48,9 @@ class Hasher {
         return maskMatrix;
     }
 
-    public int hash(long ocuppied, long magic, int square){
+    public int hash(long occupied, long magic, int square){
         var mask = maskMatrix[square];
-        var blockers = ocuppied & mask;
+        var blockers = occupied & mask;
         return (int) ((blockers * magic) >>> (64 - indexBits));
     }
 }

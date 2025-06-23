@@ -22,7 +22,7 @@ import java.util.Iterator;
  * @author lunalobos
  * @since 1.2.8
  */
-class BitIterator implements Iterator<Integer> {
+final class BitIterator implements Iterator<Integer> {
 
 	private final int bits;
 	private int pointer = 0;

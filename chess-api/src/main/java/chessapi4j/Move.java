@@ -24,12 +24,14 @@ import java.util.regex.Pattern;
  * representation modified for the UCI protocol.
  *
  * @author lunalobos
- *
  */
 public class Move {
 
-	private long move;
-	private int origin, promotionPiece;
+    private long move;
+
+    private int origin;
+
+	private int promotionPiece;
 
 	/**
 	 * Creates a new move instance
@@ -69,16 +71,7 @@ public class Move {
 		this(1L << target.ordinal(), origin.ordinal(), promotionPiece.ordinal());
 	}
 
-	/**
-	 * Origin square
-	 * 
-	 * @return the origin square
-	 */
-	public int getOrigin() {
-		return origin;
-	}
-
-	/**
+    /**
 	 * Origin square
 	 * 
 	 * @return the origin square
@@ -89,16 +82,7 @@ public class Move {
 		return Square.get(origin);
 	}
 
-	/**
-	 * Bitboard representing the move. It's equivalent to {@code 1L << targetSquare}
-	 * 
-	 * @return the bitboard move representation
-	 */
-	public long getMove() {
-		return move;
-	}
-
-	/**
+    /**
 	 * Wrapped bitboard representing the move.
 	 * 
 	 * @return the bitboard move representation
@@ -129,16 +113,7 @@ public class Move {
 		return Square.get(Long.numberOfTrailingZeros(move));
 	}
 
-	/**
-	 * Promotion piece or -1 if there is no promotion.
-	 * 
-	 * @return the promotion piece or -1 if there is no promotion
-	 */
-	public int getPromotionPiece() {
-		return promotionPiece;
-	}
-
-	/**
+    /**
 	 * Promotion piece or {@code Piece.EMPTY} if there is no promotion.
 	 * 
 	 * @return the promotion piece or {@code Piece.EMPTY} if there is no promotion
@@ -217,21 +192,19 @@ public class Move {
 	public String toString() {
 		if (Long.bitCount(move) != 1)
 			return "0000";
-		int y = Util.getRow(getOrigin()) + 1;
-		int y_ = Util.getRow(getTarget()) + 1;
-		String collum = Util.getColLetter(getOrigin());
-		String collum_ = Util.getColLetter(getTarget());
+		var sb = new StringBuilder();
+		sb.append(origin().getName()).append(target().getName());
 		if (getPromotionPiece() < 0)
-			return collum + y + collum_ + y_;
+			return sb.toString();
 		else {
 			String regex = "(?<color>[BW])(?<piece>[NBRQ])";
 			Pattern pattern = Pattern.compile(regex);
 			Matcher matcher = pattern.matcher(Piece.values()[getPromotionPiece()].toString());
-			boolean finded = matcher.find();
-			if (!finded)
+			boolean found = matcher.find();
+			if (!found)
 				throw new IllegalArgumentException("Invalid move.");
 			String promotion = matcher.group("piece").toLowerCase();
-			return collum + y + collum_ + y_ + promotion;// UCI notation;
+			return sb.append(promotion).toString();// UCI notation;
 		}
 	}
 
@@ -251,5 +224,29 @@ public class Move {
 		Move other = (Move) obj;
 		return getOrigin() == other.getOrigin() && getTarget() == other.getTarget()
 				&& getPromotionPiece() == other.getPromotionPiece();
+	}
+
+	/**
+	 * The move bitboard as a long
+	 * @return the move bitboard as a long
+	 */
+	public long getMove() {
+		return this.move;
+	}
+
+	/**
+	 * The origin square index
+	 * @return the origin square index
+	 */
+	public int getOrigin() {
+		return this.origin;
+	}
+
+	/**
+	 * The promotion piece index
+	 * @return the promotion piece index
+	 */
+	public int getPromotionPiece() {
+		return this.promotionPiece;
 	}
 }

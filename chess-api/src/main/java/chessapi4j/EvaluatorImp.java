@@ -448,7 +448,7 @@ class EvaluatorImp implements Evaluator {
 			0b0000000000010000101000000000000000000000000000000000000000000000L,
 			0b0000000000100000010000000000000000000000000000000000000000000000L };
 	protected EvaluatorImp() {
-		logger.instanciation();
+		logger.instantiation();
 	}
 
 	private static int eval(Position position) {

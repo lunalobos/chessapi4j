@@ -1,5 +1,5 @@
 ![Java](https://img.shields.io/badge/Java-11%2B-green)
-[![Static Badge](https://img.shields.io/badge/javadoc-1.2.8-brightgreen?style=plastic)](https://lunalobos.github.io/chessapi4j/apidocs/chessapi4j/package-summary.html)
+[![Static Badge](https://img.shields.io/badge/javadoc-1.2.9-brightgreen?style=plastic)](https://lunalobos.github.io/chessapi4j/apidocs/chessapi4j/package-summary.html)
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.lunalobos/chessapi4j)](https://central.sonatype.com/artifact/io.github.lunalobos/chessapi4j)
 ![License](https://img.shields.io/github/license/lunalobos/chessapi4j)
 
@@ -21,6 +21,12 @@ ChessAPI4j is a Java library that allows representing and performing operations 
 6. [Other Features](#other-features)
    - [Utility Classes](#utility-classes)
    - [Heuristic Evaluation and Search](#heuristic-evaluation-and-search)
+7. [Functional Package (since 1.2.9)](#sparkles-functional-package)
+    - [Position](#position)
+    - [Generator](#generator)
+    - [Game](#game)
+    - [PGNHandler](#pgnhandler)
+    - [Move and PGNMove](#move-and-pgnmove)
 7. [Unit Testing](#unit-testing)
 8. [Javadoc](#javadoc)
 9. [Contributing](#contributing)
@@ -63,7 +69,7 @@ Add the following to your dependencies:
 <dependency>
     <groupId>io.github.lunalobos</groupId>
     <artifactId>chessapi4j</artifactId>
-    <version>1.2.8-RELEASE</version>
+    <version>1.2.9-RELEASE</version>
 </dependency>
 
 ```
@@ -278,6 +284,98 @@ The Util and AdvanceUtil classes provide useful methods for working with custom 
 ### Heuristic Evaluation and Search
 
 This library offers interfaces and implementations for various search and evaluation algorithms. While an implementation is provided, these feature is still experimental.
+
+## :sparkles: Functional Package
+
+Introduced in version 1.2.9, the functional package presents a new generation of classes for working with chess. It is focused on immutability, safety, and robustness. All main classes in this package provide unmodifiable (immutable) instances by default, making them thread-safe and especially suitable for concurrent or multithreaded environments.
+
+### Position
+
+The Position class in the functional package allows for representing chess positions immutably. Once an instance is created, its state cannot be modified, ensuring that the position data remains consistent and safe in any context—even when shared across multiple threads. This class provides a zobristHash() method that returns the corresponding Zobrist hash value as a long (i.e., 64 bits), which is the minimum acceptable length for a hash of this kind. However, Java has a limitation in that it does not allow arrays with lengths over 32 bits, so implementing hash tables for positions becomes a bit more complex.
+
+```java
+import chessapi4j.functional.Factory;
+...
+// You can always use the same startpos instance because it is immutable,
+// and therefore thread-safe.
+var startpos = Factory.startpos();
+
+// If you need a new instance of this class, you can call the children method
+// to get its derived positions from legal moves.
+var children = startpos.children();
+
+// You can create new positions just by using the move method
+// in one of its available versions.
+var position = startpos.move("g1f3"); // King's Knight Opening
+
+// You can also use standard algebraic notation.
+var nextPosition = startpos.sanMove("d5"); // King's Knight Opening again
+
+// It is also suitable for constructing a position from several moves.
+var finalPosition = startpos
+        .sanMove("e4")
+        .sanMove("e5")
+        .sanMove("Nf3")
+        .sanMove("Nc6")
+        .sanMove("Bb5"); // Ruy Lopez Opening
+
+// You may want to store this position after a heuristic evaluation in
+// your hash table implementation. You can use the zobristHash() method
+// to fulfill the hashing contract of your implementation.
+var hash = finalPosition.zobristHash(); // this is a long value
+
+```
+
+### Generator
+
+The Generator class for move generation offers the same functionality as in the main package. Although it is currently about 30% slower than the original version due to the creation of move objects (the computational cost of instantiating more objects), the advantage of this package does not lie in performance yet, but rather in a more solid programmatic flow, which leads to simpler system design.
+
+Since the Position class provides the children method, it's not necessary to use this class directly, although it is available through the generator method in Factory.
+
+### Game
+
+The Game class in the functional package enables the creation of chess game representations that can be either immutable (when the result is defined) or mutable (when the game is ongoing). Its setter methods are synchronized, allowing game modifications in multithreaded environments to be handled much more reliably than with the original Game class. This makes it an ideal choice for servers, concurrent analysis, or any application where data safety is a top priority. This class can detect when the game is over and set the result tag to the corresponding value.
+
+```java
+
+import chessapi4j.functional.Game;
+...
+// lets create a open to modification instance
+var game = Game.builder()
+        .event("DSB Kongress-16 Hauptturnier A")
+        .site("Duesseldorf")
+        .date("1908.08.14")
+        .round("11")
+        .white("Lasker, Edward")
+        .black("Alekhine, Alexander")
+        .repetitionsMode(Game.RepetitionsMode.AWARE)
+        .build();
+// you can add the game moves in a simple way
+game.sanMove("e4")
+    .sanMove("e5")
+    .sanMove("Nf3")
+    .sanMove("d6")
+    ... // until the game is over
+// you can see de eco code like in the original class
+var ecoCode = game.getEcoDescriptor().getEco();
+
+```
+
+### PGNHandler
+
+The PGNHandler class has the same functionality as in the original version, but it's implemented for the new classes in the package.
+```java
+import chessapi4j.functional.PGNHandler;
+...
+// you need to provide a input stream with the pgn database
+var is = ... // some input stream instatiation
+// this will convert the original database to a game list, a classic representation
+var games = PGNHandler.parseGames(is);
+
+```
+
+### Move and PGNMove
+The Move and PGNMove classes are almost identical to their original versions, but they are immutable. This is important to keep in mind for PGNMove, which must be instantiated all at once rather than in parts. In general, developers don't construct it manually, but it's also possible to instantiate a PGNMove using the basic parameters: target square, origin square, promotion piece, and origin position.
 
 ## :white_check_mark: Unit Testing
 

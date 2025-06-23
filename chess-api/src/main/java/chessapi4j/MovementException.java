@@ -21,7 +21,7 @@ package chessapi4j;
  * @author lunalobos
  * @since 1.0.0
  */
-public class MovementException extends Exception {
+public class MovementException extends RuntimeException {
 	/**
 	 *
 	 */
@@ -31,10 +31,10 @@ public class MovementException extends Exception {
 	 * Creates a new instance of {@link MovementException} with a message that
 	 * indicates that the move string is invalid.
 	 * @param invalidString the invalid move string
-	 * @return
+	 * @return an instance of MovementException
 	 */
 	public static MovementException invalidString(String invalidString){
-		return new MovementException("Invalid move string: %s".formatted(invalidString));
+		return new MovementException(String.format("Invalid move string: %s", invalidString));
 	}
 	
 	/**
@@ -55,7 +55,33 @@ public class MovementException extends Exception {
 	 * @since 1.2.5
 	 */
 	public MovementException(Move move, Position position) {
-		this(String.format("Move %s is illegal for position %s".formatted(move, position)));
+		this(String.format("Move %s is illegal for position %s", move, position.toFen()));
+	}
+
+	/**
+	 * Creates a new instance of {@link MovementException} with a message that
+	 * indicates that the move is illegal for the position.
+	 * 
+	 * @param move the move that is illegal
+	 * @param position the position where the move is illegal
+	 * 
+	 * @since 1.2.5
+	 */
+	public MovementException(chessapi4j.functional.Move move, chessapi4j.functional.Position position) {
+		this(String.format("Move %s is illegal for position %s", move, position.fen()));
+	}
+
+	/**
+	 * Creates a new instance of {@link MovementException} with a message that
+	 * indicates that the move is illegal for the position.
+	 * 
+	 * @param move the move that is illegal
+	 * @param position the position where the move is illegal
+	 * 
+	 * @since 1.2.5
+	 */
+	public MovementException(String move, chessapi4j.functional.Position position) {
+		this(String.format("Move %s is illegal for position %s", move, position.fen()));
 	}
 
 }

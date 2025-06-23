@@ -16,12 +16,15 @@
 package chessapi4j;
 
 //bean
+
+import java.util.Arrays;
+
 /**
  * @author lunalobos
  * @since 1.2.8
  */
 class FastFailLongMap {
-    private Long[] map;
+    private final Long[] map;
 
     public FastFailLongMap(int capacity) {
         map = new Long[capacity];
@@ -54,8 +57,6 @@ class FastFailLongMap {
     }
 
     public void clear() {
-        for (int i = 0; i < map.length; i++) {
-            map[i] = null;
-        }
+        Arrays.fill(map, null);
     }
 }

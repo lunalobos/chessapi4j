@@ -17,6 +17,7 @@ package chessapi4j;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,18 +34,11 @@ import java.util.stream.Collectors;
  * 
  * @since 1.2.7
  */
-class CsvParser {
+final class CsvParser {
     private static final Logger logger = LoggerFactory.getLogger(CsvParser.class);
-    private char separator = ',';
-    private char stringSeparator = '"';
 
     public CsvParser() {
-        logger.instanciation();
-    }
-
-    public CsvParser(char separator, char stringSeparator) {
-        this.separator = separator;
-        this.stringSeparator = stringSeparator;
+        logger.instantiation();
     }
 
 
@@ -57,12 +51,13 @@ class CsvParser {
         var previousString = false;
         while (!stack.isEmpty()) {
             var c = stack.pop();
+            char stringSeparator = '"';
+            char separator = ',';
             if (c == separator && !previousString) {
                 strings.add(sb.toString());
                 
                 sb = new StringBuilder();
-                previousString = false;
-            } else if (c == stringSeparator && sb.isEmpty()) {
+            } else if (c == stringSeparator && sb.length() == 0) {
                 var bucket = new Bucket(stringSeparator);
                 previousString = true;
                 while (bucket.hasSpace() && !stack.isEmpty()) {
@@ -77,40 +72,30 @@ class CsvParser {
                 sb.append(c);
             }
         }
-        if (!sb.isEmpty()) {
+        if (!(sb.length() == 0)) {
             strings.add(sb.toString());
         }
         return new ArrayList<>(strings);
     }
 
-    /**
-     * Parses an input stream containing CSV data and returns a list of lists of
-     * strings, where each inner list represents a line in the CSV file split by
-     * commas.
-     *
-     * @param inputStream the input stream to be parsed
-     * @return a list of lists of strings parsed from the input stream
-     * @throws IOException if an I/O error occurs while reading the input stream
-     * 
-     * @since 1.2.6
-     */
     public List<List<String>> parseInputStream(InputStream inputStream) throws IOException {
         var bytes = inputStream.readAllBytes();
         
-        var str = new String(bytes, "UTF-8");
+        var str = new String(bytes, StandardCharsets.UTF_8);
         return Arrays.stream(str.split("\n")).map(this::parseLine).collect(Collectors.toCollection(LinkedList::new));
     }
 
 }
 
 class Bucket {
-
-    private char end;
-    private StringBuilder sb = new StringBuilder();
-    private boolean hasSpace = true;
+    private final char end;
+    private final StringBuilder sb;
+    private boolean hasSpace;
 
     public Bucket(char end) {
         this.end = end;
+        this.sb = new StringBuilder();
+        this.hasSpace = true;
     }
 
     public boolean hasSpace() {

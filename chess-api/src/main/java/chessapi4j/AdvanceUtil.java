@@ -68,7 +68,7 @@ public class AdvanceUtil {
 	 * @return {@code 1} if the position is in check, {@code 0} otherwise.
 	 */
 	public static int isInCheck(Position position) {
-		return (int) GeneratorFactory.generatorUtil.isInCheck(position);
+		return (int) GeneratorFactory.container.generatorUtil.isInCheck(position);
 	}
 
 	static {
@@ -107,6 +107,8 @@ public class AdvanceUtil {
 	public static int fiftyMoves(Position position) {
 		return HALF_MOVES[position.getHalfMovesCounter()];
 	}
+
+	private AdvanceUtil() {}
 
 }
 

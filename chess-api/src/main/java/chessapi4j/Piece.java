@@ -72,9 +72,9 @@ public enum Piece {
 	 * Black king
 	 */
 	BK(Side.BLACK);
-	private Side side;
+	private final Side side;
 
-	private Piece(Side side) {
+	Piece(Side side) {
 		this.side = side;
 	}
 
@@ -85,5 +85,16 @@ public enum Piece {
 	 */
 	public Side side() {
 		return side;
+	}
+
+	/**
+	 * Retrieves the piece object for the given piece index
+	 * @param pieceIndex the piece index
+	 * @return the corresponding piece object
+	 *
+	 * @since 1.2.9
+	 */
+	public static Piece get(int pieceIndex){
+		return Piece.values()[pieceIndex];
 	}
 }

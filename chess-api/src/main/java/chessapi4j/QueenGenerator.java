@@ -24,13 +24,13 @@ import java.util.List;
  */
 final class QueenGenerator {
     private static final Logger logger = LoggerFactory.getLogger(QueenGenerator.class);
-    private VisibleMetrics visibleMetrics;
-    private GeneratorUtil generatorUtil;
+    private final VisibleMetrics visibleMetrics;
+    private final GeneratorUtil generatorUtil;
 
     public QueenGenerator(VisibleMetrics visibleMetrics, GeneratorUtil generatorUtil) {
         this.visibleMetrics = visibleMetrics;
         this.generatorUtil = generatorUtil;
-        logger.instanciation();
+        logger.instantiation();
     }
 
     public void queenMoves(long br, int square, int pieceType, int kingSquare, long friends, long enemies,

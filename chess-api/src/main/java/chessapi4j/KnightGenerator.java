@@ -22,20 +22,21 @@ import java.util.List;
  * @author lunalobos
  * @since 1.2.8
  */
-final class KnightGenerator {
+class KnightGenerator {
 	private static final Logger logger = LoggerFactory.getLogger(KnightGenerator.class);
-    private GeneratorUtil generatorUtil;
+	private final GeneratorUtil generatorUtil;
+	private final MatrixUtil matrixUtil;
 
-    public KnightGenerator(GeneratorUtil generatorUtil) {
-        this.generatorUtil = generatorUtil;
-		logger.instanciation();
-    }
+	public KnightGenerator(GeneratorUtil generatorUtil, MatrixUtil matrixUtil) {
+		this.generatorUtil = generatorUtil;
+		this.matrixUtil = matrixUtil;
+		logger.instantiation();
+	}
 
-    public void knightMoves(long br, int square, int pieceType, long enemies, long friends, Position pos,
+	public void knightMoves(long br, int square, int pieceType, long enemies, long friends, Position pos,
 			long checkMask, long inCheckMask, List<Position> children) {
-		final int[] knightDirections = GeneratorUtil.KNIGHT_MATRIX[square];
-		final long emptySquares = ~(enemies | friends);
-		final long emptyOrEnemy = emptySquares | enemies;
+		final int[] knightDirections = matrixUtil.knightMatrix[square];
+		final long emptyOrEnemy = ~friends;
 		long moves = 0L;
 		for (int move : knightDirections) {
 			moves = moves | (1L << move);

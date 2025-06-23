@@ -54,5 +54,5 @@ public enum MoveDirection {
 	/**
 	 * Left
 	 */
-	L;
+	L
 }

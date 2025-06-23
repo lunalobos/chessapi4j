@@ -26,7 +26,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
-//bean
 /**
  * The Game class represents a chess game. The class Provides a structured
  * representation of a chess game and has methods to access, modify, and
@@ -38,14 +37,29 @@ import java.util.stream.Collectors;
 public class Game implements Iterable<Position> {
 	// dependency injection chain
 	private static final CsvParser csvParser = new CsvParser();
-	protected static final Eco eco = new Eco(csvParser);
+	static final Eco eco = new Eco(csvParser);
 
-	private Tag event, site, date, round, white, black, result;
-	private Set<Tag> suplementalTags;
-	private List<PGNMove> moves;
-	private List<Position> positions;
+
+    private Tag event;
+
+    private Tag site;
+
+    private Tag date;
+
+    private Tag round;
+
+    private Tag white;
+
+    private Tag black;
+
+    private Tag result;
+
+    private Set<Tag> supplementalTags;
+
+    private List<PGNMove> moves;
+	private final List<Position> positions;
 	private EcoDescriptor ecoDescriptor;
-	private Map<String, String> tags;
+	private final Map<String, String> tags;
 
 	/**
 	 * Constructs a Game object with the specified parameters.
@@ -57,10 +71,10 @@ public class Game implements Iterable<Position> {
 	 * @param white           the white tag
 	 * @param black           the black tag
 	 * @param result          the result tag
-	 * @param suplementalTags the supplemental tags
+	 * @param supplementalTags the supplemental tags
 	 * @param moves           the list of moves
 	 */
-	public Game(Tag event, Tag site, Tag date, Tag round, Tag white, Tag black, Tag result, Set<Tag> suplementalTags,
+	public Game(Tag event, Tag site, Tag date, Tag round, Tag white, Tag black, Tag result, Set<Tag> supplementalTags,
 			List<PGNMove> moves) {
 		super();
 		Objects.requireNonNull(event, "Event tag cannot be null.");
@@ -77,9 +91,9 @@ public class Game implements Iterable<Position> {
 		this.white = white;
 		this.black = black;
 		this.result = result;
-		this.suplementalTags = new CopyOnWriteArraySet<>(suplementalTags);
+		this.supplementalTags = new CopyOnWriteArraySet<>(supplementalTags);
 		this.moves = moves;
-		positions = createHistory(moves, suplementalTags);
+		positions = createHistory(moves, supplementalTags);
 
 		tags = new ConcurrentHashMap<>();
 		tags.put("Event", event.getValue());
@@ -90,23 +104,12 @@ public class Game implements Iterable<Position> {
 		tags.put("Black", black.getValue());
 		tags.put("Result", result.getValue());
 
-		if (suplementalTags != null) {
-			for (Tag tag : suplementalTags) {
-				tags.put(tag.getName(), tag.getValue());
-			}
+		for (Tag tag : this.supplementalTags) {
+			tags.put(tag.getName(), tag.getValue());
 		}
 	}
 
-	/**
-	 * Returns the event tag.
-	 *
-	 * @return the event tag
-	 */
-	public Tag getEvent() {
-		return event;
-	}
-
-	/**
+    /**
 	 * Sets the event tag.
 	 *
 	 * @param event the event tag to set
@@ -116,16 +119,7 @@ public class Game implements Iterable<Position> {
 		tags.put("Event", event.getValue());
 	}
 
-	/**
-	 * Returns the site tag.
-	 *
-	 * @return the site tag
-	 */
-	public Tag getSite() {
-		return site;
-	}
-
-	/**
+    /**
 	 * Sets the site tag.
 	 *
 	 * @param site the site tag to set
@@ -135,16 +129,7 @@ public class Game implements Iterable<Position> {
 		tags.put("Site", site.getValue());
 	}
 
-	/**
-	 * Returns the date tag.
-	 *
-	 * @return the date tag
-	 */
-	public Tag getDate() {
-		return date;
-	}
-
-	/**
+    /**
 	 * Sets the date tag.
 	 *
 	 * @param date the date tag to set
@@ -154,16 +139,7 @@ public class Game implements Iterable<Position> {
 		tags.put("Date", date.getValue());
 	}
 
-	/**
-	 * Returns the round tag.
-	 *
-	 * @return the round tag
-	 */
-	public Tag getRound() {
-		return round;
-	}
-
-	/**
+    /**
 	 * Sets the round tag.
 	 *
 	 * @param round the round tag to set
@@ -173,16 +149,7 @@ public class Game implements Iterable<Position> {
 		tags.put("Round", round.getValue());
 	}
 
-	/**
-	 * Returns the white tag.
-	 *
-	 * @return the white tag
-	 */
-	public Tag getWhite() {
-		return white;
-	}
-
-	/**
+    /**
 	 *
 	 * Sets the white tag.
 	 *
@@ -193,16 +160,7 @@ public class Game implements Iterable<Position> {
 		tags.put("White", white.getValue());
 	}
 
-	/**
-	 * Returns the black tag.
-	 *
-	 * @return the black tag
-	 */
-	public Tag getBlack() {
-		return black;
-	}
-
-	/**
+    /**
 	 * Sets the black tag.
 	 *
 	 * @param black the black tag to set
@@ -212,16 +170,7 @@ public class Game implements Iterable<Position> {
 		tags.put("Black", black.getValue());
 	}
 
-	/**
-	 * Returns the result tag.
-	 *
-	 * @return the result tag
-	 */
-	public Tag getResult() {
-		return result;
-	}
-
-	/**
+    /**
 	 * Sets the result tag.
 	 *
 	 * @param result the result tag to set
@@ -231,53 +180,26 @@ public class Game implements Iterable<Position> {
 		tags.put("Result", result.getValue());
 	}
 
-	/**
-	 * Returns the supplemental tags.
-	 *
-	 * @return the supplemental tags
-	 */
-	public Set<Tag> getSuplementalTags() {
-		return suplementalTags;
-	}
-
-	/**
+    /**
 	 * Sets the supplemental tags.
 	 *
-	 * @param suplementalTags the supplemental tags to set
+	 * @param supplementalTags the supplemental tags to set
 	 */
-	public void setSuplementalTags(Set<Tag> suplementalTags) {
-		if (this.suplementalTags != null) {
-			for (Tag tag : suplementalTags) {
+	public void setSupplementalTags(Set<Tag> supplementalTags) {
+		if (this.supplementalTags != null) {
+			for (Tag tag : supplementalTags) {
 				tags.remove(tag.getName());
 			}
 		}
-		this.suplementalTags = suplementalTags;
-		if (suplementalTags != null) {
-			for (Tag tag : suplementalTags) {
+		this.supplementalTags = supplementalTags;
+		if (supplementalTags != null) {
+			for (Tag tag : supplementalTags) {
 				tags.put(tag.getName(), tag.getValue());
 			}
 		}
 	}
 
-	/**
-	 * Returns the list of moves.
-	 *
-	 * @return the list of moves
-	 */
-	public List<PGNMove> getMoves() {
-		return moves;
-	}
-
-	/**
-	 * Sets the list of moves.
-	 *
-	 * @param moves the list of moves to set
-	 */
-	public void setMoves(List<PGNMove> moves) {
-		this.moves = moves;
-	}
-
-	/**
+    /**
 	 * Add the move to the game and returns the last position.
 	 *
 	 * @param move to add to the game
@@ -305,7 +227,7 @@ public class Game implements Iterable<Position> {
 	 * to the list of positions of the game. The last position of the game is
 	 * returned.
 	 *
-	 * @param move the move in UCI/SAN format
+	 * @param move the move in UCI format
 	 * @return the last position of the game
 	 * @throws MovementException if the move is illegal
 	 * 
@@ -341,8 +263,8 @@ public class Game implements Iterable<Position> {
 		return positions.get(index + (after ? 1 : 0));
 	}
 
-	private List<Position> createHistory(List<PGNMove> moves, Set<Tag> suplementalTags) {
-		Position initial = suplementalTags.stream().filter(tag -> tag.getName().toLowerCase().equals("fen"))
+	private List<Position> createHistory(List<PGNMove> moves, Set<Tag> supplementalTags) {
+		Position initial = supplementalTags.stream().filter(tag -> tag.getName().equalsIgnoreCase("fen"))
 				.map(tag -> new Position(tag.getValue())).findFirst().orElse(new Position());
 		Iterator<PGNMove> moveIterator = moves.iterator();
 		List<Position> positions = new LinkedList<>();
@@ -351,7 +273,7 @@ public class Game implements Iterable<Position> {
 		while (moveIterator.hasNext()) {
 			PGNMove pgnMove = moveIterator.next();
 			Move move = MoveFactory.instance(pgnMove.getOrigin(), pgnMove.getTarget(), pgnMove.getPromotionPiece());
-			current = current.childFromMove(move).orElseThrow(() -> new IllegalArgumentException());
+			current = current.childFromMove(move).orElseThrow(IllegalArgumentException::new);
 			positions.add(current);
 		}
 		return positions;
@@ -364,7 +286,7 @@ public class Game implements Iterable<Position> {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(black, date, event, moves, result, round, site, suplementalTags, white);
+		return Objects.hash(black, date, event, moves, result, round, site, supplementalTags, white);
 	}
 
 	/**
@@ -385,7 +307,7 @@ public class Game implements Iterable<Position> {
 		return Objects.equals(black, other.black) && Objects.equals(date, other.date)
 				&& Objects.equals(event, other.event) && Objects.equals(moves, other.moves)
 				&& Objects.equals(result, other.result) && Objects.equals(round, other.round)
-				&& Objects.equals(site, other.site) && Objects.equals(suplementalTags, other.suplementalTags)
+				&& Objects.equals(site, other.site) && Objects.equals(supplementalTags, other.supplementalTags)
 				&& Objects.equals(white, other.white);
 	}
 
@@ -401,12 +323,12 @@ public class Game implements Iterable<Position> {
 
 		sb.append("\n").append(event).append("\n").append(site).append("\n").append(date).append("\n").append(round)
 				.append("\n").append(white).append("\n").append(black).append("\n").append(result).append("\n");
-		for (Tag tag : suplementalTags) {
+		for (Tag tag : supplementalTags) {
 			sb.append(tag).append("\n");
 		}
 		sb.append("\n");
 		Position position;
-		List<Tag> fenTagList = suplementalTags.stream().filter(tag -> tag.getName().equals("FEN"))
+		List<Tag> fenTagList = supplementalTags.stream().filter(tag -> tag.getName().equals("FEN"))
 				.collect(Collectors.toCollection(LinkedList::new));
 		if (!fenTagList.isEmpty())
 			position = new Position(fenTagList.get(0).getValue());
@@ -431,18 +353,18 @@ public class Game implements Iterable<Position> {
 		for (PGNMove move : moves) {
 			String sanMove = move.toString();
 			if (position.isWhiteMove())
-				sb.append(position.getMovesCounter() + ". ");
+				sb.append(position.getMovesCounter()).append(". ");
 
-			sb.append(sanMove + " ");
+			sb.append(sanMove).append(" ");
 
 			if (move.getSuffixAnnotations() != null) {
 				for (int suffix : move.getSuffixAnnotations()) {
-					sb.append("$" + suffix + " ");
+					sb.append("$").append(suffix).append(" ");
 				}
 			}
 
 			if (move.getComment() != null) {
-				sb.append("{" + move.getComment() + "} ");
+				sb.append("{").append(move.getComment()).append("} ");
 			}
 
 			if (move.getRav() != null) {
@@ -501,7 +423,7 @@ public class Game implements Iterable<Position> {
 	}
 
 	private EcoDescriptor calculateEcoDescriptor() {
-		if (moves.size() == 0)
+		if (moves.isEmpty())
 			return null;
 		var i = 0;
 		var movesBuilder = new StringBuilder();
@@ -534,6 +456,86 @@ public class Game implements Iterable<Position> {
 				.ifPresent(eco -> tags.put("ECO", eco));
 		}
 		return Optional.ofNullable(tags.get(tagName));
+	}
+
+	/**
+	 * The event tag
+	 * @return the event tag
+	 */
+	public Tag getEvent() {
+		return this.event;
+	}
+
+	/**
+	 * The site tag
+	 * @return the site tag
+	 */
+	public Tag getSite() {
+		return this.site;
+	}
+
+	/**
+	 * The date tag
+	 * @return the date tag
+	 */
+	public Tag getDate() {
+		return this.date;
+	}
+
+	/**
+	 * The round tag
+	 * @return the round tag
+	 */
+	public Tag getRound() {
+		return this.round;
+	}
+
+	/**
+	 * The white tag
+	 * @return the white tag
+	 */
+	public Tag getWhite() {
+		return this.white;
+	}
+
+	/**
+	 * The black tag
+	 * @return the balck tag
+	 */
+	public Tag getBlack() {
+		return this.black;
+	}
+
+	/**
+	 * The result tag
+	 * @return the result tag
+	 */
+	public Tag getResult() {
+		return this.result;
+	}
+
+	/**
+	 * The supplemental tags
+	 * @return the supplemental tags
+	 */
+	public Set<Tag> getSupplementalTags() {
+		return this.supplementalTags;
+	}
+
+	/**
+	 * The moves collection
+	 * @return the moves collection
+	 */
+	public List<PGNMove> getMoves() {
+		return this.moves;
+	}
+
+	/**
+	 * Set the moves collection
+	 * @param moves the new moves collection
+	 */
+	public void setMoves(List<PGNMove> moves) {
+		this.moves = moves;
 	}
 
 }

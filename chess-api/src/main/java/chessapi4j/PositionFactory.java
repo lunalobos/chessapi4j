@@ -29,15 +29,17 @@ import java.util.Optional;
  */
 public class PositionFactory {
 
+	
 	/**
 	 * Custom new instance. Argument is a fen string with the next moves separated
 	 * by spaces. Returns the position after play all the moves. The form of the
 	 * string is such as the used in the UCI protocol: positionFen + moves(token) + move1 + move2 +
 	 * ... + moveN
 	 *
-	 * @param fenPlusMoves
-	 * @return a new instance
+	 * @param fenPlusMoves a fen string with the next moves separated by spaces
+	 * @return a new {@code Position} instance
 	 */
+	@Deprecated
 	public static Position fromMoves(String fenPlusMoves) throws MovementException {
 		Scanner input = new Scanner(fenPlusMoves);
 		List<String> list = new LinkedList<>();
@@ -58,7 +60,7 @@ public class PositionFactory {
 			boolean whiteMove = position.isWhiteMove();
 			for (int i = 7; i < list.size(); i++) {
 				Move move = MoveFactory.instance(list.get(i), whiteMove);
-				whiteMove = whiteMove ? false : true;
+				whiteMove = !whiteMove;
 				moves.add(move);
 			}
 		}
@@ -66,15 +68,17 @@ public class PositionFactory {
 
 	}
 
+
 	/**
 	 * Custom new instance. Arguments are the initial position and a list of the
 	 * next moves. Returns the position after play all moves.
 	 *
-	 * @param p, moves
-	 * @return a new instance
+	 * @param startpos 	the initial position
+	 * @param moves 	the list of the next moves
+	 * @return a new Position instance
 	 */
-	public static Position fromMoves(Position p, List<Move> moves) throws MovementException {
-		Position fp = p.makeClone();
+	public static Position fromMoves(Position startpos, List<Move> moves) throws MovementException {
+		Position fp = startpos.makeClone();
 		for (Move move : moves) {
 			final var copy = fp;
 			fp = fp.childFromMove(move)
@@ -91,7 +95,10 @@ public class PositionFactory {
 	 * @return an optional containing the position if the fen is valid
 	 * @since 1.2.4
 	 */
+	@Deprecated
 	public Optional<Position> secureInstance(String fen){
 		return Rules.isValidFen(fen) ? Optional.of(new Position(fen)) : Optional.empty();
 	}	
+
+	private PositionFactory() {}
 }

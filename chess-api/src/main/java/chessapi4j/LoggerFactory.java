@@ -22,16 +22,12 @@ import java.util.Map;
  * @author lunalobos
  * @since 1.2.8
  */
-class LoggerFactory {
+final class LoggerFactory {
     private static final Map<String, LoggerImpl> LOGGERS = new HashMap<>();
-    private static final String DEFAULT_FILTER_LEVEL = "INFO";
+    private static final String DEFAULT_FILTER_LEVEL = "WARN";
 
     public static Logger getLogger(Class<?> clazz) {
-        var logger = LOGGERS.get(clazz.getName());
-        if (logger == null) {
-            logger = new LoggerImpl(clazz);
-            LOGGERS.put(clazz.getName(), logger);
-        }
+        var logger = LOGGERS.computeIfAbsent(clazz.getCanonicalName(), k -> new LoggerImpl(clazz));
         logger.setFilterLevel(DEFAULT_FILTER_LEVEL);
         return logger;
     }

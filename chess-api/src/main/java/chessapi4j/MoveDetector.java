@@ -26,13 +26,17 @@ import java.util.Optional;
  * @author lunalobos
  *
  */
+
 public final class MoveDetector {
-	private Position parent, child;
+
+    private Position parent;
+
+	private Position child;
 
 	/**
 	 * Creates a new instance of MoveDetector.
-	 * @param parent
-	 * @param child
+	 * @param parent the parent position
+	 * @param child the child position
 	 */
 	public MoveDetector(Position parent, Position child) {
 		this.parent = parent;
@@ -117,24 +121,7 @@ public final class MoveDetector {
 		return null;
 	}
 
-	/**
-	 * Returns the parent
-	 * 
-	 * @return the parent
-	 */
-	public Position getParent() {
-		return parent;
-	}
-
-	/**
-	 * Returns the child
-	 * @return the child
-	 */
-	public Position getChild() {
-		return child;
-	}
-
-	/**
+    /**
 	 * Sets the parent.
 	 * @param parent the parent to set
 	 */
@@ -150,4 +137,19 @@ public final class MoveDetector {
 		this.child = child;
 	}
 
+	/**
+	 * The parent position
+	 * @return the paren position
+	 */
+	public Position getParent() {
+		return this.parent;
+	}
+
+	/**
+	 * The child position
+	 * @return the child position
+	 */
+	public Position getChild() {
+		return this.child;
+	}
 }

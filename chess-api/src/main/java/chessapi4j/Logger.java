@@ -20,7 +20,7 @@ package chessapi4j;
  * @since 1.2.8
  */
 interface Logger {
-    void instanciation();
+    void instantiation();
     void trace(String message);
     void trace(String message, Object... args);
     void debug(String message);

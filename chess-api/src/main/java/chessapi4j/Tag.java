@@ -28,29 +28,18 @@ public class Tag {
 	private String name;
 	private String value;
 
+	/**
+	 * Creates a new tag
+	 * @param name the name of the tag
+	 * @param value the value of the tag
+	 */
 	public Tag(String name, String value) {
 		super();
 		this.name = name;
 		this.value = value;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	@Override
+    @Override
 	public int hashCode() {
 		return Objects.hash(name, value);
 	}
@@ -69,9 +58,40 @@ public class Tag {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("[").append(name).append(" ").append('"').append(value).append('"').append("]");
-		return sb.toString();
+		return new StringBuilder().append("[").append(name).append(" ").append('"').append(value).append('"')
+				.append("]").toString();
+	}
+
+	/**
+	 * Sets the name of this tag
+	 * @param name the new name of this tag
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * Sets the value for this tag
+	 * @param value the new value for this tag
+	 */
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	/**
+	 * The name of this tag
+	 * @return the name of this tag
+	 */
+	public String getName() {
+		return this.name;
+	}
+
+	/**
+	 * The value of this tag
+	 * @return the value of this tag
+	 */
+	public String getValue() {
+		return this.value;
 	}
 
 }

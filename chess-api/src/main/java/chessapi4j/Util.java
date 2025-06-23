@@ -19,6 +19,8 @@ package chessapi4j;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Utility class. Not all of these class methods are safe, be careful.
@@ -187,28 +189,31 @@ public class Util {
 	/**
 	 * Retrieves visible squares bitboard representation.
 	 *
-	 * @param position
-	 * @param directionAndSense
-	 * @param square
-	 * @return
+	 * @param position the position to look at
+	 * @param directionAndSense the direction and sense to use
+	 * @param square the square point of view
+	 * @return a bitboard as a long with the visible squares for the given arguments
 	 *
 	 * @since 1.2.3
 	 */
+	@Deprecated
 	public static long visibleSquares(Position position, MoveDirection directionAndSense, Square square) {
-		return GeneratorFactory.visibleMetrics.visibleSquares(position.getBits(),
+		return GeneratorFactory.container.visibleMetrics.visibleSquares(position.getBits(),
 				new int[] { directionAndSense.ordinal() }, square.ordinal(),
 				position.wm());
 	}
 
 	/**
-	 * Retrieves visible squares in all directions in a long as bitboard representation.
+	 * Retrieves visible squares in all directions in a long as bitboard
+	 * representation.
 	 *
-	 * @param position
-	 * @param square
-	 * @return
+	 * @param position the position to look at
+	 * @param square the square point of view
+	 * @return the visible squares bitboard as a long
 	 *
 	 * @since 1.2.3
 	 */
+	@Deprecated
 	public static long visibleSquares(Position position, Square square) {
 		var piece = position.getPiece(square);
 		var side = piece.side();
@@ -230,26 +235,26 @@ public class Util {
 					position.getBitboard(Piece.WK)).getValue();
 
 		}
-		return GeneratorFactory.visibleMetrics.visibleSquaresQueen(square.ordinal(), friends, enemies);
+		return GeneratorFactory.container.visibleMetrics.visibleSquaresQueen(square.ordinal(), friends, enemies);
 	}
 
 	/*
 	 * Retrieves visible squares bitboard representation.
 	 */
-	protected static long visibleSquares(Position position, int[] directionsIndexs, int square) {
+	static long visibleSquares(Position position, int[] directionsIndexes, int square) {
 
-		return GeneratorFactory.visibleMetrics.visibleSquares(position.getBits(), directionsIndexs, square,
+		return GeneratorFactory.container.visibleMetrics.visibleSquares(position.getBits(), directionsIndexes, square,
 				position.wm());
 	}
 
 	/**
 	 * Separates the given bitboard in individuals bitboards, one for each bit.
 	 *
-	 * @param bitRep
+	 * @param bitboard the bitboard as a long
 	 * @return a list containing the separated bitboards
 	 */
-	public static List<Long> longToList(long bitRep) {
-		long j = bitRep;
+	public static List<Long> longToList(long bitboard) {
+		long j = bitboard;
 		List<Long> output = new LinkedList<>();
 		while (j != 0) {
 			long b = j & -j;
@@ -260,9 +265,20 @@ public class Util {
 	}
 
 	/**
+	 * Creates a deep copy of the given bitboard array.
+	 * @param bitboards the bitboard array
+	 * @return a deep copy of the given bitboard array
+	 */
+	public static long[] copyBitboards(long[] bitboards){
+		var newBitboards = new long[bitboards.length];
+		System.arraycopy(bitboards, 0, newBitboards, 0, bitboards.length);
+		return newBitboards;
+	}
+
+	/**
 	 * Column number for the given square (zero-based)
 	 *
-	 * @param square
+	 * @param square the square number
 	 * @return the column number for the given square
 	 */
 	public static int getCol(int square) {
@@ -272,7 +288,7 @@ public class Util {
 	/**
 	 * Column number for the given square object
 	 *
-	 * @param square
+	 * @param square the square
 	 * @return the column number for the given square
 	 *
 	 * @since 1.2.3
@@ -284,7 +300,7 @@ public class Util {
 	/**
 	 * Row number for the given square (zero-based)
 	 *
-	 * @param square
+	 * @param square the square index
 	 * @return the row number for the given square
 	 */
 	public static int getRow(int square) {
@@ -294,7 +310,7 @@ public class Util {
 	/**
 	 * Row number for the given square object
 	 *
-	 * @param square
+	 * @param square the square
 	 * @return the row number for the given square
 	 *
 	 * @since 1.2.3
@@ -305,15 +321,15 @@ public class Util {
 
 	/**
 	 * Column character for the given square
-	 *
+	 * <p>
 	 * WARNING: the square number can only be in the range of 0 (included) to 64
 	 * (excluded) otherwise ArrayIndexOutOfBoundsException will be thrown.
-	 *
-	 * @param square
+	 * </p>
+	 * @param square the square index
 	 * @return the column character for the given square
 	 *
 	 * @throws ArrayIndexOutOfBoundsException if square is not a valid
-	 * square number
+	 *                                        square number
 	 */
 	public static String getColLetter(int square) {
 		int colNum = getCol(square);
@@ -323,8 +339,8 @@ public class Util {
 	/**
 	 * Square for the given column and row
 	 *
-	 * @param col
-	 * @param row
+	 * @param col the col index 0-based
+	 * @param row the row index 0-based
 	 * @return the column character for the given square
 	 */
 	public static int getSquareIndex(int col, int row) {
@@ -334,11 +350,11 @@ public class Util {
 	/**
 	 * Promotion checker for the given target square
 	 *
-	 * @param targetSquare
+	 * @param targetSquare the square index to check
 	 * @return true if it is a promotion square
 	 */
 	public static boolean isPromotion(int targetSquare) {
-		return Generator.isPromotion(targetSquare) == 1L;
+		return PawnGenerator.isPromotion(targetSquare) == 1L;
 	}
 
 	/**
@@ -348,7 +364,7 @@ public class Util {
 	 * This method doesn't work for relative promotions based on a specific side; it
 	 * simply checks the row.
 	 *
-	 * @param targetSquare
+	 * @param targetSquare the square to check
 	 * @return true if it is a promotion square
 	 *
 	 * @since 1.2.3
@@ -366,13 +382,13 @@ public class Util {
 	 * For a secure functionality, resort to the method
 	 * {@link #getSquareIndex(Square)}.
 	 *
-	 * @param square
+	 * @param square the square
 	 * @return square number for the given square in algebraic notation
 	 */
 	public static int getSquareIndex(String square) {
 		char[] chars = square.toCharArray();
-		int collum = getColIndex(new String(new char[] { chars[0] }));
-		int row = Integer.parseInt(new String(new char[] { chars[1] })) - 1;
+		int collum = getColIndex(String.valueOf(chars[0]));
+		int row = Integer.parseInt(String.valueOf(chars[1])) - 1;
 		return getSquareIndex(collum, row);
 	}
 
@@ -391,7 +407,7 @@ public class Util {
 	/**
 	 * Square number for the given square in algebraic notation.
 	 *
-	 * @param square
+	 * @param square the square
 	 * @return square number for the given square in algebraic notation
 	 *
 	 * @since 1.2.3
@@ -423,7 +439,7 @@ public class Util {
 	 * @return true if the position is in check false otherwise
 	 */
 	public static boolean isInCheck(Position position) {
-		return GeneratorFactory.generatorUtil.isInCheck(position) == 1;
+		return GeneratorFactory.container.generatorUtil.isInCheck(position) == 1;
 	}
 
 	/**
@@ -440,4 +456,10 @@ public class Util {
 		}
 		return sum;
 	}
+
+	static Stream<IndexedValue<Long>> arraytoLongStream(long[] array) {
+		return IntStream.range(0, array.length).mapToObj(i -> new IndexedValue<>(i, array[i]));
+	}
+
+	private Util(){}
 }

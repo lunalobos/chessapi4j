@@ -26,18 +26,18 @@ import java.util.stream.IntStream;
  * @author lunalobos
  * @since 1.2.8
  */
-class MagicNumbers {
+final class MagicNumbers {
     private static final Logger logger = LoggerFactory.getLogger(MagicNumbers.class);
-    private Combinator combinator;
-    private VisibleMetricsUtil visibleMetricsUtil;
-    private Hasher hasher;
+    private final Combinator combinator;
+    private final VisibleMetricsUtil visibleMetricsUtil;
+    private final MagicHasher hasher;
     private long[] magicNumbersArray;
-    private Long[][] perfectHashMaps;
-    private FastFailLongMap map;
-    private int[] directionIndexes;
-    private Random random;
+    private final Long[][] perfectHashMaps;
+    private final FastFailLongMap map;
+    private final int[] directionIndexes;
+    private final Random random;
 
-    public MagicNumbers(Combinator combinator, VisibleMetricsUtil visibleMetricsUtil, Hasher hasher, int capacity,
+    public MagicNumbers(Combinator combinator, VisibleMetricsUtil visibleMetricsUtil, MagicHasher hasher, int capacity,
             int[] directionIndexes, Random random) {
         this.combinator = combinator;
         this.visibleMetricsUtil = visibleMetricsUtil;
@@ -46,16 +46,15 @@ class MagicNumbers {
         map = new FastFailLongMap(capacity);
         this.directionIndexes = directionIndexes;
         this.random = random;
-        logger.instanciation();
+        logger.instantiation();
     }
 
-    protected final void calculate() {
+    void calculate() {
         final Map<Integer, Long> magicNumbers = new HashMap<>();
-        IntStream.range(0, 64).mapToObj(i -> i)
+        IntStream.range(0, 64).boxed()
                 .forEach(square -> {
-                    boolean searching = true;
                     var combinations = combinator.compute(square, directionIndexes);
-                    while (searching) { // don't worry about this loop, it will allways converge =)
+                    while (true) { // don't worry about this loop, it will always converge =)
                         var magicNumber = BigInteger.probablePrime(63, random).longValue();
                         if (magicNumber < 0) {
                             magicNumber = -magicNumber;
@@ -66,22 +65,15 @@ class MagicNumbers {
                             var directions = Util.QUEEN_MEGAMATRIX[square];
                             var visible = visibleMetricsUtil.computeVisible(square, directionIndexes, directions, 0L, combination);
                             var index = hasher.hash(combination, magicNumber, square);
-                            try {
-                                if (map.containsKey(index)) {
-                                    if (map.get(index).equals(visible)) {
-                                        continue;
-                                    } else {
-                                        isMagic = false;
-                                    }
-                                } else {
-                                    map.put(index, visible);
+                            if (map.containsKey(index)) {
+                                if (!map.get(index).equals(visible)) {
+                                    isMagic = false;
                                 }
-                            } catch (MappingException e) {
-                                logger.fatal("MappingException: %s", e.getMessage());
+                            } else {
+                                map.put(index, visible);
                             }
                         }
                         if (isMagic) {
-                            searching = false;
                             magicNumbers.put(square, magicNumber);
                             perfectHashMaps[square] = map.toLongArray();
                             break;
@@ -95,17 +87,9 @@ class MagicNumbers {
 
     }
 
-    public long[] getMagicNumbersArray() {
-        return magicNumbersArray;
-    }
-
-    public Long[][] getPerfectHashMaps() {
-        return perfectHashMaps;
-    }
-
-    public long visibleHashed(int square, long ocuppied) {
+    public long visibleHashed(int square, long occupied) {
         var magic = magicNumbersArray[square];
-        var hash = hasher.hash(ocuppied, magic, square);
+        var hash = hasher.hash(occupied, magic, square);
         var result = perfectHashMaps[square][hash];
         return result == null ? 0L : result;
     }

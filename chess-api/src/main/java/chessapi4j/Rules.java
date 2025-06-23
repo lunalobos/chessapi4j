@@ -15,10 +15,6 @@
  */
 package chessapi4j;
 
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -36,24 +32,7 @@ public class Rules {
 	private static final Pattern VALID_EN_PASSANT_PATTERN = Pattern.compile("^[-]{1}$|^[abcdefgh][36]$");
 	private static final Pattern VALID_HALF_MOVE_CLOCK_PATTERN = Pattern.compile("^[012345679]+$");
 	private static final Pattern VALID_FULL_MOVE_COUNTER_PATTERN = Pattern.compile("^[1-9][0-9]*$");
-	private static final List<List<Integer>> LACK_OF_MATERIAL_MATRIX = new LinkedList<>();
-	// private static final List<Integer> MATERIAL_PIECES = new
-	// ArrayList<>(Arrays.asList(0, 1, 2, 3, 4, 6, 7, 8, 9, 10));
-	static {
-		Integer[][] matrix = new Integer[][] { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // K k
-				{ 0, 1, 0, 0, 0, 0, 1, 0, 0, 0 }, // KN kn
-				{ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 }, // KN k
-				{ 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, // K kn
-				{ 0, 1, 0, 0, 0, 0, 0, 1, 0, 0 }, // KN kb
-				{ 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 }, // KB kn
-				{ 0, 0, 1, 0, 0, 0, 0, 1, 0, 0 }, // KB kb
-				{ 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 }, // KB k
-				{ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 } // K kb
-		};
-		for (Integer[] array : matrix) {
-			LACK_OF_MATERIAL_MATRIX.add(new LinkedList<>(Arrays.asList(array)));
-		}
-	}
+
 
 	private static int movesCounter(Position position) {
 		return GeneratorFactory.instance().generateChildren(position).size();
@@ -69,7 +48,7 @@ public class Rules {
 	public static void setStatus(Position position) {
 		position.setLackOfMaterial(AdvanceUtil.lackOfMaterial(position) == 1);
 		position.setFiftyMoves(position.getHalfMovesCounter() == 50);
-		boolean inCheck = GeneratorFactory.generatorUtil.isInCheck(position) == 1;
+		boolean inCheck = GeneratorFactory.container.generatorUtil.isInCheck(position) == 1;
 		boolean noMoves = movesCounter(position) == 0;
 		position.setCheckmate(noMoves && inCheck);
 		position.setStalemate(noMoves && !inCheck);
@@ -128,7 +107,7 @@ public class Rules {
 
 		// side to move in check
 		position.changeColorToMove();
-		var validCheck = !(GeneratorFactory.generatorUtil.isInCheck(position) == 1);
+		var validCheck = !(GeneratorFactory.container.generatorUtil.isInCheck(position) == 1);
 
 		// pawns in 8th rank
 		var wpBitboards = bitboards[Piece.WP.ordinal() - 1];
@@ -143,36 +122,32 @@ public class Rules {
 		if (position.isShortCastleWhite()) {
 			var rookBitboard = 1L << 7;
 			var kingBitboard = 1L << 4;
-			var wkCondition = (Long.bitCount(bitboards[Piece.WR.ordinal() - 1] & rookBitboard) == 1)
-					|| (Long.bitCount(bitboards[Piece.WK.ordinal() - 1] & kingBitboard) == 1);
-			validWk = wkCondition;
+            validWk = (Long.bitCount(bitboards[Piece.WR.ordinal() - 1] & rookBitboard) == 1)
+                    || (Long.bitCount(bitboards[Piece.WK.ordinal() - 1] & kingBitboard) == 1);
 		}
 
 		var validWq = true;
 		if (position.isLongCastleWhite()) {
-			var rookBitboard = 1L << 0;
+			var rookBitboard = 1L;
 			var kingBitboard = 1L << 4;
-			var wqCondition = (Long.bitCount(bitboards[Piece.WR.ordinal() - 1] & rookBitboard) == 1)
-					|| (Long.bitCount(bitboards[Piece.WK.ordinal() - 1] & kingBitboard) == 1);
-			validWq = wqCondition;
+            validWq = (Long.bitCount(bitboards[Piece.WR.ordinal() - 1] & rookBitboard) == 1)
+                    || (Long.bitCount(bitboards[Piece.WK.ordinal() - 1] & kingBitboard) == 1);
 		}
 
 		var validBk = true;
 		if (position.isShortCastleBlack()) {
 			var rookBitboard = 1L << 63;
 			var kingBitboard = 1L << 60;
-			var bkCondition = (Long.bitCount(bitboards[Piece.BR.ordinal() - 1] & rookBitboard) == 1)
-					|| (Long.bitCount(bitboards[Piece.BK.ordinal() - 1] & kingBitboard) == 1);
-			validBk = bkCondition;
+            validBk = (Long.bitCount(bitboards[Piece.BR.ordinal() - 1] & rookBitboard) == 1)
+                    || (Long.bitCount(bitboards[Piece.BK.ordinal() - 1] & kingBitboard) == 1);
 		}
 
 		var validBq = true;
 		if (position.isLongCastleBlack()) {
 			var rookBitboard = 1L << 56;
 			var kingBitboard = 1L << 60;
-			var bqCondition = (Long.bitCount(bitboards[Piece.BR.ordinal() - 1] & rookBitboard) == 1)
-					|| (Long.bitCount(bitboards[Piece.BK.ordinal() - 1] & kingBitboard) == 1);
-			validBq = bqCondition;
+            validBq = (Long.bitCount(bitboards[Piece.BR.ordinal() - 1] & rookBitboard) == 1)
+                    || (Long.bitCount(bitboards[Piece.BK.ordinal() - 1] & kingBitboard) == 1);
 		}
 
 		// en passant
@@ -238,33 +213,5 @@ public class Rules {
 				&& validHalfMoveClock && validFullMoveCounter && kingsPresence;
 	}
 
-	private static boolean isCheckmate(Position position) {
-		var enemiesDeque = new ArrayDeque<Integer>();
-		var bits = position.getBits();
-		final var black = bits[6] | bits[7] | bits[8] | bits[9] | bits[10] | bits[11];
-		final var white = bits[0] | bits[1] | bits[2] | bits[3] | bits[4] | bits[5];
-		long friends;
-		long enemies;
-		var isWhiteMove = position.isWhiteMove();
-		if (isWhiteMove) {
-			friends = white;
-			enemies = black;
-		} else {
-			friends = black;
-			enemies = white;
-		}
-		var kingSquare = Long.numberOfTrailingZeros(
-				bits[isWhiteMove ? Piece.WK.ordinal() - 1 : Piece.BK.ordinal() - 1]);
-		var enemiesCopy = enemies;
-		while(enemiesCopy != 0L){
-			var bitboard = Long.lowestOneBit(enemies);
-			enemiesCopy &= ~bitboard;
-			var square = Square.values()[Long.numberOfTrailingZeros(bitboard)];
-			var piece = position.getPiece(square);
-
-		}
-		// TODO continue implementing in version 1.2.9
-		return false;
-	}
-
+	private Rules() {}
 }

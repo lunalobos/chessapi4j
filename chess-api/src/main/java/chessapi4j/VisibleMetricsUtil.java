@@ -22,24 +22,22 @@ package chessapi4j;
  */
 class VisibleMetricsUtil {
 	private static final Logger logger = LoggerFactory.getLogger(VisibleMetricsUtil.class);
-    protected static final int[] BISHOP_DIRECTIONS = new int[] { 0, 1, 2, 3 };
-	protected static final int[] ROOK_DIRECTIONS = new int[] { 4, 5, 6, 7 };
 
-	private  long[] opts = new long[] { 0L, 1L, 0b11L, 0b111L, 0b1111L, 0b11111L, 0b111111L,
+	private final long[] opts = new long[] { 0L, 1L, 0b11L, 0b111L, 0b1111L, 0b11111L, 0b111111L,
 			0b1111111L };
 
-	private long[][][] visibleOptions = new long[64][8][];
+	private final long[][][] visibleOptions = new long[64][8][];
 
-	private int[] trailingZeros = new int[256];
+	private final int[] trailingZeros = new int[256];
 
 	public VisibleMetricsUtil() {
 		fillMap();
-		logger.instanciation();
+		logger.instantiation();
 	}
 
 	
 
-	private final void fillMap() {
+	private void fillMap() {
 		trailingZeros[0] = 7;
 		for (int i = 1; i < 0b10000000; i++) {
 			trailingZeros[i] = Integer.numberOfTrailingZeros(i);
@@ -64,17 +62,17 @@ class VisibleMetricsUtil {
 
 	}
 
-	protected final long computeVisible(int square, int[] directionsIndexs, int[][] directions, long friends,
+	final long computeVisible(int square, int[] directionsIndexes, int[][] directions, long friends,
 			long enemies) {
 		long moves = 0L;
-		for (int index : directionsIndexs) {
+		for (int index : directionsIndexes) {
 			moves = moves
 					| getVisible(square, index, directions[index], friends, enemies);
 		}
 		return moves;
 	}
 
-	protected final long getVisible(int square, int index, int[] direction, long friends, long enemies) {
+	final long getVisible(int square, int index, int[] direction, long friends, long enemies) {
 
 		// space transformation: board -> direction
 		int fimage = 0;
@@ -95,7 +93,7 @@ class VisibleMetricsUtil {
 
 	
 
-	protected long visibleSquares(long[] bits, int[] directionsIndexs, int square, long whiteMoveNumeric) {
+	long visibleSquares(long[] bits, int[] directionsIndexes, int square, long whiteMoveNumeric) {
 		long moves = 0L;
 		final long black = bits[6] | bits[7] | bits[8] | bits[9] | bits[10] | bits[11];
 		final long white = bits[0] | bits[1] | bits[2] | bits[3] | bits[4] | bits[5];
@@ -108,7 +106,7 @@ class VisibleMetricsUtil {
 			friends = black;
 			enemies = white;
 		}
-		for (int index : directionsIndexs) {
+		for (int index : directionsIndexes) {
 			moves = moves
 					| getVisible(square, index, Util.QUEEN_MEGAMATRIX[square][index], friends, enemies);
 		}

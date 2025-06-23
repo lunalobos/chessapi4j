@@ -24,21 +24,18 @@ import java.util.List;
  */
 final class KingGenerator {
 	private static final Logger logger = LoggerFactory.getLogger(KingGenerator.class);
-    private GeneratorUtil generatorUtil;
+    private final GeneratorUtil generatorUtil;
 
     public KingGenerator(GeneratorUtil generatorUtil) {
         this.generatorUtil = generatorUtil;
-		logger.instanciation();
+		logger.instantiation();
     }
 
     public void kingMoves(int square, int pieceType, long enemies, long friends, Position pos, long inCheck,
 			List<Position> children) {
-		final int[] kingDirections = GeneratorUtil.KING_MATRIX[square];
 		final long emptyOrEnemy = ~friends;
-		long moves = 0L;
-		for (int move : kingDirections) {
-			moves = moves | (1L << move);
-		}
+		long moves = GeneratorUtil.KING_MOVES[square];
+
 		generateKingPositions(moves & emptyOrEnemy, pieceType, square, enemies, pos, children);
 		long castleMoves = 0L;
 		castleMoves = castleMoves | (generatorUtil.isShortCastleWhiteEnable(square, enemies, friends, pos, inCheck) << 6);
@@ -77,34 +74,8 @@ final class KingGenerator {
 		}
 	}
 
-    private void makeCastle(Position position, long move, int pieceType, int originSquare) {
-		final long[] bits = position.getBits();
-
-		for (int index : GeneratorUtil.INDEXES) {
-			bits[index] = bits[index] & (~move);
-		}
-		bits[pieceType - 1] = (bits[pieceType - 1] & (~(1L << originSquare))) | move;
-
-		long rookMove = 0L;
-		rookMove = rookMove | (((1L << 6) & (move)) >> 1);
-		rookMove = rookMove | (((1L << 2) & (move)) << 1);
-		rookMove = rookMove | (((1L << 62) & (move)) >> 1);
-		rookMove = rookMove | (((1L << 58) & (move)) << 1);
-
-		long rookOrigin = 0L;
-		rookOrigin = rookOrigin | (((1L << 6) & (move)) << 1);
-		rookOrigin = rookOrigin | (((1L << 2) & (move)) >> 2);
-		rookOrigin = rookOrigin | (((1L << 62) & (move)) << 1);
-		rookOrigin = rookOrigin | (((1L << 58) & (move)) >> 2);
-
-		int rookType = pieceType - 2;
-		for (long bit : bits) {
-			bit = bit & (~rookMove);
-		}
-		bits[rookType - 1] = (bits[rookType - 1] & (~rookOrigin)) | rookMove;
-		position.setBits(bits);
-
-		position.changeColorToMove();
+    private void makeCastle(Position position, long move, int pieceType, int originSquare) {		
+		position.makeCastle(move, pieceType, originSquare);
 		generatorUtil.applyCastleRules(position);
 		position.setHalfMovesCounter(position.getHalfMovesCounter() + 1);
 		position.increaseMovesCounter();

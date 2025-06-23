@@ -24,13 +24,13 @@ import java.util.List;
  */
 final class BishopGenerator {
 	private static final Logger logger = LoggerFactory.getLogger(BishopGenerator.class);
-    private VisibleMetrics visibleMetrics;
-    private GeneratorUtil generatorUtil;
+    private final VisibleMetrics visibleMetrics;
+    private final GeneratorUtil generatorUtil;
 
     public BishopGenerator(VisibleMetrics visibleMetrics, GeneratorUtil generatorUtil) {
         this.visibleMetrics = visibleMetrics;
         this.generatorUtil = generatorUtil;
-		logger.instanciation();
+		logger.instantiation();
     }
 
     public void bishopMoves(long br, int square, int pieceType, int kingSquare, long enemies, long friends,

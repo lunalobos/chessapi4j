@@ -26,13 +26,12 @@ import java.util.regex.Pattern;
  * @since 1.0.0
  */
 public class MoveFactory {
-	private static final Logger logger = LoggerFactory.getLogger(MoveFactory.class);
 	/**
 	 * New instance.
 	 *
 	 * @param origin the origin square
 	 * @param target the target square
-	 * @return a move representation instance
+	 * @return a move instance
 	 */
 	public static Move instance(int origin, int target) {
 		return new Move(1L << target, origin, -1);
@@ -44,7 +43,7 @@ public class MoveFactory {
 	 * @param origin the origin square
 	 * @param target the target square
 	 * @param coronationPiece the coronation piece
-	 * @return a move representation instance
+	 * @return a move instance
 	 */
 	public static Move instance(int origin, int target, int coronationPiece) {
 		return new Move(1L << target, origin, coronationPiece);
@@ -55,7 +54,7 @@ public class MoveFactory {
 	 *
 	 * @param origin the origin square
 	 * @param target the target square
-	 * @return a move representation instance
+	 * @return a move instance
 	 *
 	 * @since 1.2.3
 	 */
@@ -69,7 +68,7 @@ public class MoveFactory {
 	 * @param origin the origin square
 	 * @param target the target square
 	 * @param coronationPiece the coronation piece
-	 * @return a move representation instance
+	 * @return a move instance
 	 *
 	 * @since 1.2.3
 	 */
@@ -81,8 +80,9 @@ public class MoveFactory {
 	/**
 	 * New instance.
 	 *
-	 * @param move the move representation
-	 *
+	 * @param move the move
+	 *	
+	 * @return a move instance
 	 * @since 1.2.3
 	 */
 	public static Move instance(Move move) {
@@ -95,38 +95,32 @@ public class MoveFactory {
 	 *
 	 * @param move the move string in UCI notation
 	 * @param whiteMove the player who moves
-	 * @return a move representation instance
+	 * @return a move instance
 	 * @throws MovementException if the move is illegal or the string is invalid
 	 */
 	public static Move instance(String move, boolean whiteMove) throws MovementException {
 		String regex = "(?<colOrigin>[a-h])(?<rowOrigin>[1-8])(?<colTarget>[a-h])(?<rowTarget>[1-8])(?<promotion>[nbrq])?";
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(move);
-
-		while (matcher.find()) {
+		if (matcher.find()) {
 			int xOrigin = Util.getColIndex(matcher.group("colOrigin"));
 			int yOrigin = Integer.parseInt(matcher.group("rowOrigin")) - 1;
 			int xTarget = Util.getColIndex(matcher.group("colTarget"));
 			int yTarget = Integer.parseInt(matcher.group("rowTarget")) - 1;
 			int origin = Util.getSquareIndex(xOrigin, yOrigin);
 			int target = Util.getSquareIndex(xTarget, yTarget);
-			String promotionPiece;
-			if ((promotionPiece = matcher.group("promotion")) != null && !promotionPiece.equals("")) {
-				try {
-					int promotion = promotionPiece.equals("") ? -1
-							: Piece.valueOf((whiteMove ? "W" : "B") + promotionPiece.toUpperCase()).ordinal();
-
-					return instance(origin, target, promotion);
-				} catch (Exception e) {
-					logger.error(String.format("Error with promotion. Move: %s, WhiteMove: %b, Piece: %s", move,
-							whiteMove, Piece.valueOf((whiteMove ? "W" : "B") + promotionPiece.toUpperCase())));
-
-				}
-
-			} else
+			String promotionPiece  = matcher.group("promotion");
+			if (promotionPiece != null && !promotionPiece.isEmpty()) {
+				String name = (whiteMove ? "W" : "B") + promotionPiece.toUpperCase();
+				int promotion = Piece.valueOf(name).ordinal();
+				return instance(origin, target, promotion);
+			} else {
 				return instance(origin, target);
+			}
+		} else {
+			throw MovementException.invalidString(move);
 		}
+	}
 
-		throw MovementException.invalidString(move);
-	};
+	private MoveFactory() {}
 }

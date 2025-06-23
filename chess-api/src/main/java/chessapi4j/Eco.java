@@ -29,46 +29,47 @@ import lombok.Data;
 // passing tests
 /**
  * This internal class handles the search of the ECO description. Thansk to
- * the csv file created by Destaq. An original version is provided at
- * https://github.com/Destaq/chess-graph/blob/master/elo_reading/openings_sheet.csv
+ * the csv file created by Destaq. An original version is provided at 
+ * <a href="https://github.com/Destaq/chess-graph/blob/master/elo_reading/openings_sheet.csv">openings_sheet</a>
  * The file in resources has been sanitized.
- * 
+ *
  * @author lunalobos
  * @since 1.2.7
- * 
+ *
  */
-class Eco {
+final class Eco {
     private static final Logger logger = LoggerFactory.getLogger(Eco.class);
-    private Map<String, EcoDescriptor> movesMap;
-    private Map<Position, EcoDescriptor> positionMap;
-    private CsvParser csvParser;
+    private final Map<String, EcoDescriptor> movesMap;
+    private final Map<Position, EcoDescriptor> positionMap;
+    private final CsvParser csvParser;
 
-    protected Eco(CsvParser csvParser) {
+    Eco(CsvParser csvParser) {
         this.csvParser = csvParser;
         movesMap = loadMoves();
         movesMap.remove("moves");// removing the header
         positionMap = loadPositionMap();
-        logger.instanciation();
+        logger.instantiation();
     }
 
     private Map<String, EcoDescriptor> loadMoves() {
         try (var is = Eco.class.getClassLoader().getResourceAsStream("openings_sheet.csv")) {
             var rows = csvParser.parseInputStream(is);
             return rows.stream().map(list -> new EcoRow(list.get(0), list.get(1), list.get(2)))
-                    .peek(er -> er.setMoves(er.getMoves().trim())) // this was so annoying to understand
+                    .peek(er -> er.setMoves(er.getMoves().trim())) // this was so annoying
                     .collect(HashMap::new, (map, er) -> map.put(er.getMoves(), er.getDescriptor()),
-                            (m1, m2) -> m1.putAll(m2));
+                            HashMap::putAll);
         } catch (IOException e) {
-            logger.fatal("IOException: %s", e.getMessage());
-            throw new RuntimeException(e);
+            var fatalException = new ResourceAccessException("openings_sheet.csv", e);
+            logger.fatal(fatalException.getMessage());
+            throw fatalException;
         }
     }
 
     private Position makeMove(Position position, String sanMove) {
         return PGNHandler.toUCI(position, sanMove).map(position::childFromMove)
                 .map(o -> o.orElseThrow(
-                        () -> new IllegalArgumentException("Move: %s, position: %s".formatted(sanMove, position))))
-                .orElseThrow(() -> new IllegalArgumentException("Move: %s, position: %s".formatted(sanMove, position)));
+                        () -> new IllegalArgumentException(String.format("Move: %s, position: %s", sanMove, position))))
+                .orElseThrow(() -> new IllegalArgumentException(String.format("Move: %s, position: %s", sanMove, position)));
     }
 
     private Map<Position, EcoDescriptor> loadPositionMap() {
@@ -81,12 +82,12 @@ class Eco {
                     position = makeMove(position, moves.pop());
                 } catch (IllegalArgumentException e) {
                     logger.fatal("IllegalArgumentException: %s", e.getMessage());
-                    throw new IllegalArgumentException("entry: %s, position: %s".formatted(entry, position), e);
+                    throw new IllegalArgumentException(String.format("entry: %s, position: %s", entry, position), e);
                 }
             }
             return Map.entry(position, entry.getValue());
         }).collect(HashMap::new, (map, e) -> map.merge(e.getKey(), e.getValue(), (v1, v2) -> v1),
-                (m1, m2) -> m1.putAll(m2));
+                HashMap::putAll);
     }
 
     public Optional<EcoDescriptor> get(String moves) {

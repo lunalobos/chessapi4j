@@ -11,8 +11,8 @@ public class MagicTest {
 
     @Test
     void bishop() {
-        var magic = GeneratorFactory.visibleMagic;
-        var visibleMetrics = GeneratorFactory.visibleMetrics;
+        var magic = GeneratorFactory.container.visibleMagic;
+        var visibleMetrics = GeneratorFactory.container.visibleMetrics;
         var randowm = new Random();
 
         var counter = 0;

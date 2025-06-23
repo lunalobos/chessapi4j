@@ -16,8 +16,10 @@
 package chessapi4j;
 
 /**
- * Wrapped bitboard class for several debugging or experimenting purposes. I
+ * Wrapped bitboard class for some debugging or experimenting purposes. I
  * don't recommend use it in high performance related functionality.
+ *
+ * <p>This class is not thread safe.</p>
  *
  * @author lunalobos
  *
@@ -108,7 +110,7 @@ public class Bitboard {
 		return new Bitboard(newValue);
 	}
 
-	private long value;
+    private long value;
 
 	/**
 	 * Creates an empty wrapped bitboard
@@ -148,25 +150,7 @@ public class Bitboard {
 		this.value = value;
 	}
 
-	/**
-	 * Value wrapped by this object.
-	 *
-	 * @return the long wrapped value
-	 */
-	public long getValue() {
-		return value;
-	}
-
-	/**
-	 * Sets the value of the bitboard.
-	 *
-	 * @param value the new value
-	 */
-	public void setValue(long value) {
-		this.value = value;
-	}
-
-	/**
+    /**
 	 * Removes and returns the least significant bit set to 1 in the bitboard.
 	 *
 	 * @return a new bitboard with the removed bit
@@ -184,7 +168,6 @@ public class Bitboard {
 	 */
 	public Bitboard popFirstBit() {
 		long highest = Long.highestOneBit(value);
-		;
 		value &= ~(highest);
 		return new Bitboard(highest);
 	}
@@ -207,6 +190,25 @@ public class Bitboard {
 			return false;
 	}
 
+	/**
+	 * Returns the number of trailing zeros in the bitboard.
+	 * <p>
+	 * This is useful for quickly getting the index of the least significant bit
+	 * set to 1 in the bitboard.
+	 * <p>
+	 * For example, if the bitboard is 0b1100000, then the least significant bit
+	 * set to 1 is the 5th bit (index 5), so this method will return 5.
+	 * <p>
+	 * This method is equivalent to
+	 * {@link java.lang.Long#numberOfTrailingZeros(long)
+	 * Long.numberOfTrailingZeros(long)}.
+	 * @return the number of trailing zeros
+	 * @since 1.2.9
+	 */
+	public int trailingZeros() {
+		return Long.numberOfTrailingZeros(value);
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder(500);
@@ -217,9 +219,7 @@ public class Bitboard {
 			StringBuilder isb = new StringBuilder(24);
 			long masked = (inverted & (mask << (i * 8))) >>> (i * 8);
 			int lz = Long.numberOfLeadingZeros(masked) - 56;
-			for (int j = 0; j < lz; j++) {
-				isb.append('0');
-			}
+            isb.append("0".repeat(Math.max(0, lz)));
 			isb.append(masked == 0L ? "" : Long.toBinaryString(masked));
 			char[] characters = isb.toString().toCharArray();
 			for (char c : characters) {
@@ -229,6 +229,22 @@ public class Bitboard {
 			sb.append("\n+---+---+---+---+---+---+---+---+ \n");
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * Sets the value of the bitboard.
+	 * @param value the new internal value
+	 */
+	public void setValue(long value) {
+		this.value = value;
+	}
+
+	/**
+	 * Value wrapped by this object.
+	 * @return the value wrapped by this object
+	 */
+	public long getValue() {
+		return this.value;
 	}
 
 }

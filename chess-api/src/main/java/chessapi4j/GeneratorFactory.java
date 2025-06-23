@@ -16,25 +16,14 @@
 package chessapi4j;
 
 /**
- * Factory class for {@code Generator} instances.
+ * Factory class for Generator instances.
  * 
  * @author lunalobos
  * @since 1.0.0
  */
 public class GeneratorFactory {
-	// dependency injection chain
-	private static final VisibleMetricsUtil visibleMetricsUtil = new VisibleMetricsUtil();
-	protected static final VisibleMagic visibleMagic = new VisibleMagic(visibleMetricsUtil);
-	protected static final VisibleMetrics visibleMetrics = new VisibleMetrics(visibleMetricsUtil, visibleMagic);
-	protected static final GeneratorUtil generatorUtil = new GeneratorUtil(visibleMetrics);
-	private static final PawnGenerator pawnGenerator = new PawnGenerator(visibleMetrics, generatorUtil);
-	private static final KnightGenerator knightGenerator = new KnightGenerator(generatorUtil);
-	private static final BishopGenerator bishopGenerator = new BishopGenerator(visibleMetrics, generatorUtil);
-	private static final RookGenerator rookGenerator = new RookGenerator(visibleMetrics, generatorUtil);
-	private static final QueenGenerator queenGenerator = new QueenGenerator(visibleMetrics, generatorUtil);
-	private static final KingGenerator kingGenerator = new KingGenerator(generatorUtil);
-	private static final Generator generator = new Generator(pawnGenerator, knightGenerator, bishopGenerator,
-			rookGenerator, queenGenerator, kingGenerator, visibleMetrics, generatorUtil);
+
+	static final Container container = Container.defaultBuilder.build();
 
 	/**
 	 * Generator main implementation
@@ -42,7 +31,8 @@ public class GeneratorFactory {
 	 * @return a new {@code Generator} instance
 	 */
 	public static Generator instance() {
-		return generator;
+		return container.generator;
 	}
 
+	private GeneratorFactory() {}
 }

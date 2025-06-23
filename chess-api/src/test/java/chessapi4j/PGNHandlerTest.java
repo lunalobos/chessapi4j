@@ -19,13 +19,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 class PGNHandlerTest {
-	@AfterEach
-	void tearDown() throws Exception {
-	}
 
 	@Test
 	void testParseGame() {
