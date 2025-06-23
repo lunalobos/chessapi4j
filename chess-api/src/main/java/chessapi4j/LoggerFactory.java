@@ -24,7 +24,7 @@ import java.util.Map;
  */
 final class LoggerFactory {
     private static final Map<String, LoggerImpl> LOGGERS = new HashMap<>();
-    private static final String DEFAULT_FILTER_LEVEL = "DEBUG";
+    private static final String DEFAULT_FILTER_LEVEL = "WARN";
 
     public static Logger getLogger(Class<?> clazz) {
         var logger = LOGGERS.computeIfAbsent(clazz.getCanonicalName(), k -> new LoggerImpl(clazz));

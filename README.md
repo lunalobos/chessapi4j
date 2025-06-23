@@ -1,5 +1,5 @@
 ![Java](https://img.shields.io/badge/Java-11%2B-green)
-[![Static Badge](https://img.shields.io/badge/javadoc-1.2.8-brightgreen?style=plastic)](https://lunalobos.github.io/chessapi4j/apidocs/chessapi4j/package-summary.html)
+[![Static Badge](https://img.shields.io/badge/javadoc-1.2.9-brightgreen?style=plastic)](https://lunalobos.github.io/chessapi4j/apidocs/chessapi4j/package-summary.html)
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.lunalobos/chessapi4j)](https://central.sonatype.com/artifact/io.github.lunalobos/chessapi4j)
 ![License](https://img.shields.io/github/license/lunalobos/chessapi4j)
 
@@ -69,7 +69,7 @@ Add the following to your dependencies:
 <dependency>
     <groupId>io.github.lunalobos</groupId>
     <artifactId>chessapi4j</artifactId>
-    <version>1.2.8-RELEASE</version>
+    <version>1.2.9-RELEASE</version>
 </dependency>
 
 ```
@@ -287,8 +287,7 @@ This library offers interfaces and implementations for various search and evalua
 
 ## :sparkles: Functional Package
 
-The functional package introduces a new generation of classes for working with. Focused on immutability, safety, and robustness. All main classes in this package provide unmodifiable (immutable) instances by default, making them thread-safe and especially suitable for concurrent or multithreaded environments.
-
+Introduced in version 1.2.9, the functional package presents a new generation of classes for working with chess. It is focused on immutability, safety, and robustness. All main classes in this package provide unmodifiable (immutable) instances by default, making them thread-safe and especially suitable for concurrent or multithreaded environments.
 
 ### Position
 
