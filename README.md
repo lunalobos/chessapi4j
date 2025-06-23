@@ -69,7 +69,7 @@ Add the following to your dependencies:
 <dependency>
     <groupId>io.github.lunalobos</groupId>
     <artifactId>chessapi4j</artifactId>
-    <version>1.2.9-RELEASE</version>
+    <version>1.2.9</version>
 </dependency>
 
 ```
