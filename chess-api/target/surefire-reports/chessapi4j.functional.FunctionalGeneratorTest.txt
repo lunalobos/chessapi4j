@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: chessapi4j.functional.FunctionalGeneratorTest
+-------------------------------------------------------------------------------
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 69.08 s -- in chessapi4j.functional.FunctionalGeneratorTest

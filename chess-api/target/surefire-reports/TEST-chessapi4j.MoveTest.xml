@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="chessapi4j.MoveTest" time="0.001" tests="1" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="sun.desktop" value="windows"/>
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="jdk.extensions.version" value="21.0.5.0"/>
+    <property name="java.specification.version" value="21"/>
+    <property name="sun.jnu.encoding" value="Cp1252"/>
+    <property name="java.class.path" value="E:\git\repository\chessapi4j\chess-api\target\test-classes;E:\git\repository\chessapi4j\chess-api\target\classes;E:\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.8.2\junit-jupiter-api-5.8.2.jar;E:\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;E:\.m2\repository\org\junit\platform\junit-platform-commons\1.8.2\junit-platform-commons-1.8.2.jar;E:\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;E:\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.8.2\junit-jupiter-engine-5.8.2.jar;E:\.m2\repository\org\junit\platform\junit-platform-engine\1.8.2\junit-platform-engine-1.8.2.jar;E:\.m2\repository\org\projectlombok\lombok\1.18.30\lombok-1.18.30.jar;"/>
+    <property name="java.vm.vendor" value="Eclipse OpenJ9"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="com.ibm.vm.bitmode" value="64"/>
+    <property name="user.variant" value=""/>
+    <property name="com.ibm.oti.vm.library.version" value="29"/>
+    <property name="java.vendor.url" value="https://www.ibm.com/semeru-runtimes"/>
+    <property name="user.timezone" value="America/Buenos_Aires"/>
+    <property name="os.name" value="Windows 10"/>
+    <property name="java.vm.specification.version" value="21"/>
+    <property name="user.country" value="ES"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.boot.library.path" value="C:\semeru-jdk-21.0.5+11\bin\default;C:\semeru-jdk-21.0.5+11\bin"/>
+    <property name="sun.java.command" value="C:\Users\Migue\AppData\Local\Temp\surefire15772981153563170888\surefirebooter-20250622221536859_3.jar C:\Users\Migue\AppData\Local\Temp\surefire15772981153563170888 2025-06-22T22-15-36_601-jvmRun1 surefire-20250622221536859_1tmp surefire_0-20250622221536859_2tmp"/>
+    <property name="surefire.test.class.path" value="E:\git\repository\chessapi4j\chess-api\target\test-classes;E:\git\repository\chessapi4j\chess-api\target\classes;E:\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.8.2\junit-jupiter-api-5.8.2.jar;E:\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;E:\.m2\repository\org\junit\platform\junit-platform-commons\1.8.2\junit-platform-commons-1.8.2.jar;E:\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;E:\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.8.2\junit-jupiter-engine-5.8.2.jar;E:\.m2\repository\org\junit\platform\junit-platform-engine\1.8.2\junit-platform-engine-1.8.2.jar;E:\.m2\repository\org\projectlombok\lombok\1.18.30\lombok-1.18.30.jar;"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="C:\Users\Migue"/>
+    <property name="user.language" value="es"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2024-10-15"/>
+    <property name="java.home" value="C:\semeru-jdk-21.0.5+11"/>
+    <property name="ibm.signalhandling.rs" value="false"/>
+    <property name="openjdk.methodhandles" value="true"/>
+    <property name="file.separator" value="\"/>
+    <property name="jdk.extensions.name" value="Extensions for OpenJDK for Eclipse OpenJ9"/>
+    <property name="basedir" value="E:\git\repository\chessapi4j\chess-api"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="com.ibm.util.extralibs.properties" value=""/>
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
+    <property name="com.ibm.oti.configuration" value="scar"/>
+    <property name="java.awt.fonts" value=""/>
+    <property name="surefire.real.class.path" value="C:\Users\Migue\AppData\Local\Temp\surefire15772981153563170888\surefirebooter-20250622221536859_3.jar"/>
+    <property name="com.ibm.oti.shared.enabled" value="false"/>
+    <property name="com.ibm.oti.vm.bootstrap.library.path" value="C:\semeru-jdk-21.0.5+11\bin\default;C:\semeru-jdk-21.0.5+11\bin"/>
+    <property name="com.ibm.cpu.endian" value="little"/>
+    <property name="java.fullversion" value="21.0.5+11-LTS&#10;JRE 21 Windows 10 amd64-64-Bit Compressed References 20241015_305 (JIT enabled, AOT enabled)&#10;OpenJ9   - 1d5831436e&#10;OMR      - d10a4d553&#10;JCL      - b1b311c53fe based on jdk-21.0.5+11"/>
+    <property name="java.runtime.version" value="21.0.5+11-LTS"/>
+    <property name="user.name" value="Migue"/>
+    <property name="stdout.encoding" value="windows-1252"/>
+    <property name="path.separator" value=";"/>
+    <property name="os.version" value="10.0"/>
+    <property name="java.runtime.name" value="IBM Semeru Runtime Open Edition"/>
+    <property name="ibm.signalhandling.sigint" value="true"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="openj9.compiler" value="j9jit29"/>
+    <property name="java.vm.name" value="Eclipse OpenJ9 VM"/>
+    <property name="java.vendor.version" value="21.0.5.11"/>
+    <property name="ibm.signalhandling.sigchain" value="true"/>
+    <property name="localRepository" value="E:\.m2\repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/ibmruntimes/Semeru-Runtimes/issues"/>
+    <property name="java.io.tmpdir" value="C:\Users\Migue\AppData\Local\Temp\"/>
+    <property name="java.version" value="21.0.5"/>
+    <property name="com.ibm.system.agent.path" value="C:\semeru-jdk-21.0.5+11\bin"/>
+    <property name="user.dir" value="E:\git\repository\chessapi4j\chess-api"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob"/>
+    <property name="os.encoding" value="UTF-8"/>
+    <property name="native.encoding" value="Cp1252"/>
+    <property name="java.library.path" value="C:\semeru-jdk-21.0.5+11\bin\default;C:\semeru-jdk-21.0.5+11\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\GtkSharp\2.12\bin;C:\Program Files\Git\cmd;E:\nodejs\;C:\ProgramData\chocolatey\bin;C:\Program Files\MySQL\MySQL Server 8.0\bin;C:\apache-maven-3.9.9\bin;C:\sqlite3;C:\Strawberry\c\bin;C:\Strawberry\perl\site\bin;C:\Strawberry\perl\bin;C:\semeru-jdk-21.0.5+11\bin;C:\Program Files\PostgreSQL\17\bin;C:\Users\Migue\AppData\Local\Programs\Python\Python39\;C:\Program Files (x86)\Gpg4win\..\GnuPG\bin;C:\Gradle\gradle-8.14\bin;;C:\Users\Migue\AppData\Local\Programs\Microsoft VS Code\bin;."/>
+    <property name="java.vendor" value="IBM Corporation"/>
+    <property name="java.vm.info" value="JRE 21 Windows 10 amd64-64-Bit Compressed References 20241015_305 (JIT enabled, AOT enabled)&#10;OpenJ9   - 1d5831436e&#10;OMR      - d10a4d553&#10;JCL      - b1b311c53fe based on jdk-21.0.5+11"/>
+    <property name="stderr.encoding" value="windows-1252"/>
+    <property name="java.vm.version" value="openj9-0.48.0"/>
+    <property name="com.ibm.jcl.checkClassPath" value=""/>
+    <property name="ibm.system.encoding" value="Cp1252"/>
+    <property name="java.lang.invoke.VarHandle.VAR_HANDLE_GUARDS" value="false"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="65.0"/>
+  </properties>
+  <testcase name="test" classname="chessapi4j.MoveTest" time="0.001"/>
+</testsuite>
