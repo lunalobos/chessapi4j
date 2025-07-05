@@ -22,9 +22,10 @@ package chessapi4j.functional;
 final class KnightGenerator {
     private static final Logger logger = Factory.getLogger(KnightGenerator.class);
     private final MatrixUtil matrixUtil;
-
-    public KnightGenerator(MatrixUtil matrixUtil) {
+    private final MoveFactory moveFactory;
+    public KnightGenerator(MatrixUtil matrixUtil, MoveFactory moveFactory) {
         this.matrixUtil = matrixUtil;
+        this.moveFactory = moveFactory;
         logger.instantiation();
     }
 
@@ -34,6 +35,6 @@ final class KnightGenerator {
         long moves = matrixUtil.knightMoves[square];
         final long[] pin = new long[] { -1L, 0L };
         final long pinMask = pin[(int) ((br & checkMask) >>> Long.numberOfTrailingZeros(br & checkMask))];
-        return new RegularPieceMoves(pieceType, square, enemies,moves & emptyOrEnemy & pinMask & inCheckMask);
+        return new RegularPieceMoves(pieceType, square, enemies,moves & emptyOrEnemy & pinMask & inCheckMask, moveFactory);
     }
 }

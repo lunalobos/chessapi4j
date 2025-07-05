@@ -37,6 +37,11 @@ final class Logger {
         debug("%s created", className);
     }
 
+    public void instantiation(OffsetDateTime t1, OffsetDateTime t2) {
+        var ms = t2.toInstant().toEpochMilli() - t1.toInstant().toEpochMilli();
+        debug("%s created in %d ms", className, ms);
+    }
+
     public void trace(String msg) {
         executor.execute(() -> {
             if (check(Level.TRACE)) {
@@ -134,7 +139,7 @@ final class Logger {
     }
 
     private void append(String msg) {
-        System.out.println(msg);
+        System.out.println(msg.trim());
     }
 
     private String format(String msg, Level level) {

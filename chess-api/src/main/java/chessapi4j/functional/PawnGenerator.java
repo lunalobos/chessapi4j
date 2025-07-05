@@ -42,13 +42,15 @@ final class PawnGenerator {
     private final CheckMetrics checkMetrics;
     private final MatrixUtil matrixUtil;
     private final InternalUtil internalUtil;
+    private final MoveFactory moveFactory;
 
     public PawnGenerator(VisibleMetrics visibleMetrics, CheckMetrics checkMetrics,
-                         MatrixUtil matrixUtil, InternalUtil internalUtil) {
+                         MatrixUtil matrixUtil, InternalUtil internalUtil, MoveFactory moveFactory) {
         this.visibleMetrics = visibleMetrics;
         this.checkMetrics = checkMetrics;
         this.matrixUtil = matrixUtil;
         this.internalUtil = internalUtil;
+        this.moveFactory = moveFactory;
         logger.instantiation();
     }
 
@@ -106,7 +108,8 @@ final class PawnGenerator {
                         pieceType,
                         square,
                         bitboards,
-                        wm));
+                        wm),
+                moveFactory);
     }
 
     private long isEnPassant(int originSquare, int finalSquare, long whiteMoveNumeric) {

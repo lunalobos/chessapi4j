@@ -17,6 +17,7 @@ package chessapi4j.functional;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -32,6 +33,7 @@ final class ZobristHasher {
     private final long zobristTurn;
 
     public ZobristHasher() {
+        var t1 = OffsetDateTime.now();
         var longProvider = new LongProvider();
         zobristTable = new long[12][64];
         zobristCastle = new long[4];
@@ -48,7 +50,8 @@ final class ZobristHasher {
             zobristEnPassant[i] = longProvider.nextLong();
         }
         zobristTurn = longProvider.nextLong();
-        logger.instantiation();
+        var t2 = OffsetDateTime.now();
+        logger.instantiation(t1, t2);
     }
 
     public long computeZobristHash(long[] bitBoards, boolean whiteMove, boolean shortCastleWhite, boolean longCastleWhite,
@@ -87,9 +90,9 @@ final class LongProvider {
     private static final Logger logger = Factory.getLogger(LongProvider.class);
     private final Long[] backedArray;
     private int pointer;
-    //private Random random;
 
-    public LongProvider(){//Random random) {
+    public LongProvider(){
+        var t1 = OffsetDateTime.now();
         pointer = 0;
         try (var is = this.getClass().getClassLoader().getResourceAsStream("zobrist.txt")) {
             backedArray = Arrays.stream(new String(is.readAllBytes(), StandardCharsets.UTF_8).split("\n"))
@@ -99,7 +102,8 @@ final class LongProvider {
         } catch (IOException | NumberFormatException e) {
             throw new ResourceAccessException("zobrist.txt", e);
         }
-        logger.instantiation();
+        var t2 = OffsetDateTime.now();
+        logger.instantiation(t1, t2);
     }
 
     public long nextLong() {

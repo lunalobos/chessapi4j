@@ -22,10 +22,11 @@ final class RookGenerator {
     private static final Logger logger = Factory.getLogger(RookGenerator.class);
     private final VisibleMetrics visibleMetrics;
     private final InternalUtil internalUtil;
-
-    public RookGenerator(VisibleMetrics visibleMetrics, InternalUtil internalUtil){
+    private final MoveFactory moveFactory;
+    public RookGenerator(VisibleMetrics visibleMetrics, InternalUtil internalUtil, MoveFactory moveFactory){
         this.visibleMetrics = visibleMetrics;
         this.internalUtil = internalUtil;
+        this.moveFactory = moveFactory;
         logger.instantiation();
     }
 
@@ -35,6 +36,6 @@ final class RookGenerator {
         final long pseudoLegalMoves = visibleMetrics.visibleSquaresRook(square, friends, enemies);
         final long[] pin = new long[] { -1L, pseudoLegalMoves & checkMask & defense };
         final long pinMask = pin[(int) ((br & checkMask) >>> Long.numberOfTrailingZeros(br))];
-        return new RegularPieceMoves(pieceType, square, enemies, pseudoLegalMoves & pinMask & inCheckMask);
+        return new RegularPieceMoves(pieceType, square, enemies, pseudoLegalMoves & pinMask & inCheckMask, moveFactory);
     }
 }

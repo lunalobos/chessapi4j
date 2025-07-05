@@ -74,7 +74,7 @@ import chessapi4j.Side;
  * @author lunalobos
  */
 public class Game implements Iterable<Position> {
-    static final Eco eco = new Eco(new CsvParser());
+    static final Eco eco = new Eco(new EcoDBParser());
     /**
      * This enum represents the possible modes for handling three repetitions.
      */

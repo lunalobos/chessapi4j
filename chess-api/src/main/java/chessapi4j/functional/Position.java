@@ -143,23 +143,23 @@ public final class Position implements Serializable {
         mi = new MovesInfo(
                 new Bitboard(A3, A4, B3, B4, C3, C4, D3, D4, E3, E4, F3, F4, G3, G4, H3, H4).getValue(),
                 List.of(
-                        new PawnMoves(Piece.WP, A2, enemies, new Bitboard(A3), new Bitboard(A4), new Bitboard(), new Bitboard()),
-                        new PawnMoves(Piece.WP, B2, enemies, new Bitboard(B3), new Bitboard(B4), new Bitboard(), new Bitboard()),
-                        new PawnMoves(Piece.WP, C2, enemies, new Bitboard(C3), new Bitboard(C4), new Bitboard(), new Bitboard()),
-                        new PawnMoves(Piece.WP, D2, enemies, new Bitboard(D3), new Bitboard(D4), new Bitboard(), new Bitboard()),
-                        new PawnMoves(Piece.WP, E2, enemies, new Bitboard(E3), new Bitboard(E4), new Bitboard(), new Bitboard()),
-                        new PawnMoves(Piece.WP, F2, enemies, new Bitboard(F3), new Bitboard(F4), new Bitboard(), new Bitboard()),
-                        new PawnMoves(Piece.WP, G2, enemies, new Bitboard(G3), new Bitboard(G4), new Bitboard(), new Bitboard()),
-                        new PawnMoves(Piece.WP, H2, enemies, new Bitboard(H3), new Bitboard(H4), new Bitboard(), new Bitboard())
+                        new PawnMoves(Piece.WP, A2, enemies, new Bitboard(A3), new Bitboard(A4), new Bitboard(), new Bitboard(), Factory.container.moveFactory),
+                        new PawnMoves(Piece.WP, B2, enemies, new Bitboard(B3), new Bitboard(B4), new Bitboard(), new Bitboard(), Factory.container.moveFactory),
+                        new PawnMoves(Piece.WP, C2, enemies, new Bitboard(C3), new Bitboard(C4), new Bitboard(), new Bitboard(), Factory.container.moveFactory),
+                        new PawnMoves(Piece.WP, D2, enemies, new Bitboard(D3), new Bitboard(D4), new Bitboard(), new Bitboard(), Factory.container.moveFactory),
+                        new PawnMoves(Piece.WP, E2, enemies, new Bitboard(E3), new Bitboard(E4), new Bitboard(), new Bitboard(), Factory.container.moveFactory),
+                        new PawnMoves(Piece.WP, F2, enemies, new Bitboard(F3), new Bitboard(F4), new Bitboard(), new Bitboard(), Factory.container.moveFactory),
+                        new PawnMoves(Piece.WP, G2, enemies, new Bitboard(G3), new Bitboard(G4), new Bitboard(), new Bitboard(), Factory.container.moveFactory),
+                        new PawnMoves(Piece.WP, H2, enemies, new Bitboard(H3), new Bitboard(H4), new Bitboard(), new Bitboard(), Factory.container.moveFactory)
                 ),
                 List.of(
-                        new RegularPieceMoves(Piece.WN, B1, enemies, new Bitboard(A3, C3)),
-                        new RegularPieceMoves(Piece.WN, G1, enemies, new Bitboard(H3, F3))
+                        new RegularPieceMoves(Piece.WN, B1, enemies, new Bitboard(A3, C3), Factory.container.moveFactory),
+                        new RegularPieceMoves(Piece.WN, G1, enemies, new Bitboard(H3, F3), Factory.container.moveFactory)
                 ),
                 List.of(),
                 List.of(),
                 List.of(),
-                new KingMoves(Piece.WK, E1, enemies, new Bitboard(), new Bitboard())
+                new KingMoves(Piece.WK, E1, enemies, new Bitboard(), new Bitboard(), Factory.container.moveFactory)
         );
         movesInfoPresent = true;
     }

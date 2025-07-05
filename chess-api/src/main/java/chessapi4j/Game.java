@@ -209,7 +209,7 @@ public class Game implements Iterable<Position> {
 	 * @since 1.2.3
 	 */
 	public Position addMove(Move move) throws MovementException {
-		var lastPosition = positions.getLast();
+		var lastPosition = positions.get(positions.size() -1);
 		positions.add(lastPosition.childFromMove(MoveFactory.instance(move))
 				.orElseThrow(() -> new MovementException(move, lastPosition)));
 		if (move instanceof PGNMove) {
@@ -218,7 +218,7 @@ public class Game implements Iterable<Position> {
 			moves.add(new PGNMove(move, lastPosition));
 		}
 
-		return positions.getLast();
+		return positions.get(positions.size() -1);
 	}
 
 	/**
@@ -245,7 +245,7 @@ public class Game implements Iterable<Position> {
 	 * @since 1.2.5
 	 */
 	public Position currentPosition() {
-		return positions.getLast();
+		return positions.get(positions.size() -1);
 	}
 
 	/**

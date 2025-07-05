@@ -34,9 +34,9 @@ import java.util.stream.Collectors;
  * 
  * @since 1.2.7
  */
-final class CsvParser {
-    private static final Logger logger = Factory.getLogger(CsvParser.class);
-    public CsvParser() {
+final class EcoDBParser {
+    private static final Logger logger = Factory.getLogger(EcoDBParser.class);
+    public EcoDBParser() {
         logger.instantiation();
     }
 

@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 package chessapi4j.functional;
+
 import java.io.IOException;
+import java.time.OffsetDateTime;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,7 +32,8 @@ import lombok.Data;
 /**
  * This internal class handles the search of the ECO description. Thansk to
  * the csv file created by Destaq. An original version is provided at
- * <a href="https://github.com/Destaq/chess-graph/blob/master/elo_reading/openings_sheet.csv">openings_sheet</a>
+ * <a href=
+ * "https://github.com/Destaq/chess-graph/blob/master/elo_reading/openings_sheet.csv">openings_sheet</a>
  * The file in resources has been sanitized.
  *
  * @author lunalobos
@@ -41,14 +44,16 @@ final class Eco {
     private static final Logger logger = Factory.getLogger(Eco.class);
     private final Map<String, EcoDescriptor> movesMap;
     private final Map<Position, EcoDescriptor> positionMap;
-    private final CsvParser csvParser;
+    private final EcoDBParser csvParser;
 
-    Eco(CsvParser csvParser) {
+    Eco(EcoDBParser csvParser) {
+        var t1 = OffsetDateTime.now();
         this.csvParser = csvParser;
         movesMap = loadMoves();
         movesMap.remove("moves");// removing the header
         positionMap = loadPositionMap();
-        logger.instantiation();
+        var t2 = OffsetDateTime.now();
+        logger.instantiation(t1, t2);
     }
 
     private Map<String, EcoDescriptor> loadMoves() {
@@ -59,14 +64,17 @@ final class Eco {
                     .collect(HashMap::new, (map, er) -> map.put(er.getMoves(), er.getDescriptor()),
                             HashMap::putAll);
         } catch (IOException e) {
-            var fatalException = new ResourceAccessException("openings_sheet.csv", e);
+            var fatalException = new RuntimeException(String.format("Can not access resource %s. Error message: %s",
+                    "openings_sheet.csv", e.getMessage()), e);
+            logger.fatal(fatalException);
             throw fatalException;
         }
     }
 
     private Position makeMove(Position position, String sanMove) {
         return PGNHandler.toUCI(position, sanMove).map(position::move)
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Move: %s, position: %s", sanMove, position)));
+                .orElseThrow(
+                        () -> new IllegalArgumentException(String.format("Move: %s, position: %s", sanMove, position)));
     }
 
     private Map<Position, EcoDescriptor> loadPositionMap() {

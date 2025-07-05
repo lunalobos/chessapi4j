@@ -19,7 +19,6 @@ import chessapi4j.Bitboard;
 import chessapi4j.Piece;
 import chessapi4j.Square;
 
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,7 +52,6 @@ public class Move {
      * @param origin the origin square
      * @param target the target square
      *
-     * @since 1.2.7
      */
     public Move(Square origin, Square target) {
         this(1L << target.ordinal(), origin.ordinal(), -1);
@@ -66,7 +64,6 @@ public class Move {
      * @param target the target square
      * @param promotionPiece the promotion piece
      *
-     * @since 1.2.7
      */
     public Move(Square origin, Square target, Piece promotionPiece) {
         this(1L << target.ordinal(), origin.ordinal(), promotionPiece.ordinal());
@@ -78,7 +75,6 @@ public class Move {
      * @param origin the origin square
      * @param target the target square
      *
-     * @since 1.2.7
      */
     public Move(int origin, int target) {
         this.move = 1L << target;
@@ -91,7 +87,6 @@ public class Move {
      *
      * @return the origin square
      *
-     * @since 1.2.3
      */
     public Square origin() {
         return Square.get(origin);
@@ -102,7 +97,6 @@ public class Move {
      *
      * @return the bitboard move representation
      *
-     * @since 1.2.3
      */
     public Bitboard bitboardMove() {
         return new Bitboard(move);
@@ -122,7 +116,6 @@ public class Move {
      *
      * @return the target square
      *
-     * @since 1.2.3
      */
     public Square target() {
         return Square.get(Long.numberOfTrailingZeros(move));
@@ -133,7 +126,6 @@ public class Move {
      *
      * @return the promotion piece or {@code Piece.EMPTY} if there is no promotion
      *
-     * @since 1.2.3
      */
     public Piece promotionPiece() {
         if (promotionPiece < 0)
@@ -165,7 +157,8 @@ public class Move {
 
     @Override
     public int hashCode() {
-        return Objects.hash(move, origin, promotionPiece);
+        // 16 bits hash
+        return getOrigin() | (getTarget() << 6) | (getPromotionPiece() == -1 ? 0 : (getPromotionPiece() << 12));
     }
 
     @Override

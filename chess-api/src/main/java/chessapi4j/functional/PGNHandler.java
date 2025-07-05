@@ -292,10 +292,10 @@ public class PGNHandler {
 			boolean longCastle = matcher.group("castle").equals("O-O-O");
 			if (!longCastle) {
 				return Optional
-						.of(position.whiteMove() ? new Move(Square.E1, Square.G1) : new Move(Square.E8, Square.G8));
+						.of(position.whiteMove() ? Factory.move(Square.E1, Square.G1) : Factory.move(Square.E8, Square.G8));
 			} else {
 				return Optional
-						.of(position.whiteMove() ? new Move(Square.E1, Square.C1) : new Move(Square.E8, Square.C8));
+						.of(position.whiteMove() ? Factory.move(Square.E1, Square.C1) : Factory.move(Square.E8, Square.C8));
 			}
 		}
 
@@ -310,7 +310,7 @@ public class PGNHandler {
 
 		if (origin.length() == 2) {
 
-			return Optional.of(new Move(Util.getSquare(origin), Util.getSquare(target), Piece.valueOf(
+			return Optional.of(Factory.move(Util.getSquare(origin), Util.getSquare(target), Piece.valueOf(
 					position.whiteMove() ? ("W" + promotionPiece.toUpperCase())
 							: ("B" + promotionPiece.toUpperCase()))));
 		}

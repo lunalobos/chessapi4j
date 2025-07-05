@@ -39,8 +39,8 @@ public final class Tuple <T1,T2> {
      * @param v2 the second value
      */
     public Tuple(T1 v1, T2 v2) {
-        this.v1 = Objects.requireNonNull(v1);
-        this.v2 = Objects.requireNonNull(v2);
+        this.v1 = Objects.requireNonNull(v1, "v1 cannot be null");
+        this.v2 = Objects.requireNonNull(v2, "v2 cannot be null");
     }
     
     /**

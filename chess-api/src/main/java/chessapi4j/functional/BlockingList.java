@@ -783,14 +783,13 @@ class BlockingList<E> extends AbstractList<E> implements Deque<E>, RandomAccess,
         return isEmpty() ? null : removeLast();
     }
 
-    @Override
     public E getFirst() {
-        return super.getFirst();
+        return get(0);
     }
 
-    @Override
+   
     public E getLast() {
-        return super.getLast();
+        return get(size() - 1);
     }
 
     @Override
@@ -873,13 +872,14 @@ class BlockingList<E> extends AbstractList<E> implements Deque<E>, RandomAccess,
 
     @Override
     public Iterator<E> descendingIterator() {
-        return reversed().iterator();
+        // return reversed().iterator();
+        throw new UnsupportedOperationException();
     }
-
-    @Override
+    
     public chessapi4j.functional.BlockingList<E> reversed() {
-        return new chessapi4j.functional.BlockingList.ReverseOrderShiftListView<>(this, super.reversed(),
-                Deque.super.reversed());
+        throw new UnsupportedOperationException();
+        //return new chessapi4j.functional.BlockingList.ReverseOrderShiftListView<>(this, super.reversed(),
+        //        Deque.super.reversed());
     }
 
     @Override
@@ -947,7 +947,7 @@ class BlockingList<E> extends AbstractList<E> implements Deque<E>, RandomAccess,
             this.reversedDeque = reversedDeque;
         }
 
-        @Override
+        
         public chessapi4j.functional.BlockingList<E> reversed() {
             return originalList;
         }
@@ -1162,12 +1162,11 @@ class BlockingList<E> extends AbstractList<E> implements Deque<E>, RandomAccess,
             return reversedDeque.removeFirst();
         }
 
-        @Override
+        
         public E getLast() {
             return reversedDeque.getLast();
         }
 
-        @Override
         public E getFirst() {
             return reversedDeque.getFirst();
         }
