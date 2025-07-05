@@ -43,18 +43,18 @@ final class PawnMoves {
     private Move $epCaptureMove;
 
     public PawnMoves(int pawnPiece, int originSquare, long enemies, long regularMoves, long advanceEpMoves,
-                     long promotionMoves, long epCapture){
+            long promotionMoves, long epCapture, MoveFactory moveFactory) {
         this.pawnPiece = pawnPiece;
         this.originSquare = originSquare;
         this.enemies = enemies;
         this.$regularMoves = regularMoves;
         this.regularMoves = CollectionUtil.bitboardToList(this.$regularMoves,
-                move -> new Move(move, this.originSquare, -1),
+                move -> moveFactory.move(this.originSquare, Long.numberOfTrailingZeros(move)),
                 BlockingList::new);
         this.$advanceEpMoves = advanceEpMoves;
         this.advanceEpMoves = CollectionUtil.bitboardToList(this.$advanceEpMoves,
-                move -> new Move(move, this.originSquare, -1),
-                        BlockingList::new);
+                move -> moveFactory.move(this.originSquare, Long.numberOfTrailingZeros(move)),
+                BlockingList::new);
         this.$promotionMoves = promotionMoves;
         this.promotionMoves = CollectionUtil.bitboardToCollectedList(this.$promotionMoves,
                 bitboard -> {
@@ -62,36 +62,44 @@ final class PawnMoves {
                     Move rook;
                     Move bishop;
                     Move knight;
-                    if(pawnPiece == Piece.WP.ordinal()){
-                        queen = new Move(bitboard, this.originSquare, Piece.WQ.ordinal());
-                        rook = new Move(bitboard, this.originSquare, Piece.WR.ordinal());
-                        bishop = new Move(bitboard, this.originSquare, Piece.WB.ordinal());
-                        knight = new Move(bitboard, this.originSquare, Piece.WN.ordinal());
+                    if (pawnPiece == Piece.WP.ordinal()) {
+                        queen = moveFactory.move(this.originSquare, Long.numberOfTrailingZeros(bitboard),
+                                Piece.WQ.ordinal());
+                        rook = moveFactory.move(this.originSquare, Long.numberOfTrailingZeros(bitboard),
+                                Piece.WR.ordinal());
+                        bishop = moveFactory.move(this.originSquare, Long.numberOfTrailingZeros(bitboard),
+                                Piece.WB.ordinal());
+                        knight = moveFactory.move(this.originSquare, Long.numberOfTrailingZeros(bitboard),
+                                Piece.WN.ordinal());
                     } else {
-                        queen = new Move(bitboard, this.originSquare, Piece.BQ.ordinal());
-                        rook = new Move(bitboard, this.originSquare, Piece.BR.ordinal());
-                        bishop = new Move(bitboard, this.originSquare, Piece.BB.ordinal());
-                        knight = new Move(bitboard, this.originSquare, Piece.BN.ordinal());
+                        queen = moveFactory.move(this.originSquare, Long.numberOfTrailingZeros(bitboard),
+                                Piece.BQ.ordinal());
+                        rook = moveFactory.move(this.originSquare, Long.numberOfTrailingZeros(bitboard),
+                                Piece.BR.ordinal());
+                        bishop = moveFactory.move(this.originSquare, Long.numberOfTrailingZeros(bitboard),
+                                Piece.BB.ordinal());
+                        knight = moveFactory.move(this.originSquare, Long.numberOfTrailingZeros(bitboard),
+                                Piece.BN.ordinal());
                     }
                     return List.of(queen, rook, bishop, knight);
                 }, BlockingList::new);
         this.$epCapture = epCapture;
-        this.$epCaptureMove = epCapture != 0L ?
-                new Move(epCapture, this.originSquare, -1) :
-                null;
+        this.$epCaptureMove = epCapture != 0L
+                ? moveFactory.move(this.originSquare, Long.numberOfTrailingZeros(epCapture))
+                : null;
     }
 
     public PawnMoves(Piece piece, Square square, Bitboard enemies, Bitboard regularMoves, Bitboard advanceEpMoves,
-                     Bitboard promotionMoves, Bitboard epCapture){
+            Bitboard promotionMoves, Bitboard epCapture, MoveFactory moveFactory) {
         this(piece.ordinal(), square.ordinal(), enemies.getValue(), regularMoves.getValue(), advanceEpMoves.getValue(),
-                promotionMoves.getValue(), epCapture.getValue());
+                promotionMoves.getValue(), epCapture.getValue(), moveFactory);
     }
 
-    public Optional<Move> getEpCapture(){
+    public Optional<Move> getEpCapture() {
         return Optional.ofNullable($epCaptureMove);
     }
 
-    public long allMoves(){
+    public long allMoves() {
         return $regularMoves | $advanceEpMoves | $promotionMoves | $epCapture;
     }
 }

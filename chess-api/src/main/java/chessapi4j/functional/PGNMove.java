@@ -75,7 +75,7 @@ public class PGNMove extends Move {
 
     @Override
 	public String toString() {
-		return PGNHandler.toSAN(position, new Move(1L << getTarget(), getOrigin(), getPromotionPiece()));
+		return PGNHandler.toSAN(position, Factory.move(getOrigin(), getTarget(), getPromotionPiece()));
 	}
 
 	@Override

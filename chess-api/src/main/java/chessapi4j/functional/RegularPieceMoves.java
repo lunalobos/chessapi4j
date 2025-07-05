@@ -33,21 +33,22 @@ final class RegularPieceMoves {
     private final long enemies;
     private final long $moves;
     private final List<Move> moves;
-    public RegularPieceMoves(int piece, int square, long enemies, long moves){
+
+    public RegularPieceMoves(int piece, int square, long enemies, long moves, MoveFactory moveFactory) {
         this.piece = piece;
         this.square = square;
         this.enemies = enemies;
         this.$moves = moves;
         this.moves = CollectionUtil.bitboardToList(this.$moves,
-                bitboard -> new Move(bitboard, square, -1),
+                bitboard -> moveFactory.move(square, Long.numberOfTrailingZeros(bitboard)),
                 BlockingList::new);
     }
 
-    public RegularPieceMoves(Piece piece, Square square, Bitboard enemies, Bitboard moves){
-        this(piece.ordinal(), square.ordinal(), enemies.getValue(), moves.getValue());
+    public RegularPieceMoves(Piece piece, Square square, Bitboard enemies, Bitboard moves, MoveFactory moveFactory) {
+        this(piece.ordinal(), square.ordinal(), enemies.getValue(), moves.getValue(), moveFactory);
     }
 
-    public long allMoves(){
+    public long allMoves() {
         return $moves;
     }
 }

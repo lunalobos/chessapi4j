@@ -23,10 +23,12 @@ final class BishopGenerator {
     private static final Logger logger = Factory.getLogger(BishopGenerator.class);
     private final VisibleMetrics visibleMetrics;
     private final InternalUtil internalUtil;
+    private final MoveFactory moveFactory;
 
-    public BishopGenerator(VisibleMetrics visibleMetrics, InternalUtil internalUtil) {
+    public BishopGenerator(VisibleMetrics visibleMetrics, InternalUtil internalUtil, MoveFactory moveFactory) {
         this.visibleMetrics = visibleMetrics;
         this.internalUtil = internalUtil;
+        this.moveFactory = moveFactory;
         logger.instantiation();
     }
 
@@ -35,6 +37,6 @@ final class BishopGenerator {
         final long pseudoLegalMoves = visibleMetrics.visibleSquaresBishop(square, friends, enemies);
         final long[] pin = new long[] { -1L, pseudoLegalMoves & checkMask & internalUtil.defenseDirection(kingSquare, square) };
         final long isPin = pin[(int) ((br & checkMask) >>> Long.numberOfTrailingZeros(br & checkMask))];
-        return new RegularPieceMoves(pieceType, square, enemies,pseudoLegalMoves & isPin & inCheckMask);
+        return new RegularPieceMoves(pieceType, square, enemies,pseudoLegalMoves & isPin & inCheckMask, moveFactory);
     }
 }

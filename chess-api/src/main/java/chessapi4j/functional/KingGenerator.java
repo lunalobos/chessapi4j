@@ -25,10 +25,12 @@ final class KingGenerator {
     private static final Logger logger = Factory.getLogger(KingGenerator.class);
     private final VisibleMetrics visibleMetrics;
     private final MatrixUtil matrixUtil;
+    private final MoveFactory moveFactory;
 
-    public KingGenerator(VisibleMetrics visibleMetrics, MatrixUtil matrixUtil) {
+    public KingGenerator(VisibleMetrics visibleMetrics, MatrixUtil matrixUtil, MoveFactory moveFactory) {
         this.visibleMetrics = visibleMetrics;
         this.matrixUtil = matrixUtil;
+        this.moveFactory = moveFactory;
         logger.instantiation();
     }
 
@@ -39,14 +41,14 @@ final class KingGenerator {
         var threats = visibleMetrics.threats(bitboards, friends & ~(1L << square), enemies, square, wm);
         var regularMoves = moves & emptyOrEnemy & ~threats;
         if(inCheck == 1L){
-            return new KingMoves(pieceType, square, enemies, regularMoves, 0L);
+            return new KingMoves(pieceType, square, enemies, regularMoves, 0L, moveFactory);
         }
         var castleMoves = 0L;
         castleMoves = castleMoves | (isShortCastleWhiteEnable(square, enemies, friends, wk, inCheck, threats) << 6);
         castleMoves = castleMoves | (isLongCastleWhiteEnable(square, enemies, friends, wq, inCheck, threats) << 2);
         castleMoves = castleMoves | (isShortCastleBlackEnable(square, enemies, friends, bk, inCheck, threats) << 62);
         castleMoves = castleMoves | (isLongCastleBlackEnable(square, enemies, friends, bq, inCheck, threats) << 58);
-        return new KingMoves(pieceType, square, enemies, regularMoves, castleMoves);
+        return new KingMoves(pieceType, square, enemies, regularMoves, castleMoves, moveFactory);
     }
 
 

@@ -19,6 +19,7 @@ package chessapi4j.functional;
 import lombok.Getter;
 
 import java.math.BigInteger;
+import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.stream.IntStream;
 /**
@@ -101,6 +102,7 @@ final class VisibleMetrics {
     private final MagicNumbers bishopMagicNumbers;
 
     public VisibleMetrics(MatrixUtil matrixUtil, Random random){
+        var t1 = OffsetDateTime.now();
         this.matrixUtil = matrixUtil;
         fillMap();
         // magic numbers calculation
@@ -135,7 +137,8 @@ final class VisibleMetrics {
                 this::visibleSquaresQueen,
                 (sq, f, e) -> visibleSquaresKing(sq, f)
         };
-        logger.instantiation();
+        var t2 = OffsetDateTime.now();
+        logger.instantiation(t1, t2);
     }
 
     private void fillMap() {
@@ -427,9 +430,11 @@ final class MagicHasher {
     private final long[] maskMatrix;
 
     public MagicHasher(int indexBits, int[][][] queenMatrix, int[] directions) {
+        var t1 = OffsetDateTime.now();
         this.indexBits = indexBits;
         maskMatrix = createMaskMatrix(queenMatrix, directions);
-        logger.instantiation();
+        var t2 = OffsetDateTime.now();
+        logger.instantiation(t1, t2);
     }
 
     private long[] createMaskMatrix(int[][][] queenMatrix, int[] directions) {

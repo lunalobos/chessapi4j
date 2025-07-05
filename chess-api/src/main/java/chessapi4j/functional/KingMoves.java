@@ -36,22 +36,22 @@ final class KingMoves {
     private final List<Move> regularMoves;
     private final List<Move> castleMoves;
 
-    public KingMoves(int kingPiece, int originSquare, long enemies, long regularMoves, long castleMoves){
+    public KingMoves(int kingPiece, int originSquare, long enemies, long regularMoves, long castleMoves, MoveFactory moveFactory){
         this.kingPiece = kingPiece;
         this.originSquare = originSquare;
         this.$regularMoves = regularMoves;
         this.$castleMoves = castleMoves;
         this.enemies = enemies;
         this.regularMoves = CollectionUtil.bitboardToList(this.$regularMoves,
-                bitboard -> new Move(bitboard, this.originSquare, -1),
+                bitboard -> moveFactory.move( this.originSquare, Long.numberOfTrailingZeros(bitboard)),
                 BlockingList::new);
         this.castleMoves = CollectionUtil.bitboardToList(this.$castleMoves,
-                bitboard -> new Move(bitboard, this.originSquare, -1),
+                bitboard -> moveFactory.move(this.originSquare, Long.numberOfTrailingZeros(bitboard)),
                 BlockingList::new);
     }
 
-    public KingMoves(Piece piece, Square square, Bitboard enemies, Bitboard regularMoves, Bitboard castleMoves){
-        this(piece.ordinal(), square.ordinal(), enemies.getValue(), regularMoves.getValue(), castleMoves.getValue());
+    public KingMoves(Piece piece, Square square, Bitboard enemies, Bitboard regularMoves, Bitboard castleMoves, MoveFactory moveFactory){
+        this(piece.ordinal(), square.ordinal(), enemies.getValue(), regularMoves.getValue(), castleMoves.getValue(), moveFactory);
     }
 
     public long allMoves(){
