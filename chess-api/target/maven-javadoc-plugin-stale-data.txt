@@ -1,0 +1,55 @@
+-J-Duser.language=
+-J-Duser.country=
+@options
+@packages
+-classpath
+'E:/.m2/repository/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar'
+-encoding
+'UTF-8'
+-protected
+-sourcepath
+'E:/git/repository/chessapi4j/chess-api/src/main/java;E:/git/repository/chessapi4j/chess-api/target/generated-sources/annotations'
+-Xdoclint:none
+-author
+-bottom
+'Copyright &#169; 2025. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'E:/git/repository/chessapi4j/chess-api/target/reports/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'ChessAPI4j 1.2.10 API'
+-linkoffline
+'https://docs.oracle.com/en/java/javase/11/docs/api' 'E:/git/repository/chessapi4j/chess-api/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'ChessAPI4j 1.2.10 API'
+chessapi4j
+chessapi4j.functional
+E:\.m2\repository\org\projectlombok\lombok\1.18.30\lombok-1.18.30.jar = 1707051490889
+E:\git\repository\chessapi4j\chess-api\src\main\java = 1750643151602
+E:\git\repository\chessapi4j\chess-api\target\generated-sources\annotations = 1751733530109
+E:\git\repository\chessapi4j\chess-api\target\reports\apidocs\allclasses-index.html = 1751733741528
+E:\git\repository\chessapi4j\chess-api\target\reports\apidocs\allclasses.html = 1751733741576
+E:\git\repository\chessapi4j\chess-api\target\reports\apidocs\allpackages-index.html = 1751733741544
+E:\git\repository\chessapi4j\chess-api\target\reports\apidocs\constant-values.html = 1751733740801
+E:\git\repository\chessapi4j\chess-api\target\reports\apidocs\deprecated-list.html = 1751733741564
+E:\git\repository\chessapi4j\chess-api\target\reports\apidocs\element-list = 1751733740731
+E:\git\repository\chessapi4j\chess-api\target\reports\apidocs\help-doc.html = 1751733741610
+E:\git\repository\chessapi4j\chess-api\target\reports\apidocs\index-all.html = 1751733741506
+E:\git\repository\chessapi4j\chess-api\target\reports\apidocs\index.html = 1751733741588
+E:\git\repository\chessapi4j\chess-api\target\reports\apidocs\member-search-index.js = 1751733741473
+E:\git\repository\chessapi4j\chess-api\target\reports\apidocs\member-search-index.zip = 1751733741500
+E:\git\repository\chessapi4j\chess-api\target\reports\apidocs\overview-summary.html = 1751733741601
+E:\git\repository\chessapi4j\chess-api\target\reports\apidocs\overview-tree.html = 1751733741407
+E:\git\repository\chessapi4j\chess-api\target\reports\apidocs\package-search-index.js = 1751733741457
+E:\git\repository\chessapi4j\chess-api\target\reports\apidocs\package-search-index.zip = 1751733741463
+E:\git\repository\chessapi4j\chess-api\target\reports\apidocs\script.js = 1751733741634
+E:\git\repository\chessapi4j\chess-api\target\reports\apidocs\search.js = 1751733741640
+E:\git\repository\chessapi4j\chess-api\target\reports\apidocs\serialized-form.html = 1751733740828
+E:\git\repository\chessapi4j\chess-api\target\reports\apidocs\stylesheet.css = 1751733741626
+E:\git\repository\chessapi4j\chess-api\target\reports\apidocs\type-search-index.js = 1751733741465
+E:\git\repository\chessapi4j\chess-api\target\reports\apidocs\type-search-index.zip = 1751733741471

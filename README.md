@@ -1,15 +1,21 @@
 ![Java](https://img.shields.io/badge/Java-11%2B-green)
-[![Static Badge](https://img.shields.io/badge/javadoc-1.2.9-brightgreen?style=plastic)](https://lunalobos.github.io/chessapi4j/apidocs/chessapi4j/package-summary.html)
+[![Static Badge](https://img.shields.io/badge/javadoc-1.2.10-brightgreen)](https://lunalobos.github.io/chessapi4j/apidocs/chessapi4j/package-summary.html)
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.lunalobos/chessapi4j)](https://central.sonatype.com/artifact/io.github.lunalobos/chessapi4j)
 ![License](https://img.shields.io/github/license/lunalobos/chessapi4j)
 
-
 ![chessapi4j](https://chessapi4j.my.canva.site/media/7547b1586c5d91c735c3b3a67838eb13.png)
-
 
 # Overview
 
-ChessAPI4j is a Java library that allows representing and performing operations related to chess. With this library, it is possible to create representations of positions, generate legal moves, execute moves, detect moves between different positions, work with PGN files (import and export), use or implement heuristic evaluations of positions, and use or implement algorithms for searching the best move.
+This library aims to provide a solid foundation for handling abstractions of chess concepts such as board positions, determination of the state of a position (checkmate, stalemate, insufficient material, etc.), games between players (either in progress or already played), legal move generation and validation, FEN validation, ECO code determination, and conversion to and from PGN format.
+
+
+> **⚠️ Java 11 Compatibility Note:**  
+> Full compatibility with Java 11 is ensured starting from version **1.2.10**. However, it is **strongly recommended** to use the `functional` package when working with Java 11, as the original package is significantly slower in this environment (the cause is currently unknown).
+
+
+> **⚠️ Java 17 Compatibility Note:** 
+> There do not appear to be performance issues with the original package when running on Java 17. Nevertheless, it is still recommended to use the `functional` package, as it is generally more robust and safer for concurrent or complex applications.
 
 ## Table of contents
 
@@ -69,7 +75,7 @@ Add the following to your dependencies:
 <dependency>
     <groupId>io.github.lunalobos</groupId>
     <artifactId>chessapi4j</artifactId>
-    <version>1.2.9</version>
+    <version>1.2.10</version>
 </dependency>
 
 ```
