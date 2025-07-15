@@ -20,7 +20,6 @@ import chessapi4j.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 
 import static chessapi4j.Square.*;
 
@@ -36,7 +35,7 @@ import static chessapi4j.Square.*;
  */
 public class Factory {
     private static final Map<String, Logger> LOGGERS = new HashMap<>();
-    private static final String DEFAULT_FILTER_LEVEL = "WARN";
+    private static final String DEFAULT_FILTER_LEVEL = "DEBUG";
     static final ZobristHasher zobristHasher = new ZobristHasher();
     static final long initialHash = zobristHasher.computeZobristHash(
             new long[] {
@@ -70,11 +69,10 @@ public class Factory {
     }
 
     static Container defaultContainer() {
-        var random = new Random();
         var matrixUtil = new MatrixUtil();
         var moveFactory = new MoveFactory();
         var internalUtil = new InternalUtil(matrixUtil);
-        var visibleMetrics = new VisibleMetrics(matrixUtil, random);
+        var visibleMetrics = new VisibleMetrics(matrixUtil);
         var lackOfMaterialMetrics = new LackOfMaterialMetrics();
         var checkMetrics = new CheckMetrics(visibleMetrics, internalUtil);
         var checkmateMetrics = new CheckmateMetrics(visibleMetrics, internalUtil);
@@ -89,7 +87,6 @@ public class Factory {
                 queenGenerator, kingGenerator, visibleMetrics, internalUtil, matrixUtil);
         var generator = new Generator(pawnGenerator, kingGenerator, matrixUtil);
         return Container.builder()
-                .random(random)
                 .matrixUtil(matrixUtil)
                 .moveFactory(moveFactory)
                 .internalUtil(internalUtil)

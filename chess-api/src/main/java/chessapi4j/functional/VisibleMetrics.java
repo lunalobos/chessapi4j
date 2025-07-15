@@ -15,13 +15,18 @@
  */
 package chessapi4j.functional;
 
-
 import lombok.Getter;
 
-import java.math.BigInteger;
 import java.time.OffsetDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.IntStream;
+
 /**
  * 
  * @author lunalobos
@@ -29,22 +34,23 @@ import java.util.stream.IntStream;
  */
 final class VisibleMetrics {
     final class MagicNumbers {
+
         private final Combinator combinator;
         final MagicHasher hasher;
         long[] magicNumbersArray;
         final Long[][] perfectHashMaps;
         private final FastFailLongMap map;
         private final int[] directionIndexes;
-        private final Random random;
+        private long[] numbers;
 
         public MagicNumbers(Combinator combinator, MagicHasher hasher, int capacity,
-                            int[] directionIndexes, Random random) {
+                int[] directionIndexes, long[] numbers) {
             this.combinator = combinator;
             this.hasher = hasher;
             perfectHashMaps = new Long[64][];
             map = new FastFailLongMap(capacity);
             this.directionIndexes = directionIndexes;
-            this.random = random;
+            this.numbers = numbers;
         }
 
         void calculate() {
@@ -53,7 +59,7 @@ final class VisibleMetrics {
                     .forEach(square -> {
                         var combinations = combinator.compute(square, directionIndexes);
                         while (true) { // don't worry about this loop, it will always converge
-                            var magicNumber = BigInteger.probablePrime(63, random).longValue();
+                            var magicNumber = numbers[square];
                             if (magicNumber < 0) {
                                 magicNumber = -magicNumber;
                             }
@@ -92,7 +98,140 @@ final class VisibleMetrics {
             return result == null ? 0L : result;
         }
     }
+
     private static final Logger logger = Factory.getLogger(VisibleMetrics.class);
+    private static final long[] BISHOP_NUMBERS = new long[] {
+            9180746499051547339L,
+            8707807373265853253L,
+            6890374909820324227L,
+            5627801193431221999L,
+            7070276170865304959L,
+            8646047479734845597L,
+            6970364831972632061L,
+            8392904025588649759L,
+            9165100239868844527L,
+            7574600961932545601L,
+            8231890758063327347L,
+            5253712730057210803L,
+            6311715373123481983L,
+            6334105248820147973L,
+            7211009014984146431L,
+            8889425855821077019L,
+            6574226960727251671L,
+            6708565959103258043L,
+            5178519028952829793L,
+            5879483439702805337L,
+            7486612042827253013L,
+            8758447185029814091L,
+            7189392548657180447L,
+            6780047248211824439L,
+            7929108997084741009L,
+            5869828385829124279L,
+            4777761137253294683L,
+            5054787237607967851L,
+            5834892739460910721L,
+            8148705127734915707L,
+            8636668779999915157L,
+            8766366790746870541L,
+            5899194859104552961L,
+            5831126227585501889L,
+            5979890708839720271L,
+            6599232715290823837L,
+            7549227303974068249L,
+            5182668415790382497L,
+            8923294130810616437L,
+            5276224996548832559L,
+            4794425474436064603L,
+            7514650417736568737L,
+            6199840546671067217L,
+            7870580082374679457L,
+            5389076785064634397L,
+            7647560584267299979L,
+            5229105129703969763L,
+            8298546287603928523L,
+            5139758389917592841L,
+            4934888716358947091L,
+            6075346491543767443L,
+            9035089192323316819L,
+            7518307732297911763L,
+            8324337169270498819L,
+            5289712152947913373L,
+            6886207625641520513L,
+            9020848015567691011L,
+            6095561483492665153L,
+            5101085567079109061L,
+            7753684519139727811L,
+            9051213235571841283L,
+            6505215318015708773L,
+            6264950850225518497L,
+            8846374642034972683L
+    };
+    private static final long[] ROOK_NUMBERS = new long[] {
+            4709623878237656957L,
+            6865183052646244721L,
+            6376349624237580539L,
+            5297447463024482657L,
+            9122807865927424703L,
+            8012020613347644007L,
+            6228879715230563381L,
+            5540515467914588591L,
+            8770107568067005553L,
+            8986403958761139377L,
+            8131918036122205621L,
+            5022165755838167137L,
+            4832586688523938121L,
+            5428552052160802469L,
+            5831257442195200493L,
+            7064005338091317367L,
+            6118218228362103289L,
+            8434548741746836823L,
+            4801460560457390327L,
+            8322046220482070471L,
+            7160066332761400189L,
+            5244068665286708351L,
+            6471265142626309261L,
+            6708231474468600607L,
+            8589414748053393119L,
+            9092153752976174291L,
+            5880039800537319007L,
+            7096385088387992291L,
+            5868382921559828143L,
+            5213961656025392357L,
+            6646704432795100783L,
+            6184809677821607387L,
+            6721153792961377871L,
+            5617169922917932529L,
+            8617436509115982403L,
+            4999461642255592667L,
+            9159219035379779473L,
+            8559313339296319189L,
+            7351814044577528761L,
+            6540225446102046473L,
+            7690088775049124837L,
+            5170824029536525513L,
+            8409164576103292979L,
+            6183299942039277269L,
+            5625704011045159049L,
+            5810863580383657097L,
+            8702110883440362671L,
+            8561948336959790603L,
+            5246479419567441313L,
+            7336324587000056257L,
+            7987216914294478919L,
+            8454347739456244987L,
+            5754423180144473291L,
+            4827287952960235573L,
+            7546809074950217327L,
+            8425978790361598091L,
+            8232630225451587701L,
+            8228743875403331681L,
+            8940890047099034509L,
+            5239080441164902853L,
+            7971899346368537093L,
+            8450193975376315007L,
+            6116738265998620831L,
+            6773585498517633529L
+    };
     private final long[] opts = new long[] { 0L, 1L, 0b11L, 0b111L, 0b1111L, 0b11111L, 0b111111L, 0b1111111L };
     private final long[][][] visibleOptions = new long[64][8][];
     private final int[] trailingZeros = new int[256];
@@ -101,7 +240,7 @@ final class VisibleMetrics {
     private final MagicNumbers rookMagicNumbers;
     private final MagicNumbers bishopMagicNumbers;
 
-    public VisibleMetrics(MatrixUtil matrixUtil, Random random){
+    public VisibleMetrics(MatrixUtil matrixUtil) {
         var t1 = OffsetDateTime.now();
         this.matrixUtil = matrixUtil;
         fillMap();
@@ -114,14 +253,18 @@ final class VisibleMetrics {
         var rookHasher = new MagicHasher(rookSize.getBits(), matrixUtil.queenMegamatrix, matrixUtil.rookDirections);
         var bishopHasher = new MagicHasher(bishopSize.getBits(), matrixUtil.queenMegamatrix,
                 matrixUtil.bishopDirections);
+
         rookMagicNumbers = new MagicNumbers(combinator, rookHasher, rookSize.getCapacity(),
-                matrixUtil.rookDirections, random);
+                matrixUtil.rookDirections, ROOK_NUMBERS);
+
         bishopMagicNumbers = new MagicNumbers(combinator, bishopHasher, bishopSize.getCapacity(),
-                matrixUtil.bishopDirections, random);
+                matrixUtil.bishopDirections, BISHOP_NUMBERS);
+        logger.debug("bishop magic numbers");
         bishopMagicNumbers.calculate();
+        logger.debug("rook magic numbers");
         rookMagicNumbers.calculate();
-        calculators = new VisibleCalculator[]{
-                (sq,  f, e) -> {
+        calculators = new VisibleCalculator[] {
+                (sq, f, e) -> {
                     throw new IllegalArgumentException("piece must be between 1 and 12");
                 },
                 (sq, f, e) -> visibleSquaresWhitePawn(sq, f),
@@ -167,7 +310,7 @@ final class VisibleMetrics {
     }
 
     long computeVisible(int square, int[] directionsIndexes, int[][] directions, long friends,
-                        long enemies) {
+            long enemies) {
         long moves = 0L;
         for (int index : directionsIndexes) {
             moves = moves
@@ -261,45 +404,45 @@ final class VisibleMetrics {
         final var visibleKing = visibleSquaresKing(kingSquare, friends);
         final var effectiveFriends = friends | (visibleKing & enemies);
         final var effectiveEnemies = enemies & ~(visibleKing & enemies);
-        final var enemyPawn = 6 * (int)wm;
+        final var enemyPawn = 6 * (int) wm;
         final var pawnFunction = calculators[enemyPawn + 1];
         var pawnBitboard = bitboards[enemyPawn];
-        while(pawnBitboard != 0L){
+        while (pawnBitboard != 0L) {
             final var bitboard = pawnBitboard & -pawnBitboard;
             pawnBitboard &= ~bitboard;
             final var square = Long.numberOfTrailingZeros(bitboard);
             enemiesVisible |= pawnFunction.visibleSquares(square, effectiveEnemies, effectiveFriends);
         }
         var knightBitboard = bitboards[enemyPawn + 1];
-        while(knightBitboard != 0L){
+        while (knightBitboard != 0L) {
             final var bitboard = knightBitboard & -knightBitboard;
             knightBitboard &= ~bitboard;
             final var square = Long.numberOfTrailingZeros(bitboard);
             enemiesVisible |= visibleSquaresKnight(square, effectiveEnemies);
         }
         var bishopBitboard = bitboards[enemyPawn + 2];
-        while(bishopBitboard != 0L){
+        while (bishopBitboard != 0L) {
             final var bitboard = bishopBitboard & -bishopBitboard;
             bishopBitboard &= ~bitboard;
             final var square = Long.numberOfTrailingZeros(bitboard);
             enemiesVisible |= visibleSquaresBishop(square, effectiveEnemies, effectiveFriends);
         }
         var rookBitboard = bitboards[enemyPawn + 3];
-        while(rookBitboard != 0L){
+        while (rookBitboard != 0L) {
             final var bitboard = rookBitboard & -rookBitboard;
             rookBitboard &= ~bitboard;
             final var square = Long.numberOfTrailingZeros(bitboard);
             enemiesVisible |= visibleSquaresRook(square, effectiveEnemies, effectiveFriends);
         }
         var queenBitboard = bitboards[enemyPawn + 4];
-        while(queenBitboard != 0L){
+        while (queenBitboard != 0L) {
             final var bitboard = queenBitboard & -queenBitboard;
             queenBitboard &= ~bitboard;
             final var square = Long.numberOfTrailingZeros(bitboard);
             enemiesVisible |= visibleSquaresQueen(square, effectiveEnemies, effectiveFriends);
         }
         var kingBitboard = bitboards[enemyPawn + 5];
-        while(kingBitboard != 0L){
+        while (kingBitboard != 0L) {
             final var bitboard = kingBitboard & -kingBitboard;
             kingBitboard &= ~bitboard;
             final var square = Long.numberOfTrailingZeros(bitboard);
@@ -309,6 +452,7 @@ final class VisibleMetrics {
     }
 
 }
+
 /**
  * @author lunalobos
  * @since 1.2.9
@@ -368,6 +512,7 @@ final class FastFailLongMap {
 final class Combinator {
     private static final Logger logger = Factory.getLogger(Combinator.class);
     private final MatrixUtil matrixUtil;
+
     public Combinator(MatrixUtil matrixUtil) {
         this.matrixUtil = matrixUtil;
         logger.instantiation();
@@ -451,7 +596,7 @@ final class MagicHasher {
         return maskMatrix;
     }
 
-    public int hash(long occupied, long magic, int square){
+    public int hash(long occupied, long magic, int square) {
         var mask = maskMatrix[square];
         var blockers = occupied & mask;
         return (int) ((blockers * magic) >>> (64 - indexBits));
@@ -462,6 +607,7 @@ final class MagicHasher {
 final class Size {
     private final int bits;
     private final int capacity;
+
     public Size(int bits) {
         this.bits = bits;
         this.capacity = 1 << bits;

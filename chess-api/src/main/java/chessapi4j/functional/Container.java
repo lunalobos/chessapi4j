@@ -18,8 +18,6 @@ package chessapi4j.functional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
-import java.util.Random;
-
 /**
  * @author lunalobos
  * @since 1.2.9
@@ -27,7 +25,6 @@ import java.util.Random;
 @AllArgsConstructor
 @Builder
 final class Container {
-    final Random random;
     final InternalUtil internalUtil;
     final MatrixUtil matrixUtil;
     final MoveFactory moveFactory;
