@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="chessapi4j.functional.LackOfMaterialMetricsTest" time="0.007" tests="10" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="sun.desktop" value="gnome"/>
+    <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
+    <property name="java.specification.version" value="21"/>
+    <property name="jdk.extensions.version" value="21.0.9.0"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/home/miguel/Documentos/git/repository/chessapi4j/chess-api/target/test-classes:/home/miguel/Documentos/git/repository/chessapi4j/chess-api/target/classes:/home/miguel/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.8.2/junit-jupiter-api-5.8.2.jar:/home/miguel/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/home/miguel/.m2/repository/org/junit/platform/junit-platform-commons/1.8.2/junit-platform-commons-1.8.2.jar:/home/miguel/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/miguel/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.8.2/junit-jupiter-engine-5.8.2.jar:/home/miguel/.m2/repository/org/junit/platform/junit-platform-engine/1.8.2/junit-platform-engine-1.8.2.jar:/home/miguel/.m2/repository/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar:"/>
+    <property name="java.vm.vendor" value="Eclipse OpenJ9"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="com.ibm.vm.bitmode" value="64"/>
+    <property name="com.ibm.oti.vm.library.version" value="29"/>
+    <property name="java.vendor.url" value="https://www.ibm.com/semeru-runtimes"/>
+    <property name="user.timezone" value="America/Argentina/Buenos_Aires"/>
+    <property name="jfr.unsupported.vm" value="true"/>
+    <property name="java.vm.specification.version" value="21"/>
+    <property name="os.name" value="Linux"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="ES"/>
+    <property name="sun.boot.library.path" value="/usr/lib/jvm/jdk-21.0.9+10/lib/default:/usr/lib/jvm/jdk-21.0.9+10/lib"/>
+    <property name="sun.java.command" value="/home/miguel/Documentos/git/repository/chessapi4j/chess-api/target/surefire/surefirebooter-20251113100359543_3.jar /home/miguel/Documentos/git/repository/chessapi4j/chess-api/target/surefire 2025-11-13T10-03-58_019-jvmRun1 surefire-20251113100359543_1tmp surefire_0-20251113100359543_2tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="/home/miguel/Documentos/git/repository/chessapi4j/chess-api/target/test-classes:/home/miguel/Documentos/git/repository/chessapi4j/chess-api/target/classes:/home/miguel/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.8.2/junit-jupiter-api-5.8.2.jar:/home/miguel/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/home/miguel/.m2/repository/org/junit/platform/junit-platform-commons/1.8.2/junit-platform-commons-1.8.2.jar:/home/miguel/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/miguel/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.8.2/junit-jupiter-engine-5.8.2.jar:/home/miguel/.m2/repository/org/junit/platform/junit-platform-engine/1.8.2/junit-platform-engine-1.8.2.jar:/home/miguel/.m2/repository/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/home/miguel"/>
+    <property name="user.language" value="es"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2025-10-21"/>
+    <property name="java.home" value="/usr/lib/jvm/jdk-21.0.9+10"/>
+    <property name="ibm.signalhandling.rs" value="false"/>
+    <property name="openjdk.methodhandles" value="true"/>
+    <property name="jdk.extensions.name" value="Extensions for OpenJDK for Eclipse OpenJ9"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/home/miguel/Documentos/git/repository/chessapi4j/chess-api"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="com.ibm.util.extralibs.properties" value=""/>
+    <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
+    <property name="com.ibm.oti.configuration" value="scar"/>
+    <property name="java.awt.fonts" value=""/>
+    <property name="surefire.real.class.path" value="/home/miguel/Documentos/git/repository/chessapi4j/chess-api/target/surefire/surefirebooter-20251113100359543_3.jar"/>
+    <property name="com.ibm.oti.shared.enabled" value="false"/>
+    <property name="com.ibm.oti.vm.bootstrap.library.path" value="/usr/lib/jvm/jdk-21.0.9+10/lib/default:/usr/lib/jvm/jdk-21.0.9+10/lib"/>
+    <property name="com.ibm.cpu.endian" value="little"/>
+    <property name="java.fullversion" value="21.0.9+10-LTS&#10;JRE 21 Linux amd64-64-Bit Compressed References 20251021_630 (JIT enabled, AOT enabled)&#10;OpenJ9   - 14b3b2de26&#10;OMR      - d4c7e3040&#10;JCL      - 7a630fb0f55 based on jdk-21.0.9+10"/>
+    <property name="java.runtime.version" value="21.0.9+10-LTS"/>
+    <property name="user.name" value="miguel"/>
+    <property name="stdout.encoding" value="UTF-8"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="6.14.0-35-generic"/>
+    <property name="java.runtime.name" value="IBM Semeru Runtime Open Edition"/>
+    <property name="ibm.signalhandling.sigint" value="true"/>
+    <property name="org.eclipse.openj9.criu.isCRaCCapable" value="true"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="org.eclipse.openj9.criu.isCRIUCapable" value="true"/>
+    <property name="java.vm.name" value="Eclipse OpenJ9 VM"/>
+    <property name="openj9.compiler" value="j9jit29"/>
+    <property name="java.vendor.version" value="21.0.9.0"/>
+    <property name="ibm.signalhandling.sigchain" value="true"/>
+    <property name="localRepository" value="/home/miguel/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/ibmruntimes/Semeru-Runtimes/issues"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="java.version" value="21.0.9"/>
+    <property name="com.ibm.system.agent.path" value="/usr/lib/jvm/jdk-21.0.9+10/lib"/>
+    <property name="user.dir" value="/home/miguel/Documentos/git/repository/chessapi4j/chess-api"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="org.eclipse.openj9.jfr.isJFREnabled" value="true"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="java.awt.printerjob" value="sun.print.PSPrinterJob"/>
+    <property name="os.encoding" value="UTF-8"/>
+    <property name="native.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/usr/lib/jvm/jdk-21.0.9+10/lib/default:/usr/lib/jvm/jdk-21.0.9+10/lib:/usr/lib64:/usr/lib"/>
+    <property name="java.vm.info" value="JRE 21 Linux amd64-64-Bit Compressed References 20251021_630 (JIT enabled, AOT enabled)&#10;OpenJ9   - 14b3b2de26&#10;OMR      - d4c7e3040&#10;JCL      - 7a630fb0f55 based on jdk-21.0.9+10"/>
+    <property name="stderr.encoding" value="UTF-8"/>
+    <property name="java.vendor" value="IBM Corporation"/>
+    <property name="java.vm.version" value="21.0.9+10-openj9-0.56.0"/>
+    <property name="ibm.system.encoding" value="UTF-8"/>
+    <property name="com.ibm.jcl.checkClassPath" value=""/>
+    <property name="java.lang.invoke.VarHandle.VAR_HANDLE_GUARDS" value="false"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="65.0"/>
+  </properties>
+  <testcase name="kvk" classname="chessapi4j.functional.LackOfMaterialMetricsTest" time="0.001"/>
+  <testcase name="kbvk" classname="chessapi4j.functional.LackOfMaterialMetricsTest" time="0.001"/>
+  <testcase name="knvk" classname="chessapi4j.functional.LackOfMaterialMetricsTest" time="0.0"/>
+  <testcase name="kvkb" classname="chessapi4j.functional.LackOfMaterialMetricsTest" time="0.001"/>
+  <testcase name="kvkn" classname="chessapi4j.functional.LackOfMaterialMetricsTest" time="0.0"/>
+  <testcase name="kbbvk" classname="chessapi4j.functional.LackOfMaterialMetricsTest" time="0.001"/>
+  <testcase name="kbvkb" classname="chessapi4j.functional.LackOfMaterialMetricsTest" time="0.0"/>
+  <testcase name="kbvkn" classname="chessapi4j.functional.LackOfMaterialMetricsTest" time="0.0"/>
+  <testcase name="knvkb" classname="chessapi4j.functional.LackOfMaterialMetricsTest" time="0.001"/>
+  <testcase name="knvkn" classname="chessapi4j.functional.LackOfMaterialMetricsTest" time="0.001"/>
+</testsuite>
