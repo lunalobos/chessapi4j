@@ -75,7 +75,7 @@ Add the following to your dependencies:
 <dependency>
     <groupId>io.github.lunalobos</groupId>
     <artifactId>chessapi4j</artifactId>
-    <version>1.2.10</version>
+    <version>1.2.11</version>
 </dependency>
 
 ```
