@@ -1,5 +1,5 @@
 ![Java](https://img.shields.io/badge/Java-11%2B-green)
-[![Static Badge](https://img.shields.io/badge/javadoc-1.2.10-brightgreen)](https://lunalobos.github.io/chessapi4j/apidocs/chessapi4j/package-summary.html)
+[![Static Badge](https://img.shields.io/badge/javadoc-1.2.11-brightgreen)](https://lunalobos.github.io/chessapi4j/apidocs/chessapi4j/package-summary.html)
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.lunalobos/chessapi4j)](https://central.sonatype.com/artifact/io.github.lunalobos/chessapi4j)
 ![License](https://img.shields.io/github/license/lunalobos/chessapi4j)
 
