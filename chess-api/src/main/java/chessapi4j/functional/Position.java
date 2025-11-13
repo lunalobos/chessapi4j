@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.IntStream;
@@ -859,6 +860,25 @@ public final class Position implements Serializable {
             () -> new MovementException(String.format("move %s is not valid for position %s", move, this.fen()))
         );
         return move(moveObj);
+    }
+
+    /**
+     * Gets the en passant target square for the current position, if one is available.
+     * <p>
+     * The en passant square is the *target* square a pawn lands on when performing
+     * an en passant capture (e.g., e3 or e6), not the pawn being captured.
+     *
+     * @since 1.2.11
+     * @return an {@link Optional} containing the en passant {@link Square},
+     * or {@link Optional#empty()} if no en passant capture is possible.
+     */
+    public Optional<Square> enPassant(){
+        if(ep == -1){
+            return Optional.empty();
+        } else {
+            return Optional.of(Square.valueOf(Util.getColLetter(Util.getCol(ep)).toUpperCase()
+                    + (Util.getRow(ep) == 3 ? 3 : 6)));
+        }
     }
 }
 

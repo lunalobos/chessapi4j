@@ -69,7 +69,7 @@ final class Logger {
     public void info(String msg) {
         executor.execute(() -> {
             if (check(Level.INFO)) {
-                sendMsg(msg, Level.DEBUG);
+                sendMsg(msg, Level.INFO);
             }
         });
     }
@@ -81,7 +81,7 @@ final class Logger {
     public void warn(String msg) {
         executor.execute(() -> {
             if (check(Level.WARN)) {
-                sendMsg(msg, Level.DEBUG);
+                sendMsg(msg, Level.WARN);
             }
         });
     }
@@ -93,7 +93,7 @@ final class Logger {
     public void error(String msg) {
         executor.execute(() -> {
             if (check(Level.ERROR)) {
-                sendMsg(msg, Level.DEBUG);
+                sendMsg(msg, Level.ERROR);
             }
         });
     }
@@ -111,7 +111,7 @@ final class Logger {
     public void fatal(String msg) {
         executor.execute(() -> {
             if (check(Level.FATAL)) {
-                sendMsg(msg, Level.DEBUG);
+                sendMsg(msg, Level.FATAL);
             }
         });
     }

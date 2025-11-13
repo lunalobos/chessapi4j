@@ -34,7 +34,7 @@ final class LackOfMaterialMetrics {
             1 << Piece.WK.ordinal(), 1 << Piece.BP.ordinal(), 1 << Piece.BN.ordinal(), 1 << Piece.BB.ordinal(),
             1 << Piece.BR.ordinal(), 1 << Piece.BQ.ordinal(), 1 << Piece.BK.ordinal(), };
     private final Integer[] material = new Integer[] {
-            pieceMask[Piece.EMPTY.ordinal()] | pieceMask[Piece.WK.ordinal()] | pieceMask[Piece.BK.ordinal()], // K k
+            pieceMask[Piece.WK.ordinal()] | pieceMask[Piece.BK.ordinal()], // K k
             pieceMask[Piece.WN.ordinal()] | pieceMask[Piece.BN.ordinal()] | pieceMask[Piece.WK.ordinal()]
                     | pieceMask[Piece.BK.ordinal()], // KN kn
             pieceMask[Piece.WN.ordinal()] | pieceMask[Piece.WK.ordinal()] | pieceMask[Piece.BK.ordinal()], // KN k
