@@ -36,7 +36,7 @@ public class AdvanceUtil {
 			1 << Piece.BR.ordinal(), 1 << Piece.BQ.ordinal(), 1 << Piece.BK.ordinal(), };
 
 	private static final Integer[] MATERIAL = new Integer[] {
-			PIECE_MASK[Piece.EMPTY.ordinal()] | PIECE_MASK[Piece.WK.ordinal()] | PIECE_MASK[Piece.BK.ordinal()], // K k
+			PIECE_MASK[Piece.WK.ordinal()] | PIECE_MASK[Piece.BK.ordinal()], // K k
 			PIECE_MASK[Piece.WN.ordinal()] | PIECE_MASK[Piece.BN.ordinal()] | PIECE_MASK[Piece.WK.ordinal()]
 					| PIECE_MASK[Piece.BK.ordinal()], // KN kn
 			PIECE_MASK[Piece.WN.ordinal()] | PIECE_MASK[Piece.WK.ordinal()] | PIECE_MASK[Piece.BK.ordinal()], // KN k
