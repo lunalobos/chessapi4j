@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"chessapi4j"},{"l":"chessapi4j.functional"}]
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"chessapi4j"},{"l":"chessapi4j.functional"}];updateSearchResults();
