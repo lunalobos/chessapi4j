@@ -35,7 +35,7 @@ import static chessapi4j.Square.*;
  */
 public class Factory {
     private static final Map<String, Logger> LOGGERS = new HashMap<>();
-    private static final String DEFAULT_FILTER_LEVEL = "DEBUG";
+    private static final String DEFAULT_FILTER_LEVEL = "FATAL";
     static final ZobristHasher zobristHasher = new ZobristHasher();
     static final long initialHash = zobristHasher.computeZobristHash(
             new long[] {
